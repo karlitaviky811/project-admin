@@ -1,27 +1,37 @@
+
+
 import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-
+import Login from '../src/views/dashboard/pages/Login'
 export default new Router({
-  mode: 'hash',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
+      path: '/home',
       component: () => import('@/views/dashboard/Index'),
+      redirect: '/dashboard',
       children: [
         // Dashboard
         {
           name: 'Dashboard',
-          path: '',
+          path: '/dashboard',
           component: () => import('@/views/dashboard/Dashboard'),
         },
         // Pages
         {
-          name: 'User Profile',
-          path: 'pages/user',
+          name: 'Solicitudes',
+          path: 'requests/user',
           component: () => import('@/views/dashboard/pages/UserProfile'),
+          children: [
+            {
+              name: 'Detail',
+              path: 'detail',
+              component: () => import('@/views/dashboard/component/Typography'),
+            },
+          ]
         },
         {
           name: 'Notifications',
@@ -33,11 +43,7 @@ export default new Router({
           path: 'components/icons',
           component: () => import('@/views/dashboard/component/Icons'),
         },
-        {
-          name: 'Typography',
-          path: 'components/typography',
-          component: () => import('@/views/dashboard/component/Typography'),
-        },
+
         // Tables
         {
           name: 'Regular Tables',
@@ -58,5 +64,13 @@ export default new Router({
         },
       ],
     },
+    ,
+
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('../src/views/dashboard/pages/Login'),
+    },
+    
   ],
 })
