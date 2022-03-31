@@ -1,18 +1,20 @@
 <template>
- <table-req />
+  <div>
+    <table-req v-if="role === 'ROLE_USER'" />
+    <table-req-admin v-else/>
+  </div>
 </template>
 
 <script>
-
-import TableReq from './TableReq.vue'
-import { mapGetters } from "vuex";
-import moment from "moment";
+import TableReq from "./TableReq.vue";
+import TableReqAdmin from "./TableReqAdmin.vue";
 export default {
   components: {
-  TableReq
+    TableReq,
+    TableReqAdmin,
   },
   mounted() {
-    
+    this.role = JSON.parse(localStorage.getItem("user")).role;
   },
   data() {
     return {
@@ -22,20 +24,16 @@ export default {
       expanded: [],
       singleExpand: false,
       dialog: false,
+      role: '',
       props: {
         expanded: false,
       },
       request: {},
-      headers: [
-      
-      ],
+      headers: [],
     };
   },
-  computed: {
-    
-  },
-  methods: {
-  },
+  computed: {},
+  methods: {},
 };
 </script>
 

@@ -4,20 +4,20 @@
       <v-card-title class="d-flex justify-space-between">
         <v-container class="d-flex flex-column align-end">
           <v-row>
-            <v-col>
+            <v-col v-show="true">
               <v-tooltip left>
                 <template v-slot:activator="{ on: tooltip }">
                   <v-btn
                     v-on="{ ...tooltip }"
                     fab
                     small
-                    v-show="true"
+                    v-show="false"
                     color="success"
-                    @click.stop="create(true)"
+                    @click.stop="detail(true)"
                   >
                     <v-icon dark>mdi-plus</v-icon>
                   </v-btn>
-                  <modal-request
+                    <modal-request
                     :id="id"
                     :req="request"
                     :show="showModal(true)"
@@ -46,7 +46,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="requestsU"
+        :items="requestList"
         :items-per-page="20"
         :search="search"
         :loading="data"
@@ -59,43 +59,12 @@
             <td>{{ row.item.type }}</td>
             <td>{{ row.item.status }}</td>
             <td width="200">{{ row.item.description }}</td>
-
+            <td width="200">{{ row.item.user.name }}</td>
+           
             <td v-show="true">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    class="mx-2"
-                    color="success"
-                    @click.stop="edit(row)"
-                  >
-                    <v-icon dark>mdi-pencil</v-icon>
-                  </v-btn>
-                </template>
-                <span>Editar</span>
-              </v-tooltip>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    class="mx-2"
-                    fab
-                    small
-                    color="red"
-                    @click="openModal(1)"
-                  >
-                    <v-icon dark>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-                <span>Eliminar</span>
-              </v-tooltip>
-            </td>
-            <td v-show="true">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on: tooltip }">
+                   
                   <v-btn
                     v-on="{ ...tooltip }"
                     fab
@@ -124,15 +93,15 @@ import ModalRequest from "../component/modals/ModalRequest.vue";
 import { mapGetters } from "vuex";
 import moment from "moment";
 export default {
-  name: "TableReq",
+  name: "TableReqAdmin",
   components: {
     ModalRequest,
   },
   created() {
-    this.data = true;
+ 
     const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_REQUESTS_USER", user);
-    this.data = false;
+    this.$store.dispatch("GET_REQUESTS_ALL");
+
       this.role = JSON.parse(localStorage.getItem("user")).role;
     console.log("role", this.role);
     
@@ -164,7 +133,7 @@ export default {
         { text: "Tipo", value: "type", sortable: false },
         { text: "Estatus", value: "status", sortable: false },
         { text: "Descripción", value: "description", sortable: false },
-        { text: "", sortable: false, value: "actions" },
+        { text: "Usuario", value: "user", sortable: false },
         { text: "", sortable: false, value: "more" },
       ],
     };
@@ -172,6 +141,7 @@ export default {
   computed: {
     ...mapGetters(["token"]),
     ...mapGetters(["requestsU"]),
+    ...mapGetters(["requestList"])
   },
   methods: {
     showModal: function (id) {
@@ -209,7 +179,7 @@ export default {
       this.dialog = true;
     },
     detail(item) {
-      this.type = true;
+       this.type = true;
       this.title = "Prueba Detalle Karlita";
       this.request = Object.assign({}, item.item);
       console.log("item", item)

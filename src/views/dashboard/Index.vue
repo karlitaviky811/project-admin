@@ -7,6 +7,7 @@
 
     <dashboard-core-view />
   
+  <dashboard-core-settings />
 
 </div>
 </template>
@@ -19,6 +20,7 @@ import {mapState} from 'vuex';
     components: {
       DashboardCoreAppBar: () => import('./components/core/AppBar'),
       DashboardCoreDrawer: () => import('./components/core/Drawer'),
+      DashboardCoreSettings: () => import('./components/core/Settings'),
       DashboardCoreView: () => import('./components/core/View'),
    
     },

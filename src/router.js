@@ -24,8 +24,8 @@ export default new Router({
         {
           name: 'Solicitudes',
           path: 'requests/user',
-          component: () => import('@/views/dashboard/pages/UserProfile'),
-          children: [
+          component: () => import('@/views/dashboard/pages/UserRequest'),
+          children:[
             {
               name: 'Detail',
               path: 'detail',
@@ -43,7 +43,7 @@ export default new Router({
           path: 'components/icons',
           component: () => import('@/views/dashboard/component/Icons'),
         },
-
+        
         // Tables
         {
           name: 'Regular Tables',
@@ -71,6 +71,10 @@ export default new Router({
       name: 'Login',
       component: () => import('../src/views/dashboard/pages/Login'),
     },
-    
+    ,
+    {
+      path: '',
+      redirect: Login,
+    }
   ],
 })

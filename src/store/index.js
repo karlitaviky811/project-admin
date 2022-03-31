@@ -18,6 +18,7 @@ export default new Vuex.Store({
       state.barImage = payload
     },
     SET_DRAWER (state, payload) {
+      console.log("payload")
       state.drawer = payload
     },
   },

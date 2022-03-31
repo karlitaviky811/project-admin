@@ -11,63 +11,75 @@
             <v-row>
               <v-col cols="12" md="4">
                 <v-text-field
-                  v-model="request.title"
+                  v-model="modalReq.title"
                   label="Título solicitud"
                   required
                   solo
+                  :disabled="true"
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="4">
                 <v-text-field
-                  v-model="request.type"
+                  v-model="modalReq.type"
                   :counter="10"
                   label="Tipo"
                   required
                   solo
+                  :disabled="true"
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="4">
                 <v-text-field
-                  v-model="request.project"
+                  v-model="modalReq.project"
                   label="Proyecto"
                   required
                   solo
+                  :disabled="true"
                 ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" md="4">
                 <v-text-field
-                  v-model="request.priority"
+                  v-model="modalReq.priority"
                   :counter="10"
                   label="Prioridad"
                   required
                   solo
+                  :disabled="true"
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="4">
                 <v-text-field
-                  v-model="request.status"
+                  v-model="modalReq.status"
                   :counter="10"
                   label="Estatus"
                   required
                   solo
+                  :disabled="!role === 'ROLE_USER'"
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="4">
-                <v-text-field label="Urgencia" required solo></v-text-field>
+                <v-text-field
+                  label="Urgencia"
+                  required
+                  :disabled="role === 'ROLE_USER'"
+                  solo
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" sm="6">
                 <v-textarea
-                  v-model="request.description"
+                  v-model="modalReq.description"
                   color="teal"
                   label="Descripción"
+                  height="100"
+                  :disabled="role === 'ROLE_USER'"
                 >
                   <template v-slot:label>
                     <div>Descripción <small>(optional)</small></div>
@@ -83,6 +95,20 @@
                 ></v-file-input>
               </v-col>
             </v-row>
+            <v-row>
+              <v-col cols="12" sm="6" v-if="type">
+                <v-textarea
+                  v-model="modalReq.description"
+                  color="teal"
+                  label="Feedback"
+                  :disabled="role === 'ROLE_USER'"
+                >
+                  <template v-slot:label>
+                    <div>Feedback</div>
+                  </template>
+                </v-textarea>
+              </v-col>
+            </v-row>
             <v-row class="mt-5">
               <v-spacer></v-spacer>
               <v-btn color="secondary" text @click="close">Cerrar</v-btn>
@@ -90,23 +116,23 @@
             </v-row>
           </v-container>
         </v-form>
-      </template></modal
-    >
-  </div>
-</template>
+      </template>
     </modal>
   </div>
 </template>
 
 <script>
 import Modal from "./Modal";
+import { mapGetters } from "vuex";
 export default {
-  props: ["show", "title", "req", "id"],
+  props: ["show", "title", "req", "id", "type"],
   components: { Modal },
   data: () => ({
     valid: false,
     firstname: "",
     request: {},
+    tipo: false,
+    role: "",
     lastname: "",
     nameRules: [
       (v) => !!v || "Name is required",
@@ -119,7 +145,14 @@ export default {
     ],
   }),
   mounted() {
-    this.request = Object.assign({}, this.req);
+    console.log("hey", this.type, this.modalReq);
+    this.role = JSON.parse(localStorage.getItem("user")).role;
+    console.log("role", this.role);
+    this.request = Object.assign({}, this.modalReq);
+  },
+  computed: {
+    ...mapGetters(["modalReq"]),
+    ...mapGetters(["user"]),
   },
   methods: {
     close: function () {
