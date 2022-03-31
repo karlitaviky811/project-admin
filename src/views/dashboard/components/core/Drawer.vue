@@ -80,25 +80,25 @@ export default {
       },
       {
         icon: "mdi-account",
-        title: "user",
+        title: "Solicitudes",
         to: "/home/requests/user",
       },
       {
-        title: "rtables",
+        title: "Proyectos",
         icon: "mdi-clipboard-outline",
         to: "/home/tables/regular-tables",
       },
       {
-        title: "typography",
+        title: "Indicadores",
         icon: "mdi-format-font",
         to: "/home/components/typography",
       },
       {
-        title: "icons",
+        title: "Usuarios",
         icon: "mdi-chart-bubble",
         to: "/home/components/icons",
       },
-      {
+     /* {
         title: "google",
         icon: "mdi-map-marker",
         to: "/home/maps/google-maps",
@@ -108,6 +108,7 @@ export default {
         icon: "mdi-bell",
         to: "/home/components/notifications",
       },
+    */
     ],
   }),
 

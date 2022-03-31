@@ -1,5 +1,9 @@
 <template>
-  <v-card class="fill-height">
+    <base-material-card
+      icon="mdi-clipboard-text"
+      title="Simple Table"
+      class="px-5 py-3"
+    >
     <div v-if="this.$route.name === 'Solicitudes'">
       <v-card-title class="d-flex justify-space-between">
         <v-container class="d-flex flex-column align-end">
@@ -116,7 +120,7 @@
       </v-data-table>
     </div>
     <router-view></router-view>
-  </v-card>
+  </base-material-card>
 </template>
 
 <script>

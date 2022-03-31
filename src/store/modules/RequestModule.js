@@ -112,8 +112,43 @@ const RequestModule = {
           console.log("FAILURE!!", res);
         });
 
-    }
+    },
+    UPDATE_REQUESTS_USER_FEEDBACK: async function ({ commit }, data) {
+      const headers = {
+        Authorization: localStorage.getItem('token')
+      }
+      console.log("data ---->", data)
+      const req = {
+        type: data.type,
+        project: data.project,
+        title: data.title,
+        description: data.description,
+        priority: data.priority,
+        status: data.status,
+        feedBack:{
+          comment: data.feedBack.comment
+        }
+      }
+      console.log("req--->>>>", req)
 
+
+      axios
+        .put("http://localhost:3999/api/req/request/624321cb89a0bb3650db2a58/feedback",  req, {
+          headers: {
+            "Authorization": localStorage.getItem('token'),
+          }
+        })
+        .then(function (res) {
+          //console.log("SUCCESS!!", res);
+          //that.$refs.form.reset()
+          console.log("res put request---->", res)
+          return true
+        })
+        .catch(function (res) {
+          console.log("FAILURE!!", res);
+        });
+
+    },
   },
   getters: {
     requestsU(state) {

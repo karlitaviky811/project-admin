@@ -1,81 +1,126 @@
 <template>
   <v-container
-    id="icons"
+    id="regular-tables"
     fluid
     tag="section"
   >
-    <base-v-component
-      heading="Icons"
-      link="components/icons"
-    />
+    <div class="py-3" />
 
-    <v-row>
-      <v-col cols="12">
-        <base-material-card color="green">
-          <template v-slot:heading>
-            <div class="text-h3 font-weight-light">
-              Material Design Icons
-            </div>
-
-            <div class="text-subtitle-1 font-weight-light">
-              See all available
-              <a
-                class="white--text"
-                href="https://materialdesignicons.com/"
-                target="_blank"
-              >
-                Icons
-              </a>
-            </div>
-          </template>
-
-          <v-row
-            align="center"
-            justify="center"
-          >
-            <v-col
-              v-for="icon in icons"
-              :key="icon"
-              class="ma-2"
-            >
-              <v-tooltip
-                content-class="top"
-                top
-              >
-                <template v-slot:activator="{ attrs, on }">
-                  <v-icon
-                    v-bind="attrs"
-                    v-on="on"
+    <base-material-card
+      color="success"
+      icon="mdi-clipboard-plus"
+      title="Usuarios"
+      class="px-5 py-3"
+    >
+     <v-container class="d-flex flex-column align-end">
+        <v-row>
+            <v-col>
+              <v-tooltip left>
+                <template v-slot:activator="{ on: tooltip }">
+                  <v-btn
+                    v-on="{ ...tooltip }"
+                    fab
+                    small
+                    v-show="true"
+                    color="success"
+                    @click.stop="create(true)"
                   >
-                    {{ icon }}
-                  </v-icon>
+                    <v-icon dark>mdi-plus</v-icon>
+                  </v-btn>
+                
                 </template>
-                <span>{{ icon }}</span>
+                <span>Nuevo</span>
               </v-tooltip>
             </v-col>
           </v-row>
-        </base-material-card>
-      </v-col>
+     </v-container>
+      <v-simple-table>
+        
+        <thead>
+          <tr>
+            <th class="primary--text">
+              ID
+            </th>
+            <th class="primary--text">
+              Usuario
+            </th>
+            <th class="primary--text">
+             Fecha de Creación
+            </th>
+            <th class="primary--text">
+              Rol
+            </th>
+            <th class="text-right primary--text">
+              Solicitudes
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Dakota Rice</td>
+            <td>Niger</td>
+            <td>Oud-Turnhout</td>
+            <td class="text-right">
+              $36,738
+            </td>
+          </tr>
 
-      <v-col
-        class="mx-auto"
-        cols="auto"
-      >
-        <v-btn
-          color="success"
-          href="https://materialdesignicons.com/"
-          large
-          target="_blank"
-        >
-          <v-icon left>
-            mdi-material-design
-          </v-icon>
-          <span>See all icons</span>
-        </v-btn>
-      </v-col>
-    </v-row>
+          <tr>
+            <td>2</td>
+            <td>Minverva Hooper</td>
+            <td>Curaçao</td>
+            <td>Sinaas-Waas</td>
+            <td class="text-right">
+              $23,789
+            </td>
+          </tr>
+
+          <tr>
+            <td>3</td>
+            <td>Sage Rodriguez</td>
+            <td>Netherlands</td>
+            <td>Baileux</td>
+            <td class="text-right">
+              $56,142
+            </td>
+          </tr>
+
+          <tr>
+            <td>4</td>
+            <td>Philip Chaney</td>
+            <td>Korea, South</td>
+            <td>Overland Park</td>
+            <td class="text-right">
+              $38,735
+            </td>
+          </tr>
+
+          <tr>
+            <td>5</td>
+            <td>Doris Greene</td>
+            <td>Malawi</td>
+            <td>Feldkirchen in Kärnten</td>
+            <td class="text-right">
+              $63,542
+            </td>
+          </tr>
+
+          <tr>
+            <td>6</td>
+            <td>Mason Porter</td>
+            <td>Chile</td>
+            <td>Gloucester</td>
+            <td class="text-right">
+              $78,615
+            </td>
+          </tr>
+        </tbody>
+      </v-simple-table>
+    </base-material-card>
   </v-container>
 </template>
+
 
 <script>
   export default {

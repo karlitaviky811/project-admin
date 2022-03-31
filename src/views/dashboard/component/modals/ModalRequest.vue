@@ -15,7 +15,7 @@
                   label="Título solicitud"
                   required
                   solo
-                  :disabled="true"
+                  :disabled="type=='Detail'"
                 ></v-text-field>
               </v-col>
 
@@ -26,7 +26,7 @@
                   label="Tipo"
                   required
                   solo
-                  :disabled="true"
+                  :disabled="type=='Detail'"
                 ></v-text-field>
               </v-col>
 
@@ -36,7 +36,7 @@
                   label="Proyecto"
                   required
                   solo
-                  :disabled="true"
+                  :disabled="type=='Detail'"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -48,7 +48,7 @@
                   label="Prioridad"
                   required
                   solo
-                  :disabled="true"
+                  :disabled="type=='Detail'"
                 ></v-text-field>
               </v-col>
 
@@ -67,7 +67,7 @@
                 <v-text-field
                   label="Urgencia"
                   required
-                  :disabled="role === 'ROLE_USER'"
+                  :disabled="type=='Detail'"
                   solo
                 ></v-text-field>
               </v-col>
@@ -98,7 +98,7 @@
             <v-row>
               <v-col cols="12" sm="6" v-if="type">
                 <v-textarea
-                  v-model="modalReq.description"
+                  v-model="modalReq.feedBack.comment"
                   color="teal"
                   label="Feedback"
                   :disabled="role === 'ROLE_USER'"
@@ -159,12 +159,20 @@ export default {
       this.$emit("close");
     },
     save() {
-      if (this.id === 0) {
+
+      if(this.role === 'ROLE_USER'){
+         if (this.id === 0) {
         this.$store.dispatch("SAVE_REQUESTS_USER", this.request);
       } else {
         this.$store.dispatch("UPDATE_REQUESTS_USER", this.request);
       }
 
+      }else{
+        console.log("debo actualizar el estatus!!!", this.modalReq)
+
+        this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq)
+      }
+     
       this.close();
       this.$emit("reqCreated");
     },

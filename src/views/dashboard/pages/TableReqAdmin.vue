@@ -1,5 +1,14 @@
 <template>
-  <v-card class="fill-height">
+ <v-container
+    id="regular-tables"
+    fluid
+    tag="section"
+  >
+   <base-material-card
+      icon="mdi-clipboard-text"
+      title="Listado"
+      class="px-5 py-3"
+    >
     <div v-if="this.$route.name === 'Solicitudes'">
       <v-card-title class="d-flex justify-space-between">
         <v-container class="d-flex flex-column align-end">
@@ -85,7 +94,8 @@
       </v-data-table>
     </div>
     <router-view></router-view>
-  </v-card>
+   </base-material-card>
+ </v-container>
 </template>
 
 <script>
@@ -182,7 +192,7 @@ export default {
        this.type = true;
       this.title = "Prueba Detalle Karlita";
       this.request = Object.assign({}, item.item);
-      console.log("item", item)
+      console.log("item----->", item)
       this.$store.commit("setRequestsUserModal", this.request);
       this.toggleModal(item._id);
     },

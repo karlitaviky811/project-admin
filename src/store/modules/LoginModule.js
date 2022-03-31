@@ -47,6 +47,8 @@ const LoginModule = {
           localStorage.setItem('token',response.data.token)
           commit('setLogued', true)
         })
+
+        
         router.push("/home")
        
         return true;
