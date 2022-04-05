@@ -11,36 +11,36 @@
       <v-container class="d-flex flex-column align-end">
         <v-row>
           <v-col>
-             <v-tooltip left>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    color="success"
-                    @click.stop="create(true)"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
-                  <modal-project
-                    :id="id"
-                    :project="project"
-                    :show="showModal(true)"
-                    :type="type"
-                    :title="title"
-                    @close="toggleModalClose(true)"
-                    @reqProject="loadProjects"
-                  />
-                </template>
-                <span>Nuevo</span>
-              </v-tooltip>
+            <v-tooltip left>
+              <template v-slot:activator="{ on: tooltip }">
+                <v-btn
+                  v-on="{ ...tooltip }"
+                  fab
+                  small
+                  v-show="true"
+                  color="success"
+                  @click.stop="create(true)"
+                >
+                  <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
+                <modal-qrs
+                  :id="id"
+                  :project="project"
+                  :show="showModal(true)"
+                  :type="type"
+                  :title="title"
+                  @close="toggleModalClose(true)"
+                  @reqProject="loadProjects"
+                />
+              </template>
+              <span>Nuevo</span>
+            </v-tooltip>
           </v-col>
         </v-row>
       </v-container>
       <v-data-table
         :headers="headers"
-        :items="projectsList"
+        :items="QrsList"
         :items-per-page="20"
         :search="search"
         :loading="data"
@@ -48,10 +48,11 @@
         <template v-slot:item="row">
           <tr>
             <td>{{ row.item.title }}</td>
+            <td>{{ row.item.type }}</td>
             <td>{{ convertDate(row.item.date) }}</td>
             <td>{{ row.item.description }}</td>
-            <td>{{ row.item.department }}</td>
-            <td>{{ row.item.tecnology }}</td>
+             <td>{{ row.item.status }}</td>
+            <td>{{ row.item.user.name }}</td>
 
             <td v-show="true">
               <v-tooltip bottom>
@@ -95,20 +96,17 @@
 <script>
 import { mapGetters } from "vuex";
 import moment from "moment";
-import ModalProject from "../component/modals/ModalProject.vue";
+import ModalQrs from '../component/modals/ModalQrs.vue'
 export default {
   name: "Tableqrs",
   components: {
-
-    ModalProject,
+    ModalQrs,
   },
   created() {
     this.data = true;
-    const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_PROJECTS_ALL");
+    this.$store.dispatch("GET_QRS_ALL");
     this.data = false;
-    this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
+
   },
 
   data() {
@@ -133,15 +131,16 @@ export default {
         { text: "Título", value: "title" },
         { text: "Descripción", value: "description" },
         { text: "Fecha", value: "date", sortable: false },
-        { text: "Computación", value: "department", sortable: false },
-        { text: "Tecnology", value: "tecnology", sortable: false },
+        { text: "Tipo", value: "type", sortable: false },
+         { text: "Estatus", value: "status", sortable: false },
+        { text: "Usuario", value: "user.name", sortable: false },
         { text: "", sortable: false, value: "actions" },
       ],
     };
   },
   computed: {
     ...mapGetters(["token"]),
-    ...mapGetters(["projectsList"]),
+    ...mapGetters(["QrsList"]),
   },
   methods: {
     clickColumn(slotData) {
@@ -170,7 +169,6 @@ export default {
       this.project = Object.assign({}, {});
       this.$store.commit("setRequestsProjectModal", {});
       this.type = "Create";
-     
     },
     edit(item) {
       this.id = item._id;
@@ -193,14 +191,13 @@ export default {
       this.toggleModal(item._id);
     },
     toggleModal: async function (id) {
-     
       this.activeModal = !this.activeModal;
     },
     closeModal() {
       this.isModalVisible = false;
     },
     showModal: function (id) {
-        console.log("id", this.activeModal == id)
+      console.log("id", this.activeModal == id);
       return this.activeModal == id;
     },
     openModal: function (req) {
@@ -225,12 +222,12 @@ export default {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("role", this.role);
     },
-      loadRequests() {
+    loadRequests() {
       //const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_REQUESTS_ALL");
+      this.$store.dispatch("GET_REQUESTS_ALL");
 
       this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
+      console.log("role", this.role);
       this.data = false;
     },
   },
