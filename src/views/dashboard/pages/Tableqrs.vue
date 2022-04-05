@@ -1,15 +1,17 @@
 <template>
-  <base-material-card
-    icon="mdi-clipboard-text"
-    title="Simple Table"
-    class="px-5 py-3"
-  >
-    <div v-if="this.$route.name === 'Solicitudes'">
-      <v-card-title class="d-flex justify-space-between">
-        <v-container class="d-flex flex-column align-end">
-          <v-row>
-            <v-col>
-              <v-tooltip left>
+  <v-container>
+    <div class="py-3" />
+
+    <base-material-card
+      color="success"
+      icon="mdi-clipboard-plus"
+      title="Table Qrs"
+      class="px-5 py-3"
+    >
+      <v-container class="d-flex flex-column align-end">
+        <v-row>
+          <v-col>
+             <v-tooltip left>
                 <template v-slot:activator="{ on: tooltip }">
                   <v-btn
                     v-on="{ ...tooltip }"
@@ -21,36 +23,24 @@
                   >
                     <v-icon dark>mdi-plus</v-icon>
                   </v-btn>
-                  <modal-request
+                  <modal-project
                     :id="id"
-                    :req="request"
+                    :project="project"
                     :show="showModal(true)"
                     :type="type"
                     :title="title"
                     @close="toggleModalClose(true)"
-                    @reqCreated="loadRequests"
+                    @reqProject="loadProjects"
                   />
                 </template>
                 <span>Nuevo</span>
               </v-tooltip>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-toolbar flat class="d-flex flex-column align-end">
-          <v-spacer />
-          <v-text-field
-            v-model="search"
-            v-bind:label="'Buscar solicitud'"
-            append-icon="mdi-magnify"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-toolbar>
-      </v-card-title>
-
+          </v-col>
+        </v-row>
+      </v-container>
       <v-data-table
         :headers="headers"
-        :items="requestsU"
+        :items="projectsList"
         :items-per-page="20"
         :search="search"
         :loading="data"
@@ -59,10 +49,9 @@
           <tr>
             <td>{{ row.item.title }}</td>
             <td>{{ convertDate(row.item.date) }}</td>
-            <td>{{ row.item.project }}</td>
-            <td>{{ row.item.type }}</td>
-            <td>{{ row.item.status }}</td>
-            <td width="200">{{ row.item.description }}</td>
+            <td>{{ row.item.description }}</td>
+            <td>{{ row.item.department }}</td>
+            <td>{{ row.item.tecnology }}</td>
 
             <td v-show="true">
               <v-tooltip bottom>
@@ -97,90 +86,125 @@
                 <span>Eliminar</span>
               </v-tooltip>
             </td>
-            <td v-show="true">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    class="mx-2"
-                    color="white"
-                    @click.stop="detail(row)"
-                  >
-                    <v-icon dark>mdi-chevron-right </v-icon>
-                  </v-btn>
-                </template>
-                <span>Detalle</span>
-              </v-tooltip>
-            </td>
           </tr>
         </template>
       </v-data-table>
-    </div>
-    <router-view></router-view>
-  </base-material-card>
+    </base-material-card>
+  </v-container>
 </template>
-
 <script>
-import ModalRequest from "../component/modals/ModalRequest.vue";
 import { mapGetters } from "vuex";
 import moment from "moment";
+import ModalProject from "../component/modals/ModalProject.vue";
 export default {
-  name: "TableReq",
+  name: "Tableqrs",
   components: {
-    ModalRequest,
+
+    ModalProject,
   },
   created() {
     this.data = true;
     const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_REQUESTS_USER", user);
+    this.$store.dispatch("GET_PROJECTS_ALL");
     this.data = false;
     this.role = JSON.parse(localStorage.getItem("user")).role;
     console.log("role", this.role);
   },
-  beforeRouteEnter(to, from, next) {
-    this.$store.dispatch("GET_REQUESTS_USER", user);
-  },
+
   data() {
     return {
       search: "",
       isModalVisible: false,
-      activeModal: 0,
+      activeModal: false,
       expanded: [],
       title: "Test",
       data: false,
       role: "",
       id: "",
+      request: {},
       singleExpand: false,
       dialog: false,
       type: false,
       props: {
         expanded: false,
       },
-      request: {},
+      project: {},
       headers: [
         { text: "Título", value: "title" },
-        { text: "Proyecto", value: "project" },
+        { text: "Descripción", value: "description" },
         { text: "Fecha", value: "date", sortable: false },
-        { text: "Tipo", value: "type", sortable: false },
-        { text: "Estatus", value: "status", sortable: false },
-        { text: "Descripción", value: "description", sortable: false },
+        { text: "Computación", value: "department", sortable: false },
+        { text: "Tecnology", value: "tecnology", sortable: false },
         { text: "", sortable: false, value: "actions" },
-        { text: "", sortable: false, value: "more" },
       ],
     };
   },
   computed: {
     ...mapGetters(["token"]),
-    ...mapGetters(["requestsU"]),
+    ...mapGetters(["projectsList"]),
   },
   methods: {
+    clickColumn(slotData) {
+      console.log("say hi");
+    },
+    activeDetail() {
+      this.$router.push({
+        name: "Detail",
+        params: {},
+      });
+    },
+    convertDate(value) {
+      let date = "";
+
+      if (value !== null) {
+        date = moment(value).format("YYYY-MM-DD");
+      } else {
+        date = "-";
+      }
+      return date;
+    },
+    create(id) {
+      this.title = "Crear Proyecto";
+      this.show = true;
+      this.toggleModal(id);
+      this.project = Object.assign({}, {});
+      this.$store.commit("setRequestsProjectModal", {});
+      this.type = "Create";
+     
+    },
+    edit(item) {
+      this.id = item._id;
+      this.title = "Editar ";
+      this.show = true;
+      console.log("this.request", item.item);
+      this.toggleModal(item._id);
+      this.type = "Edit";
+      this.request = Object.assign({}, item.item);
+      console.log("this", this.request);
+      this.$store.commit("setRequestsProjectModal", this.request);
+      this.dialog = true;
+    },
+    detail(item) {
+      this.type = "Detail";
+      this.title = "Detalle";
+      this.request = Object.assign({}, item.item);
+      console.log("item", item);
+      this.$store.commit("setRequestsUserModal", this.request);
+      this.toggleModal(item._id);
+    },
+    toggleModal: async function (id) {
+     
+      this.activeModal = !this.activeModal;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
     showModal: function (id) {
+        console.log("id", this.activeModal == id)
       return this.activeModal == id;
     },
     openModal: function (req) {
+      console.log("req", req);
       this.request = Object.assign({}, req);
       this.dialog = true;
     },
@@ -193,77 +217,21 @@ export default {
 
       this.activeModal = id;
     },
-    create(id) {
-      this.title = "Crear Solicitud";
-      this.toggleModal(id);
-      this.request = Object.assign({}, {});
-      this.$store.commit("setRequestsUserModal", {});
-      this.type = 'Create';
-    },
-    edit(item) {
-      this.id = item._id;
-      this.title = "Editar ";
-      this.show = true;
-      console.log("this.request", item.item);
-      this.toggleModal(item._id);
-      this.type = 'Edit';
-      this.request = Object.assign({}, item.item);
-      console.log("this", this.request);
-      this.$store.commit("setRequestsUserModal", this.request);
-      this.dialog = true;
-    },
-    detail(item) {
-      this.type = 'Detail';
-      this.title = "Detalle";
-      this.request = Object.assign({}, item.item);
-      console.log("item", item);
-      this.$store.commit("setRequestsUserModal", this.request);
-      this.toggleModal(item._id);
-    },
-    toggleModal: async function (id) {
-      this.activeModal = !this.activeModal;
-    },
-    closeModal() {
-      this.isModalVisible = false;
-    },
-    convertDate(value) {
-      let date = "";
-
-      if (value !== null) {
-        date = moment(value).format("YYYY-MM-DD");
-      } else {
-        date = "-";
-      }
-      return date;
-    },
-    open() {
-      this.$refs.createDialog.firstname = "";
-      this.$refs.createDialog.open();
-    },
-    openEdit(item) {
-      this.$refs.createDialog.firstname = item.calories;
-      this.$refs.createDialog.open();
-    },
-    test() {
-      this.$store.dispatch("GET_REQUESTS_USER", user);
-    },
-    loadRequests() {
+    loadProjects() {
       this.data = true;
       const user = JSON.parse(localStorage.getItem("user"))._id;
-      this.$store.dispatch("GET_REQUESTS_USER", user);
+      this.$store.dispatch("GET_PROJECTS_ALL");
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("role", this.role);
+    },
+      loadRequests() {
+      //const user = JSON.parse(localStorage.getItem("user"))._id;
+    this.$store.dispatch("GET_REQUESTS_ALL");
+
+      this.role = JSON.parse(localStorage.getItem("user")).role;
+    console.log("role", this.role);
       this.data = false;
-    },
-    clickColumn(slotData) {
-      console.log("say hi");
-    },
-    activeDetail() {
-      this.$router.push({
-        name: "Detail",
-        params: {},
-      });
     },
   },
 };

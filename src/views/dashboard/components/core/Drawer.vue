@@ -86,17 +86,17 @@ export default {
       {
         title: "Proyectos",
         icon: "mdi-clipboard-outline",
-        to: "/home/tables/regular-tables",
+        to: "/home/projects",
       },
       {
-        title: "Indicadores",
+        title: "Buzón opiniones",
         icon: "mdi-format-font",
-        to: "/home/components/typography",
+        to: "/home/components/qrs",
       },
       {
         title: "Usuarios",
         icon: "mdi-chart-bubble",
-        to: "/home/components/icons",
+        to: "/home/components/userslist",
       },
      /* {
         title: "google",

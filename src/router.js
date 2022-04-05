@@ -40,21 +40,21 @@ export default new Router({
         },
         {
           name: 'Icons',
-          path: 'components/icons',
-          component: () => import('@/views/dashboard/component/Icons'),
+          path: 'components/qrs',
+          component: () => import('@/views/dashboard/pages/Tableqrs'),
         },
         
         // Tables
         {
           name: 'Regular Tables',
-          path: 'tables/regular-tables',
-          component: () => import('@/views/dashboard/tables/RegularTables'),
+          path: '/home/projects',
+          component: () => import('@/views/dashboard/pages/TableProjectReq'),
         },
         // Maps
         {
-          name: 'Google Maps',
-          path: 'maps/google-maps',
-          component: () => import('@/views/dashboard/maps/GoogleMaps'),
+          name: 'Usuarios',
+          path: '/home/components/userslist',
+          component: () => import('@/views/dashboard/pages/TableUsers'),
         },
         // Upgrade
         {

@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex';
 import LoginModule from './modules/LoginModule'
 import RequestModule from './modules/RequestModule'
-
+import ProjectModule from './modules/ProjectModule'
+import QrsModule from './modules/QrsModule'
 Vue.use(Vuex)
 
 
@@ -27,6 +28,8 @@ export default new Vuex.Store({
   },
   modules:{
     LoginModule,
-    RequestModule
+    RequestModule,
+    ProjectModule,
+    QrsModule
   }
 })

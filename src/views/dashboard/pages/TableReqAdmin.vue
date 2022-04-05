@@ -175,7 +175,7 @@ export default {
       this.toggleModal(id);
       this.request = Object.assign({}, {});
        this.$store.commit("setRequestsUserModal", {});
-      this.type = false;
+      this.type = 'Create';
     },
     edit(item) {
       this.id = item._id;
@@ -183,13 +183,13 @@ export default {
       this.show = true;
       console.log("this.request", item.item);
       this.toggleModal(item._id);
-      this.type = false;
+      this.type = 'Edit';
       this.request = Object.assign({}, item.item);
       this.$store.commit("setRequestsUserModal", this.request);
       this.dialog = true;
     },
     detail(item) {
-       this.type = true;
+       this.type = 'Detail';
       this.title = "Prueba Detalle Karlita";
       this.request = Object.assign({}, item.item);
       console.log("item----->", item)
@@ -224,7 +224,11 @@ export default {
       this.$store.dispatch("GET_REQUESTS_USER", user);
     },
     loadRequests() {
-      //
+      //const user = JSON.parse(localStorage.getItem("user"))._id;
+    this.$store.dispatch("GET_REQUESTS_ALL");
+
+      this.role = JSON.parse(localStorage.getItem("user")).role;
+    console.log("role", this.role);
       this.data = false;
     },
     clickColumn(slotData) {

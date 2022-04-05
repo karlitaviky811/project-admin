@@ -3,7 +3,9 @@ import router from "@/router";
 const RequestModule = {
   state: {
     requestsU: [],
-    modalReq: {},
+    modalReq: {
+      
+    },
     requestList: []
   },
   mutations: {
@@ -13,7 +15,21 @@ const RequestModule = {
     },
     setRequestsUserModal(state, data) {
 
-      state.modalReq = data;
+      console.log("data", data)
+      const req = {
+        _id: data._id,
+        type: data.type,
+        project: data.project,
+        title: data.title,
+        description: data.description,
+        priority: data.priority,
+        urgency: data.urgency,
+        status: data.status,
+        feedBack: {
+          comment: data.feedBack.comment
+        }
+      }
+      state.modalReq = req;
     },
     setRequestsList(state, data) {
 
@@ -50,22 +66,23 @@ const RequestModule = {
 
     },
     SAVE_REQUESTS_USER: async function ({ commit }, data) {
-      const headers = {
-        Authorization: localStorage.getItem('token')
-      }
-
+     
+      console.log("data", data)
       const req = {
         type: data.type,
         project: data.project,
         title: data.title,
         description: data.description,
-        priority: data.priority
+        priority: data.priority,
+        urgency: data.urgency,
+        feedBack: ''
+  
       }
       console.log("req", req)
 
 
       axios
-        .post("http://localhost:3999/api/req/request", req, {
+        .post("http://localhost:3999/api/req/request/", req, {
           headers: {
             "Authorization": localStorage.getItem('token'),
           }
@@ -91,20 +108,23 @@ const RequestModule = {
         project: data.project,
         title: data.title,
         description: data.description,
-        priority: data.priority
+        priority: data.priority,
+        status: data.status,
+        urgency: data.urgency,
+        feedBack: data.feedBack.comment
+    
       }
       console.log("req", req)
 
-
+      
       axios
-        .put("http://localhost:3999/api/req/request/" + data._id, req, {
+        .put("http://localhost:3999/api/req/request/"+data._id, req, {
           headers: {
             "Authorization": localStorage.getItem('token'),
           }
         })
         .then(function (res) {
-          //console.log("SUCCESS!!", res);
-          //that.$refs.form.reset()
+   
           console.log("res put request---->", res)
           return true
         })
@@ -125,22 +145,21 @@ const RequestModule = {
         description: data.description,
         priority: data.priority,
         status: data.status,
-        feedBack:{
-          comment: data.feedBack.comment
-        }
+        urgency: data.urgency,
+        feedBack: data.feedBack.comment
+        
       }
       console.log("req--->>>>", req)
 
 
       axios
-        .put("http://localhost:3999/api/req/request/624321cb89a0bb3650db2a58/feedback",  req, {
+        .put("http://localhost:3999/api/req/request/" +data._id +"/feedback",  req, {
           headers: {
             "Authorization": localStorage.getItem('token'),
           }
         })
         .then(function (res) {
-          //console.log("SUCCESS!!", res);
-          //that.$refs.form.reset()
+
           console.log("res put request---->", res)
           return true
         })

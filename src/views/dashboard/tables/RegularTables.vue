@@ -128,3 +128,162 @@
     </base-material-card>
   </v-container>
 </template>
+<script>
+import ModalRequest from "../component/modals/ModalRequest.vue";
+import { mapGetters } from "vuex";
+import moment from "moment";
+export default {
+  name: "RegularTables",
+  components: {
+    ModalRequest,
+  },
+  created() {
+    this.data = true;
+    const user = JSON.parse(localStorage.getItem("user"))._id;
+    this.$store.dispatch("GET_PROJECTS", user);
+    this.data = false;
+    this.role = JSON.parse(localStorage.getItem("user")).role;
+    console.log("role", this.role);
+  },
+  beforeRouteEnter(to, from, next) {
+    this.$store.dispatch("GET_REQUESTS_USER", user);
+  },
+  data() {
+    return {
+      search: "",
+      isModalVisible: false,
+      activeModal: 0,
+      expanded: [],
+      title: "Test",
+      data: false,
+      role: "",
+      id: "",
+      singleExpand: false,
+      dialog: false,
+      type: false,
+      props: {
+        expanded: false,
+      },
+      request: {},
+      headers: [
+        { text: "Título", value: "title" },
+        { text: "Proyecto", value: "project" },
+        { text: "Fecha", value: "date", sortable: false },
+        { text: "Tipo", value: "type", sortable: false },
+        { text: "Estatus", value: "status", sortable: false },
+        { text: "Descripción", value: "description", sortable: false },
+        { text: "", sortable: false, value: "actions" },
+        { text: "", sortable: false, value: "more" },
+      ],
+    };
+  },
+  computed: {
+    ...mapGetters(["token"]),
+    ...mapGetters(["requestsU"]),
+  },
+  methods: {
+    showModal: function (id) {
+      return this.activeModal == id;
+    },
+    openModal: function (req) {
+      this.request = Object.assign({}, req);
+      this.dialog = true;
+    },
+    toggleModalClose: async function (id) {
+      if (this.activeModal !== 0) {
+        console.log("aqui caaaayo");
+        this.activeModal = 0;
+        return false;
+      }
+
+      this.activeModal = id;
+    },
+    create(id) {
+      this.title = "Crear Solicitud";
+      this.toggleModal(id);
+      this.request = Object.assign({}, {});
+      this.$store.commit("setRequestsUserModal", {});
+      this.type = 'Create';
+    },
+    edit(item) {
+      this.id = item._id;
+      this.title = "Editar ";
+      this.show = true;
+      console.log("this.request", item.item);
+      this.toggleModal(item._id);
+      this.type = 'Edit';
+      this.request = Object.assign({}, item.item);
+      console.log("this", this.request);
+      this.$store.commit("setRequestsUserModal", this.request);
+      this.dialog = true;
+    },
+    detail(item) {
+      this.type = 'Detail';
+      this.title = "Detalle";
+      this.request = Object.assign({}, item.item);
+      console.log("item", item);
+      this.$store.commit("setRequestsUserModal", this.request);
+      this.toggleModal(item._id);
+    },
+    toggleModal: async function (id) {
+      this.activeModal = !this.activeModal;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
+    convertDate(value) {
+      let date = "";
+
+      if (value !== null) {
+        date = moment(value).format("YYYY-MM-DD");
+      } else {
+        date = "-";
+      }
+      return date;
+    },
+    open() {
+      this.$refs.createDialog.firstname = "";
+      this.$refs.createDialog.open();
+    },
+    openEdit(item) {
+      this.$refs.createDialog.firstname = item.calories;
+      this.$refs.createDialog.open();
+    },
+    test() {
+      this.$store.dispatch("GET_REQUESTS_USER", user);
+    },
+    loadRequests() {
+      this.data = true;
+      const user = JSON.parse(localStorage.getItem("user"))._id;
+      this.$store.dispatch("GET_REQUESTS_USER", user);
+      this.data = false;
+      this.role = JSON.parse(localStorage.getItem("user")).role;
+      console.log("role", this.role);
+      this.data = false;
+    },
+    clickColumn(slotData) {
+      console.log("say hi");
+    },
+    activeDetail() {
+      this.$router.push({
+        name: "Detail",
+        params: {},
+      });
+    },
+  },
+};
+</script>
+
+<style scoped>
+.buttonStyle {
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  border: none !important;
+}
+
+.buttonS {
+  background-color: white !important;
+  background-repeat: no-repeat !important;
+  border: none !important;
+}
+</style>
