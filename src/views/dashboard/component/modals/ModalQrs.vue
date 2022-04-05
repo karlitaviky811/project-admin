@@ -7,7 +7,9 @@
       <template>
         <v-form v-model="valid">
           <h3 class="font-weight-medium outline text-left">{{ title }}</h3>
-
+         <v-chip  dark class="font-weight-medium" style="margin-top:25px;" v-show="type !== 'Create'">{{
+            modalQrs.status
+          }}</v-chip>
           <v-container>
             <v-row>
               <v-col cols="12" md="4">
@@ -23,15 +25,15 @@
                 <v-text-field
                   v-model="modalQrs.type"
                   :counter="10"
-                  label="Departamento"
+                  label="Tipo"
                   required
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
                <v-col cols="12" md="4">
                 <v-text-field
-                  v-model="modalQrs.status"
-                  label="Tecnologia"
+                  v-model="modalQrs.project"
+                  label="Proyecto"
                   required
                   :disabled="type == 'Detail'"
                 ></v-text-field>
@@ -43,6 +45,15 @@
                   name="input-7-1"
                   label="Descripción"
                   v-model="modalQrs.description"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+             <v-row>
+              <v-col cols="12" md="6">
+                <v-textarea
+                  name="input-7-1"
+                  label="Descripción"
+                  v-model="modalQrs.feedBack.comment"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -96,14 +107,15 @@ export default {
     },
     save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("this", this.role, this.type);
+      console.log("this", this.role, this.type, this.modalQrs);
       if (this.role === "ROLE_ADMIN") {
         if (this.type == "Create") {
-          this.$store.dispatch("SAVE_PROJECT_REQ", this.modalQrs);
+          this.$store.dispatch("SAVE_QRS", this.modalQrs);
           this.close();
           this.$emit("reqProject");
         } else if (this.type == "Edit") {
-          this.$store.dispatch("UPDATE_PROJECT_REQ", this.modalQrs);
+            console.log("editaaaaarrr", this.modalQrs)
+          this.$store.dispatch("UPDATE_QRS_FEEDBACK", this.modalQrs);
           this.close();
           this.$emit("reqProject");
         }

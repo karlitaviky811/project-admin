@@ -4,7 +4,9 @@ const QrsModule = {
     state: {
         QrsList: [],
         modalQrs: {
-
+            feedBack: {
+                comment: ''
+            }
         },
         requestList: []
     },
@@ -14,7 +16,7 @@ const QrsModule = {
             console.log(state.QrsList)
         },
         setQrsModal(state, data) {
-
+            console.log("data", data)
             const qrs = {
                 _id: data._id,
                 date: data.date,
@@ -22,8 +24,12 @@ const QrsModule = {
                 title: data.title,
                 project: data.project,
                 description: data.description,
-                status: data.status
+                status: data.status,
+                feedBack: {
+                    comment: data.feedBack.comment
+                }
             }
+            console.log("pqrs--->", qrs)
             state.modalQrs = qrs;
         },
         setRequestsList(state, data) {
@@ -39,7 +45,7 @@ const QrsModule = {
                 }
             }
             ).then((response) => {
-                console.log("response projects", response)
+                console.log("response list", response)
                 commit('setQrsList', response.data.qrs)
                 return true;
             }, (err) => {
@@ -50,18 +56,18 @@ const QrsModule = {
         },
         SAVE_QRS: async function ({ commit }, data) {
             const qrs = {
-                date: data.date,
                 type: data.type,
                 title: data.title,
                 project: data.project,
-                description: data.description
+                description: data.description,
+                feedBack: ''
             }
-            axios.post("http://localhost:3999/api/project/save", qrs, {
+            axios.post("http://localhost:3999/api/qrs/add", qrs, {
                 headers: {
                     "Authorization": localStorage.getItem('token'),
                 }
             }).then((response) => {
-                console.log("response project create", response)
+                console.log("response pqrs create", response)
                 return true;
             }, (err) => {
                 console.log(err)
@@ -69,19 +75,46 @@ const QrsModule = {
             })
 
         },
-        UPDATE_PROJECT_REQ: async function ({ commit }, data) {
-            const proj = {
+        UPDATE_QRS: async function ({ commit }, data) {
+            const qrs = {
+                date: data.date,
+                type: data.type,
                 title: data.title,
+                project: data.project,
                 description: data.description,
-                department: data.department,
-                tecnology: data.tecnology
+                status: data.status,
+                feedBack: data.feedBack.comment
             }
-            axios.put("http://localhost:3999/api/project/update/" + data._id, proj, {
+            axios.put("http://localhost:3999/api/qrs/update/" + data._id, qrs, {
                 headers: {
                     "Authorization": localStorage.getItem('token'),
                 }
             }).then((response) => {
-                console.log("response project update", response)
+                console.log("response qrs update", response)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+        UPDATE_QRS_FEEDBACK: async function ({ commit }, data) {
+            console.log("data", data)
+            const qrs = {
+                date: data.date,
+                type: data.type,
+                title: data.title,
+                project: data.project,
+                description: data.description,
+                status: data.status,
+                feedBack: data.feedBack.comment
+            }
+            axios.put("http://localhost:3999/api/qrs/update/status/" + data._id, qrs, {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }).then((response) => {
+                console.log("response qrs update", response)
                 return true;
             }, (err) => {
                 console.log(err)
@@ -94,7 +127,8 @@ const QrsModule = {
                 title: data.title,
                 description: data.description,
                 department: data.department,
-                tecnology: data.tecnology
+                tecnology: data.tecnology,
+
             }
             axios.put("http://localhost:3999/api/project/delete/" + data._id, {
                 headers: {

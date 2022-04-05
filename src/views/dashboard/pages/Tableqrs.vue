@@ -141,6 +141,8 @@ export default {
   computed: {
     ...mapGetters(["token"]),
     ...mapGetters(["QrsList"]),
+      ...mapGetters(["modalQrs"]),
+    
   },
   methods: {
     clickColumn(slotData) {
@@ -166,8 +168,24 @@ export default {
       this.title = "Crear Proyecto";
       this.show = true;
       this.toggleModal(id);
-      this.project = Object.assign({}, {});
-      this.$store.commit("setRequestsProjectModal", {});
+        const qrs = {
+                _id: '',
+                date: '',
+                type: '',
+                title: '',
+                project: '',
+                description: '',
+                status: '',
+                feedBack: {
+                  comment: 'Default'  
+                }
+            }
+      this.request = Object.assign({}, qrs);
+      console.log("epaaa", this.modalQrs)
+
+      
+            
+      this.$store.commit("setQrsModal",qrs);
       this.type = "Create";
     },
     edit(item) {
@@ -178,8 +196,8 @@ export default {
       this.toggleModal(item._id);
       this.type = "Edit";
       this.request = Object.assign({}, item.item);
-      console.log("this", this.request);
-      this.$store.commit("setRequestsProjectModal", this.request);
+      console.log("this ---->", this.request);
+      this.$store.commit("setQrsModal",this.request);
       this.dialog = true;
     },
     detail(item) {
@@ -217,7 +235,7 @@ export default {
     loadProjects() {
       this.data = true;
       const user = JSON.parse(localStorage.getItem("user"))._id;
-      this.$store.dispatch("GET_PROJECTS_ALL");
+      this.$store.dispatch("GET_QRS_ALL");
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("role", this.role);
