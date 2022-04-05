@@ -115,7 +115,7 @@ export default {
           this.$emit("reqProject");
         } else if (this.type == "Edit") {
             console.log("editaaaaarrr", this.modalQrs)
-          this.$store.dispatch("UPDATE_QRS_FEEDBACK", this.modalQrs);
+          this.$store.dispatch("UPDATE_QRS", this.modalQrs);
           this.close();
           this.$emit("reqProject");
         }
