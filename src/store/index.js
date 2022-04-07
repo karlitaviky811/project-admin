@@ -4,6 +4,8 @@ import LoginModule from './modules/LoginModule'
 import RequestModule from './modules/RequestModule'
 import ProjectModule from './modules/ProjectModule'
 import QrsModule from './modules/QrsModule'
+import UserModule from './modules/UserModule'
+import ChartsModule from './modules/ChartsModule'
 Vue.use(Vuex)
 
 
@@ -30,6 +32,8 @@ export default new Vuex.Store({
     LoginModule,
     RequestModule,
     ProjectModule,
-    QrsModule
+    QrsModule,
+    UserModule,
+    ChartsModule
   }
 })

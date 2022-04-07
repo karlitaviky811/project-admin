@@ -23,7 +23,7 @@
                   >
                     <v-icon dark>mdi-plus</v-icon>
                   </v-btn>
-                  <modal-project
+                  <modal-user
                     :id="id"
                     :project="project"
                     :show="showModal(true)"
@@ -40,18 +40,18 @@
       </v-container>
       <v-data-table
         :headers="headers"
-        :items="projectsList"
+        :items="usersList"
         :items-per-page="20"
         :search="search"
         :loading="data"
       >
         <template v-slot:item="row">
           <tr>
-            <td>{{ row.item.title }}</td>
-            <td>{{ convertDate(row.item.date) }}</td>
-            <td>{{ row.item.description }}</td>
-            <td>{{ row.item.department }}</td>
-            <td>{{ row.item.tecnology }}</td>
+            <td>{{ row.item.name }}</td>
+            <!--td>{{ convertDate(row.item.date) }}</td-->
+            <td>{{ row.item.surname }}</td>
+            <td>{{ row.item.role }}</td>
+            <td>{{ row.item.email }}</td>
 
             <td v-show="true">
               <v-tooltip bottom>
@@ -95,17 +95,17 @@
 <script>
 import { mapGetters } from "vuex";
 import moment from "moment";
-import ModalProject from "../component/modals/ModalProject.vue";
+import ModalUser from "../component/modals/ModalUser.vue";
 export default {
   name: "TableUsers",
   components: {
 
-    ModalProject,
+    ModalUser,
   },
   created() {
     this.data = true;
     const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_PROJECTS_ALL");
+    this.$store.dispatch("GET_USERS_ALL");
     this.data = false;
     this.role = JSON.parse(localStorage.getItem("user")).role;
     console.log("role", this.role);
@@ -130,18 +130,17 @@ export default {
       },
       project: {},
       headers: [
-        { text: "Título", value: "title" },
-        { text: "Descripción", value: "description" },
-        { text: "Fecha", value: "date", sortable: false },
-        { text: "Computación", value: "department", sortable: false },
-        { text: "Tecnology", value: "tecnology", sortable: false },
+        { text: "Nombre", value: "name" },
+        { text: "Surname", value: "surname" },
+        { text: "Rol", value: "role", sortable: false },
+        { text: "email", value: "email", sortable: false },
         { text: "", sortable: false, value: "actions" },
       ],
     };
   },
   computed: {
     ...mapGetters(["token"]),
-    ...mapGetters(["projectsList"]),
+    ...mapGetters(["usersList"]),
   },
   methods: {
     clickColumn(slotData) {
@@ -168,7 +167,14 @@ export default {
       this.show = true;
       this.toggleModal(id);
       this.project = Object.assign({}, {});
-      this.$store.commit("setRequestsProjectModal", {});
+      const user ={
+             _id: '' ,
+            name: '',
+            surname: '',
+            role: "ROLE_USER",
+            email: "",
+      }
+      this.$store.commit("setUserModal", user );
       this.type = "Create";
      
     },
@@ -181,7 +187,7 @@ export default {
       this.type = "Edit";
       this.request = Object.assign({}, item.item);
       console.log("this", this.request);
-      this.$store.commit("setRequestsProjectModal", this.request);
+      this.$store.commit("setUserModal", this.request);
       this.dialog = true;
     },
     detail(item) {
@@ -218,20 +224,20 @@ export default {
       this.activeModal = id;
     },
     loadProjects() {
-      this.data = true;
-      const user = JSON.parse(localStorage.getItem("user"))._id;
-      this.$store.dispatch("GET_PROJECTS_ALL");
-      this.data = false;
-      this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("role", this.role);
+       this.data = true;
+    const user = JSON.parse(localStorage.getItem("user"))._id;
+    this.$store.dispatch("GET_USERS_ALL");
+    this.data = false;
+    this.role = JSON.parse(localStorage.getItem("user")).role;
+    console.log("role", this.role);
     },
       loadRequests() {
-      //const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_REQUESTS_ALL");
-
-      this.role = JSON.parse(localStorage.getItem("user")).role;
+      this.data = true;
+    const user = JSON.parse(localStorage.getItem("user"))._id;
+    this.$store.dispatch("GET_USERS_ALL");
+    this.data = false;
+    this.role = JSON.parse(localStorage.getItem("user")).role;
     console.log("role", this.role);
-      this.data = false;
     },
   },
 };

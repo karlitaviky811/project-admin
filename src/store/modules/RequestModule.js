@@ -40,7 +40,7 @@ const RequestModule = {
     GET_REQUESTS_ALL: async function ({ commit }) {
       //let  id= data.replace('""', '')
     
-      axios.get("http://localhost:3999/api/REQ/requests/:1", {
+      axios.get("http://localhost:3999/api/req/requests/:1", {
         "Authorization": localStorage.getItem('token'),
       }).then((response) => {
         console.log("response admin", response)
