@@ -48,11 +48,11 @@
                 ></v-textarea>
               </v-col>
             </v-row>
-             <v-row>
+             <v-row v-show="type == 'Edit'">
               <v-col cols="12" md="6">
                 <v-textarea
                   name="input-7-1"
-                  label="Descripción"
+                  label="Feedback Admin"
                   v-model="modalQrs.feedBack.comment"
                 ></v-textarea>
               </v-col>
@@ -96,6 +96,7 @@ export default {
     this.role = JSON.parse(localStorage.getItem("user")).role;
     console.log("role", this.role);
     this.request = Object.assign({}, this.modalProject);
+    console.log("title", this.title)
   },
   computed: {
     ...mapGetters(["modalQrs"]),
@@ -108,7 +109,7 @@ export default {
     save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("this", this.role, this.type, this.modalQrs);
-      if (this.role === "ROLE_ADMIN") {
+      if (this.role === "ROLE_USER") {
         if (this.type == "Create") {
           this.$store.dispatch("SAVE_QRS", this.modalQrs);
           this.close();

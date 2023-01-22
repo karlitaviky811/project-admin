@@ -14,8 +14,14 @@ const RequestModule = {
       state.requestsU = data;
     },
     setRequestsUserModal(state, data) {
-
-      console.log("data", data)
+      console.log("en el set")
+      console.log("dat---->", data)
+      console.log("dat---->", data.image)
+      let comm = ''
+      if(data !== {}){
+        comm = data.feedBack?.comment
+      }
+      console.log("state", data)
       const req = {
         _id: data._id,
         type: data.type,
@@ -25,11 +31,13 @@ const RequestModule = {
         priority: data.priority,
         urgency: data.urgency,
         status: data.status,
+        image: data.image !== undefined ? data.image : 'https://www.hazteveg.com/img/empty-photo.jpg',
         feedBack: {
-          comment: data.feedBack.comment
+          comment: comm
         }
       }
       state.modalReq = req;
+      console.log("here", state.modalReq)
     },
     setRequestsList(state, data) {
 
@@ -38,8 +46,7 @@ const RequestModule = {
   },
   actions: {
     GET_REQUESTS_ALL: async function ({ commit }) {
-      //let  id= data.replace('""', '')
-    
+   
       axios.get("http://localhost:3999/api/req/requests/:1", {
         "Authorization": localStorage.getItem('token'),
       }).then((response) => {
@@ -56,7 +63,6 @@ const RequestModule = {
       //let  id= data.replace('""', '')
       console.log("data", data)
       axios.get("http://localhost:3999/api/req/user-requests/" + data).then((response) => {
-
         commit('setRequestsUser', response.data.requests)
         return true;
       }, (err) => {
@@ -67,7 +73,7 @@ const RequestModule = {
     },
     SAVE_REQUESTS_USER: async function ({ commit }, data) {
      
-      console.log("data", data)
+      console.log("data----->", data)
       const req = {
         type: data.type,
         project: data.project,
@@ -75,12 +81,13 @@ const RequestModule = {
         description: data.description,
         priority: data.priority,
         urgency: data.urgency,
-        feedBack: ''
+        feedBack: '',
+        image: data.image
   
       }
-      console.log("req", req)
+      console.log("req------->", req)
 
-
+      console.log("hereeeee", localStorage.getItem('token'))
       axios
         .post("http://localhost:3999/api/req/request/", req, {
           headers: {
@@ -90,7 +97,7 @@ const RequestModule = {
         .then(function (res) {
           //console.log("SUCCESS!!", res);
           //that.$refs.form.reset()
-
+          console.log(res)
           return true
         })
         .catch(function (res) {
@@ -111,7 +118,8 @@ const RequestModule = {
         priority: data.priority,
         status: data.status,
         urgency: data.urgency,
-        feedBack: data.feedBack.comment
+        feedBack: data.feedBack.comment,
+        image : data.image
     
       }
       console.log("req", req)

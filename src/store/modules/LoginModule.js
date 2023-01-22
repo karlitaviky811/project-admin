@@ -11,12 +11,9 @@ const LoginModule = {
       state.token = data.split('\"')[2];
     },
     setUser(state, data) {
-
-      console.log("data", data)
       state.user = data;
     },
     setLogued(state, data) {
-
       console.log("data", data)
       state.logued = data;
     },
@@ -27,13 +24,13 @@ const LoginModule = {
   actions: {
     LOGIN_USER: async function ({ commit, state }) {
       const data = {
-        email: 'admin@gmail.com',
-        password: '212323123'
+        email: 'test@gmail.com',
+        password: '12345678',
       }
 
       const data2 = {
-        email: 'admin@gmail.com',
-        password: '212323123',
+        email: 'test@gmail.com',
+        password: '12345678',
         gettoken: true
       }
 

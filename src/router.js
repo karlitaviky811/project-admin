@@ -39,7 +39,7 @@ export default new Router({
           component: () => import('@/views/dashboard/component/Notifications'),
         },
         {
-          name: 'Icons',
+          name: 'Buzón de QRS',
           path: 'components/qrs',
           component: () => import('@/views/dashboard/pages/Tableqrs'),
         },

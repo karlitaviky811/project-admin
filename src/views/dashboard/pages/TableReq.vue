@@ -1,9 +1,20 @@
 <template>
+<v-container>
+      <v-alert
+      border="top"
+      colored-border
+      type="info"
+      elevation="2"
+    >
+     Envia tus solicitudes de cambio a nuestros administradores
+    </v-alert>
+    <div class="py-3" />
   <base-material-card
     icon="mdi-clipboard-text"
-    title="Simple Table"
+    title="Listado"
     class="px-5 py-3"
   >
+  
     <div v-if="this.$route.name === 'Solicitudes'">
       <v-card-title class="d-flex justify-space-between">
         <v-container class="d-flex flex-column align-end">
@@ -58,8 +69,9 @@
         <template v-slot:item="row">
           <tr>
             <td>{{ row.item.title }}</td>
-            <td>{{ convertDate(row.item.date) }}</td>
             <td>{{ row.item.project }}</td>
+            <td>{{ convertDate(row.item.date) }}</td>
+            
             <td>{{ row.item.type }}</td>
             <td>{{ row.item.status }}</td>
             <td width="200">{{ row.item.description }}</td>
@@ -121,6 +133,8 @@
     </div>
     <router-view></router-view>
   </base-material-card>
+</v-container>
+
 </template>
 
 <script>

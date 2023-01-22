@@ -22,8 +22,8 @@
       <v-list-item>
         <v-list-item-avatar class="align-self-center" color="white" contain>
           <v-img
-            src="https://demos.creative-tim.com/vuetify-material-dashboard/favicon.ico"
-            max-height="30"
+            src="http://faraute.facyt.uc.edu.ve/public/journals/1/facyt.png"
+            max-height=""
           />
         </v-list-item-avatar>
 
@@ -148,6 +148,7 @@ export default {
 <style lang="sass">
 @import '~vuetify/src/styles/tools/_rtl.sass'
 
+
 #core-navigation-drawer
   .v-list-group__header.v-list-item--active:before
     opacity: .24
@@ -200,4 +201,19 @@ export default {
 
           +rtl()
             margin-left: 8px
+
+
+
+            
+</style>
+
+<style lang="css">
+ .v-application .primary{
+
+  background-color: #0088cc !important;
+ }
+
+ .deep-purple{
+  background-color: #5e5e5e !important;
+ }
 </style>

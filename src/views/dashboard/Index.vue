@@ -7,7 +7,6 @@
 
     <dashboard-core-view />
   
-  <dashboard-core-settings />
 
 </div>
 </template>
@@ -33,3 +32,8 @@ import {mapState} from 'vuex';
     }
   }
 </script>
+<style lang="css">
+
+
+
+</style>

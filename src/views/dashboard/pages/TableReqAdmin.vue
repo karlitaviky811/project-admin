@@ -4,6 +4,14 @@
     fluid
     tag="section"
   >
+   <v-alert
+      border="top"
+      colored-border
+      type="info"
+      elevation="2"
+    >
+     Envia tus solicitudes de cambio a nuestros administradores
+    </v-alert>
    <base-material-card
       icon="mdi-clipboard-text"
       title="Listado"

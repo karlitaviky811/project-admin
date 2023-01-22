@@ -22,6 +22,7 @@ const UserModule = {
         surname: data.surname,
         role: data.role,
         email: data.email,
+        image: data.image !== undefined ? data.image : 'https://www.hazteveg.com/img/empty-photo.jpg',
       }
       state.modalUser = user;
     }
@@ -51,6 +52,7 @@ const UserModule = {
         password: data.password,
         role: data.role,
         email: data.email,
+        image: data.image
   
       }
       console.log("user", user)
@@ -83,6 +85,7 @@ const UserModule = {
         surname: data.surname,
         password: data.password,
         email: data.email,
+        image: data.image
       }
       console.log("req", user)
 
@@ -116,7 +119,7 @@ const UserModule = {
         priority: data.priority,
         status: data.status,
         urgency: data.urgency,
-        feedBack: data.feedBack.comment
+        feedBack: data.feedBack.comment,
         
       }
       console.log("req--->>>>", req)

@@ -1,33 +1,174 @@
 <template>
-  <div>
-    <dashboard-admin v-if="role === 'ROLE_ADMIN'" />
-    <dashboard-user v-else />
-  </div>
+  <v-container id="dashboard" fluid tag="section">
+      <v-row>
+       <v-alert
+      border="top"
+      colored-border
+      type="info"
+      elevation="2"
+    >
+      Vestibulum ullamcorper mauris at ligula. Nam pretium turpis et arcu. Ut varius tincidunt libero. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Morbi nec metus.
+    </v-alert>
+    </v-row>
+
+    <v-row>
+      <v-col cols="12" md="4">
+        <base-material-chart-card
+          :data="emailsSubscriptionChart.data"
+          :options="emailsSubscriptionChart.options"
+          :responsive-options="emailsSubscriptionChart.responsiveOptions"
+          color="#E91E63"
+          hover-reveal
+          type="Bar"
+        >
+          <template v-slot:reveal-actions>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" color="info" icon v-on="on">
+                  <v-icon color="info"> mdi-refresh </v-icon>
+                </v-btn>
+              </template>
+
+              <span>Refresh</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" light icon v-on="on">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+
+              <span>Change Date</span>
+            </v-tooltip>
+          </template>
+
+          <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes de Cambio Usuarios </h4>
+
+          <p class="d-inline-flex font-weight-light ml-2 mt-1">
+            En el año en curso (2022)
+          </p>
+
+          <template v-slot:actions>
+            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
+            <span class="text-caption grey--text font-weight-light"
+              >updated 10 minutes ago</span
+            >
+          </template>
+        </base-material-chart-card>
+      </v-col>
+
+      <v-col cols="12" md="4">
+        <base-material-chart-card
+          :data="dailySalesChart.data"
+          :options="dailySalesChart.options"
+          color="success"
+          hover-reveal
+          type="Line"
+        >
+          <template v-slot:reveal-actions>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" color="info" icon v-on="on">
+                  <v-icon color="info"> mdi-refresh </v-icon>
+                </v-btn>
+              </template>
+
+              <span>Refresh</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" light icon v-on="on">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+
+              <span>Change Date</span>
+            </v-tooltip>
+          </template>
+
+          <h4 class="card-title font-weight-light mt-2 ml-2">Daily Sales</h4>
+
+          <p class="d-inline-flex font-weight-light ml-2 mt-1">
+            <v-icon color="green" small> mdi-arrow-up </v-icon>
+            <span class="green--text">55%</span>&nbsp; increase in today's sales
+          </p>
+
+          <template v-slot:actions>
+            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
+            <span class="text-caption grey--text font-weight-light"
+              >updated 4 minutes ago</span
+            >
+          </template>
+        </base-material-chart-card>
+      </v-col>
+         <v-col cols="12" md="4">
+        <base-material-chart-card
+          :data="dailySalesChart.data"
+          :options="dailySalesChart.options"
+          color="warning"
+          hover-reveal
+          type="Line"
+        >
+          <template v-slot:reveal-actions>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" color="info" icon v-on="on">
+                  <v-icon color="info"> mdi-refresh </v-icon>
+                </v-btn>
+              </template>
+
+              <span>Refresh</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" light icon v-on="on">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+
+              <span>Change Date</span>
+            </v-tooltip>
+          </template>
+
+          <h4 class="card-title font-weight-light mt-2 ml-2">Daily Sales</h4>
+
+          <p class="d-inline-flex font-weight-light ml-2 mt-1">
+            <v-icon color="green" small> mdi-arrow-up </v-icon>
+            <span class="green--text">55%</span>&nbsp; increase in today's sales
+          </p>
+
+          <template v-slot:actions>
+            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
+            <span class="text-caption grey--text font-weight-light"
+              >updated 4 minutes ago</span
+            >
+          </template>
+        </base-material-chart-card>
+      </v-col>
+
+
+
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import DashboardAdmin from './DashboardAdmin.vue';
-import DashboardUser from './DashboardUser.vue'
 export default {
-  name: "DashboardDashboard",
-  components:{
-     DashboardAdmin,
-     DashboardUser
-
-  },
+  name: "DashboardAdmin",
   async created() {
     await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
-   
-    this.role = JSON.parse(localStorage.getItem("user")).role;
+    
+
     console.log("hey", this.chartsListRPM);
-     console.log("role--->", this.role)
     this.emailsSubscriptionChart.series = this.chartsListRPM;
   },
   data() {
     return {
-      role: '',
       dailySalesChart: {
         data: {
           labels: ["M", "T", "W", "T", "F", "S", "S"],

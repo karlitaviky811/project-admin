@@ -1,11 +1,18 @@
 <template>
   <v-container>
     <div class="py-3" />
-
+   <v-alert
+      border="top"
+      colored-border
+      type="info"
+      elevation="2"
+    >
+     Proyectos activos
+    </v-alert>
     <base-material-card
       color="success"
       icon="mdi-clipboard-plus"
-      title="Table Qrs"
+      title="Listado"
       class="px-5 py-3"
     >
       <v-container class="d-flex flex-column align-end">
@@ -51,7 +58,8 @@
             <td>{{ row.item.type }}</td>
             <td>{{ convertDate(row.item.date) }}</td>
             <td>{{ row.item.description }}</td>
-             <td>{{ row.item.status }}</td>
+             
+            <td>{{ row.item.status }}</td>
             <td>{{ row.item.user.name }}</td>
 
             <td v-show="true">
@@ -96,7 +104,7 @@
 <script>
 import { mapGetters } from "vuex";
 import moment from "moment";
-import ModalQrs from '../component/modals/ModalQrs.vue'
+import ModalQrs from "../component/modals/ModalQrs.vue";
 export default {
   name: "Tableqrs",
   components: {
@@ -106,7 +114,6 @@ export default {
     this.data = true;
     this.$store.dispatch("GET_QRS_ALL");
     this.data = false;
-
   },
 
   data() {
@@ -129,10 +136,10 @@ export default {
       project: {},
       headers: [
         { text: "Título", value: "title" },
-        { text: "Descripción", value: "description" },
-        { text: "Fecha", value: "date", sortable: false },
         { text: "Tipo", value: "type", sortable: false },
-         { text: "Estatus", value: "status", sortable: false },
+        { text: "Fecha", value: "date", sortable: false },
+        { text: "Descripción", value: "description" },
+        { text: "Estatus", value: "status", sortable: false },
         { text: "Usuario", value: "user.name", sortable: false },
         { text: "", sortable: false, value: "actions" },
       ],
@@ -141,8 +148,7 @@ export default {
   computed: {
     ...mapGetters(["token"]),
     ...mapGetters(["QrsList"]),
-      ...mapGetters(["modalQrs"]),
-    
+    ...mapGetters(["modalQrs"]),
   },
   methods: {
     clickColumn(slotData) {
@@ -165,39 +171,37 @@ export default {
       return date;
     },
     create(id) {
-      this.title = "Crear Proyecto";
+      this.title = "Crear QRS";
       this.show = true;
       this.toggleModal(id);
-        const qrs = {
-                _id: '',
-                date: '',
-                type: '',
-                title: '',
-                project: '',
-                description: '',
-                status: '',
-                feedBack: {
-                  comment: 'Default'  
-                }
-            }
+      const qrs = {
+        _id: "",
+        date: "",
+        type: "",
+        title: "",
+        project: "",
+        description: "",
+        status: "",
+        feedBack: {
+          comment: "Default",
+        },
+      };
       this.request = Object.assign({}, qrs);
-      console.log("epaaa", this.modalQrs)
+      console.log("epaaa", this.modalQrs);
 
-      
-            
-      this.$store.commit("setQrsModal",qrs);
+      this.$store.commit("setQrsModal", qrs);
       this.type = "Create";
     },
     edit(item) {
       this.id = item._id;
-      this.title = "Editar ";
+      this.title = "Editar QRS";
       this.show = true;
       console.log("this.request", item.item);
       this.toggleModal(item._id);
       this.type = "Edit";
       this.request = Object.assign({}, item.item);
       console.log("this ---->", this.request);
-      this.$store.commit("setQrsModal",this.request);
+      this.$store.commit("setQrsModal", this.request);
       this.dialog = true;
     },
     detail(item) {

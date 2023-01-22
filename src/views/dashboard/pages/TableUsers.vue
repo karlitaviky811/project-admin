@@ -5,36 +5,36 @@
     <base-material-card
       color="success"
       icon="mdi-clipboard-plus"
-      title="Table Users"
+      title="Listado Usuarios"
       class="px-5 py-3"
     >
       <v-container class="d-flex flex-column align-end">
         <v-row>
           <v-col>
-             <v-tooltip left>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    color="success"
-                    @click.stop="create(true)"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
-                  <modal-user
-                    :id="id"
-                    :project="project"
-                    :show="showModal(true)"
-                    :type="type"
-                    :title="title"
-                    @close="toggleModalClose(true)"
-                    @reqProject="loadProjects"
-                  />
-                </template>
-                <span>Nuevo</span>
-              </v-tooltip>
+            <v-tooltip left>
+              <template v-slot:activator="{ on: tooltip }">
+                <v-btn
+                  v-on="{ ...tooltip }"
+                  fab
+                  small
+                  v-show="true"
+                  color="success"
+                  @click.stop="create(true)"
+                >
+                  <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
+                <modal-user
+                  :id="id"
+                  :project="project"
+                  :show="showModal(true)"
+                  :type="type"
+                  :title="title"
+                  @close="toggleModalClose(true)"
+                  @reqProject="loadProjects"
+                />
+              </template>
+              <span>Nuevo</span>
+            </v-tooltip>
           </v-col>
         </v-row>
       </v-container>
@@ -99,7 +99,6 @@ import ModalUser from "../component/modals/ModalUser.vue";
 export default {
   name: "TableUsers",
   components: {
-
     ModalUser,
   },
   created() {
@@ -167,16 +166,15 @@ export default {
       this.show = true;
       this.toggleModal(id);
       this.project = Object.assign({}, {});
-      const user ={
-             _id: '' ,
-            name: '',
-            surname: '',
-            role: "ROLE_USER",
-            email: "",
-      }
-      this.$store.commit("setUserModal", user );
+      const user = {
+        _id: "",
+        name: "",
+        surname: "",
+        role: "ROLE_USER",
+        email: "",
+      };
+      this.$store.commit("setUserModal", user);
       this.type = "Create";
-     
     },
     edit(item) {
       this.id = item._id;
@@ -199,14 +197,13 @@ export default {
       this.toggleModal(item._id);
     },
     toggleModal: async function (id) {
-     
       this.activeModal = !this.activeModal;
     },
     closeModal() {
       this.isModalVisible = false;
     },
     showModal: function (id) {
-        console.log("id", this.activeModal == id)
+      console.log("id", this.activeModal == id);
       return this.activeModal == id;
     },
     openModal: function (req) {
@@ -224,20 +221,20 @@ export default {
       this.activeModal = id;
     },
     loadProjects() {
-       this.data = true;
-    const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_USERS_ALL");
-    this.data = false;
-    this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
-    },
-      loadRequests() {
       this.data = true;
-    const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_USERS_ALL");
-    this.data = false;
-    this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
+      const user = JSON.parse(localStorage.getItem("user"))._id;
+      this.$store.dispatch("GET_USERS_ALL");
+      this.data = false;
+      this.role = JSON.parse(localStorage.getItem("user")).role;
+      console.log("role", this.role);
+    },
+    loadRequests() {
+      this.data = true;
+      const user = JSON.parse(localStorage.getItem("user"))._id;
+      this.$store.dispatch("GET_USERS_ALL");
+      this.data = false;
+      this.role = JSON.parse(localStorage.getItem("user")).role;
+      console.log("role", this.role);
     },
   },
 };

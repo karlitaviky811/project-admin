@@ -7,7 +7,7 @@
     flat
     height="75"
   >
-    <v-btn
+    <!--v-btn
       class="mr-3"
       elevation="1"
       fab
@@ -21,7 +21,7 @@
       <v-icon v-else>
         mdi-dots-vertical
       </v-icon>
-    </v-btn>
+    </v-btn-->
 
     <v-toolbar-title
       class="hidden-sm-and-down font-weight-light"
@@ -30,7 +30,7 @@
 
     <v-spacer />
 
-    <v-text-field
+    <!--v-text-field
       :label="$t('search')"
       color="secondary"
       hide-details
@@ -49,20 +49,20 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
       </template>
-    </v-text-field>
+    </v-text-field-->
 
     <div class="mx-3" />
 
-    <v-btn
+    <!--v-btn
       class="ml-2"
       min-width="0"
       text
       to="/home"
     >
       <v-icon>mdi-view-dashboard</v-icon>
-    </v-btn>
+    </v-btn-->
 
-    <v-menu
+    <!--v-menu
       bottom
       left
       offset-y
@@ -104,13 +104,13 @@
           </app-bar-item>
         </div>
       </v-list>
-    </v-menu>
+    </v-menu-->
 
     <v-btn
       class="ml-2"
       min-width="0"
       text
-      to="home/pages/user"
+      to="home/"
     >
       <v-icon>mdi-account</v-icon>
     </v-btn>

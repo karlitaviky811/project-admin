@@ -48,8 +48,8 @@
         <template v-slot:item="row">
           <tr>
             <td>{{ row.item.title }}</td>
-            <td>{{ convertDate(row.item.date) }}</td>
             <td>{{ row.item.description }}</td>
+            <td>{{ convertDate(row.item.date) }}</td>
             <td>{{ row.item.department }}</td>
             <td>{{ row.item.tecnology }}</td>
 
@@ -133,8 +133,8 @@ export default {
         { text: "Título", value: "title" },
         { text: "Descripción", value: "description" },
         { text: "Fecha", value: "date", sortable: false },
-        { text: "Computación", value: "department", sortable: false },
-        { text: "Tecnology", value: "tecnology", sortable: false },
+        { text: "Departamento", value: "department", sortable: false },
+        { text: "Tecnologia", value: "tecnology", sortable: false },
         { text: "", sortable: false, value: "actions" },
       ],
     };
