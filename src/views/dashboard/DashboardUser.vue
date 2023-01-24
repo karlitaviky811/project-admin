@@ -35,15 +35,9 @@
           <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes de Cambio</h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            En el año en curso (2022)
+            En el año en curso (2023)
           </p>
 
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
-            <span class="text-caption grey--text font-weight-light"
-              >updated 10 minutes ago</span
-            >
-          </template>
         </base-material-chart-card>
       </v-col>
 
@@ -80,15 +74,8 @@
           <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes Aceptadas</h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            En el año en curso (2022)
+            En el año en curso (2023)
           </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
-            <span class="text-caption grey--text font-weight-light"
-              >updated 4 minutes ago</span
-            >
-          </template>
         </base-material-chart-card>
       </v-col>
 
@@ -127,18 +114,11 @@
           </h3>
 
            <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            En el año en curso (2022)
+            En el año en curso (2023)
           </p>
-
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
-            <span class="text-caption grey--text font-weight-light"
-              >campaign sent 26 minutes ago</span
-            >
-          </template>
         </base-material-chart-card>
       </v-col>
+
 
       <v-col cols="12" sm="6" lg="3">
         <base-material-stats-card
@@ -146,8 +126,8 @@
           icon="mdi-widgets"
           title="Proyectos"
           value="5"
-          sub-icon="mdi-clock"
         />
+        
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
@@ -156,7 +136,6 @@
           icon="mdi-poll"
           title="Quejas"
           value="75"
-          sub-icon="mdi-tag"
         />  
       </v-col>
 
@@ -166,7 +145,6 @@
           icon="mdi-store"
           title="Reclamos"
           value="34"
-          sub-icon="mdi-calendar"
         />
       </v-col>
 
@@ -176,9 +154,8 @@
           icon="mdi-sofa"
           title="Sugerencias"
           value="184"
-          sub-icon="mdi-alert"
-          sub-icon-color="red"
-        />
+        >
+        </base-material-stats-card>
       </v-col>
 
       <v-col cols="12" md="6">
@@ -209,15 +186,15 @@
               >
               <v-tab class="mr-3">
                 <v-icon class="mr-2"> mdi-bug </v-icon>
-                Bugs
+               Incidencias
               </v-tab>
               <v-tab class="mr-3">
                 <v-icon class="mr-2"> mdi-code-tags </v-icon>
-                Website
+              Problemas
               </v-tab>
               <v-tab>
                 <v-icon class="mr-2"> mdi-cloud </v-icon>
-                Server
+              Cambios
               </v-tab>
             </v-tabs>
           </template>
@@ -228,18 +205,18 @@
                 <template v-for="(task, i) in tasks[tabs]">
                   <v-row :key="i" align="center">
                     <v-col cols="1">
-                      <v-list-item-action>
+                      <!--v-list-item-action>
                         <v-checkbox v-model="task.value" color="secondary" />
-                      </v-list-item-action>
+                      </v-list-item-action-->
                     </v-col>
 
                     <v-col cols="9">
-                      <div class="font-weight-light" v-text="task.text" />
+                      <div class="font-weight-light" v-text=" i +1  + ') ' + task.text" />
                     </v-col>
 
                     <v-col cols="2" class="text-right">
-                      <v-icon class="mx-1"> mdi-pencil </v-icon>
-                      <v-icon color="error" class="mx-1"> mdi-close </v-icon>
+                      <!--v-icon class="mx-1"> mdi-pencil </v-icon>
+                      <v-icon color="error" class="mx-1"> mdi-close </v-icon-->
                     </v-col>
                   </v-row>
                 </template>
@@ -249,6 +226,7 @@
         </base-material-card>
       </v-col>
     </v-row>
+    
   </v-container>
 </template>
 
@@ -409,43 +387,36 @@ export default {
       tasks: {
         0: [
           {
-            text: 'Sign contract for "What are conference organizers afraid of?"',
+            text: 'Listado de noticias no es resposive - WEB FACYT"',
             value: true,
           },
           {
-            text: "Lines From Great Russian Literature? Or E-mails From My Boss?",
+            text: "Redirección link de asignados via OPSU no esta disponible - WEB FACYT",
             value: false,
           },
-          {
-            text: "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-            value: false,
-          },
-          {
-            text: "Create 4 Invisible User Experiences you Never Knew About",
-            value: true,
-          },
+
         ],
         1: [
           {
-            text: "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
+            text: "Registro de estudiantes en la seccion de Calculo I - Entorno Virtual",
             value: true,
           },
           {
-            text: 'Sign contract for "What are conference organizers afraid of?"',
+            text: 'Diseño de header - Web Facyt',
             value: false,
           },
         ],
         2: [
           {
-            text: "Lines From Great Russian Literature? Or E-mails From My Boss?",
+            text: "Cambio de formato en constancias - SICE FACYT",
             value: false,
           },
           {
-            text: "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
+            text: "Cambiar textos bienvenida - SICE FACYT",
             value: true,
           },
           {
-            text: 'Sign contract for "What are conference organizers afraid of?"',
+            text: 'Cambio de formato en reporte de notas - SICE FACYT',
             value: true,
           },
         ],

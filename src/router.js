@@ -39,14 +39,14 @@ export default new Router({
           component: () => import('@/views/dashboard/component/Notifications'),
         },
         {
-          name: 'Buzón de QRS',
+          name: 'Buzon Quejas, Reclamos y Sugerencias',
           path: 'components/qrs',
           component: () => import('@/views/dashboard/pages/Tableqrs'),
         },
         
         // Tables
         {
-          name: 'Regular Tables',
+          name: 'Proyectos',
           path: '/home/projects',
           component: () => import('@/views/dashboard/pages/TableProjectReq'),
         },

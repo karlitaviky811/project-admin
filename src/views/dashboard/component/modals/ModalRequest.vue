@@ -8,12 +8,12 @@
         <v-form v-model="valid">
           <h4 class="font-weight-medium outline text-left">{{ title }}</h4>
 
-          <!--v-chip  dark class="font-weight-medium" style="margin-top:25px;" v-show="type !== 'Create'">{{
+          <v-chip  dark class="font-weight-medium" style="margin-top:25px;" v-show="type !== 'Create'">{{
             modalReq.status
-          }}</v-chip-->
+          }}</v-chip>
           <v-container>
             <v-row>
-              <v-col cols="12" md="4">
+              <v-col cols="12" md="6">
                 <v-text-field
                   v-model="modalReq.title"
                   label="Título solicitud"
@@ -22,7 +22,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" md="4">
+              <v-col cols="12" md="6">
                 <v-text-field
                   v-model="modalReq.type"
                   :counter="10"
@@ -31,8 +31,9 @@
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
-
-              <v-col cols="12" md="4">
+            </v-row>
+             <v-row>
+              <v-col cols="12" md="6">
                 <v-text-field
                   v-model="modalReq.project"
                   label="Proyecto"
@@ -40,9 +41,8 @@
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
-            </v-row>
-            <v-row v-if="type !== 'Detail' && role == 'ROLE_USER'">
-              <v-col cols="12" md="4">
+
+              <v-col cols="12" md="6">
                 <v-text-field
                   v-model="modalReq.priority"
                   :counter="10"
@@ -51,7 +51,12 @@
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" md="4">
+            </v-row>
+            <v-row>
+  
+            </v-row>
+            <v-row v-if="type !== 'Detail' && role == 'ROLE_USER'">
+              <v-col cols="12" md="6">
                 <v-text-field
                   label="Urgencia"
                   required
@@ -59,7 +64,7 @@
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="4">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   v-model="modalReq.description"
                   color="teal"
@@ -105,11 +110,9 @@
                 >
                 </v-text-field>
               </v-col>
-              <v-col cols="12" sm="6">
-                <v-file-input chips multiple label="Archivos"></v-file-input>
-              </v-col>
+
             </v-row>
-            <v-row v-show="type !== 'Detail'">
+            <v-row >
               <v-col cols="12" sm="6">
                 <v-file-input
                   chips
@@ -118,7 +121,7 @@
                   v-model="chosenFile"
                   v-on:change="upload"
                 >
-                  <v-chip small label color="primary">{{ chosenFile }}</v-chip>
+                  <v-chip small label color="primary" v-show="type !== 'Detail'">{{ chosenFile }}</v-chip>
                 </v-file-input>
                 <v-img
                   v-show="urlImgDam !== ''"
@@ -260,5 +263,9 @@ export default {
 .col-custom {
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.modal-container{
+  width: 60% !important;
 }
 </style>

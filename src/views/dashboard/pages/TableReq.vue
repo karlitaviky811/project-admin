@@ -1,5 +1,7 @@
 <template>
-<v-container>
+<v-container 
+    fluid
+    tag="section">
       <v-alert
       border="top"
       colored-border
@@ -10,9 +12,10 @@
     </v-alert>
     <div class="py-3" />
   <base-material-card
-    icon="mdi-clipboard-text"
+    icon="mdi-file-check"
     title="Listado"
     class="px-5 py-3"
+    color="primary"
   >
   
     <div v-if="this.$route.name === 'Solicitudes'">

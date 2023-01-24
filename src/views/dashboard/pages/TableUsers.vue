@@ -1,10 +1,12 @@
 <template>
-  <v-container>
+  <v-container   id="regular-tables"
+    fluid
+    tag="section">
     <div class="py-3" />
 
     <base-material-card
-      color="success"
-      icon="mdi-clipboard-plus"
+      color="primary"
+      icon="mdi-account-plus"
       title="Listado Usuarios"
       class="px-5 py-3"
     >
@@ -162,7 +164,7 @@ export default {
       return date;
     },
     create(id) {
-      this.title = "Crear Proyecto";
+      this.title = "Crear Usuario";
       this.show = true;
       this.toggleModal(id);
       this.project = Object.assign({}, {});
@@ -178,7 +180,7 @@ export default {
     },
     edit(item) {
       this.id = item._id;
-      this.title = "Editar ";
+      this.title = "Editar";
       this.show = true;
       console.log("this.request", item.item);
       this.toggleModal(item._id);

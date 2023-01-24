@@ -99,14 +99,14 @@ const QrsModule = {
 
         },
         UPDATE_QRS_FEEDBACK: async function ({ commit }, data) {
-            console.log("data", data)
+            console.log("data--->", data)
             const qrs = {
                 date: data.date,
                 type: data.type,
                 title: data.title,
                 project: data.project,
                 description: data.description,
-                status: data.status,
+                status: 'Feedback del Administrador',
                 feedBack: data.feedBack.comment
             }
             axios.put("http://localhost:3999/api/qrs/update/status/" + data._id, qrs, {

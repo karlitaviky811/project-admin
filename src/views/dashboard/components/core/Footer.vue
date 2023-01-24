@@ -29,11 +29,11 @@
           md="auto"
         >
           <div class="text-body-1 font-weight-light pt-6 pt-md-0 text-center">
-            &copy; 2019, made with
+            &copy; 2023, made with
             <v-icon size="18">
               mdi-heart
             </v-icon>
-            by <a href="https://www.creative-tim.com">Creative Tim</a> for a better web.
+            by <a href="https://www.creative-tim.com">Karla Tovar</a> for a better web.
           </div>
         </v-col>
       </v-row>
@@ -49,19 +49,15 @@
       links: [
         {
           href: '#',
-          text: 'Creative Tim',
+          text: 'Web Facyt',
         },
         {
           href: '#',
-          text: 'About Us',
+          text: 'SICE FACYT',
         },
         {
           href: '#',
-          text: 'Blog',
-        },
-        {
-          href: '#',
-          text: 'Licenses',
+          text: 'Moodle ',
         },
       ],
     }),

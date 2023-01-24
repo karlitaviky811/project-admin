@@ -4,15 +4,13 @@
       <div class="text-end">
         <v-icon @click="close">mdi-close</v-icon>
       </div>
-      <template style="width:200px !important;">
+      <template style="width: 200px !important">
         <v-form v-model="valid">
           <h3 class="font-weight-medium outline text-left">{{ title }}</h3>
-         <v-chip  dark class="font-weight-medium" style="margin-top:25px;" v-show="type !== 'Create'">{{
-            modalUser.status
-          }}</v-chip>
+
           <v-container>
             <v-row>
-              <v-col cols="12" >
+              <v-col cols="12">
                 <v-text-field
                   v-model="modalUser.name"
                   label="Nombre"
@@ -30,34 +28,43 @@
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
-               <v-col cols="12">
-                <v-text-field
-                  v-model="modalUser.role"
-                  label="Role"
-                  required
-                  :disabled="type == 'Detail'"
-                ></v-text-field>
+              <v-col cols="12">
+                <v-row>
+                  <v-col cols="12">
+                    <v-select
+                      v-model="role"
+                      label="Seleccione rol"
+                      persistent-hint
+                      :items="params"
+                       item-text="name"
+                      item-value="rol"
+                    >
+                    </v-select>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
-             <v-row>
+            <v-row>
               <v-col cols="12">
-                 <v-text-field
+                <v-text-field
                   name="input-7-1"
                   label="Email"
+                  v-show="type == 'Detail'"
                   v-model="modalUser.email"
                 ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
-                 <v-text-field
+                <v-text-field
                   name="input-7-1"
                   label="Password"
+                  type="password"
                   v-model="modalUser.password"
                 ></v-text-field>
               </v-col>
             </v-row>
-            
+
             <v-row class="mt-5">
               <v-spacer></v-spacer>
               <v-btn color="secondary" text @click="close">Cerrar</v-btn>
@@ -83,6 +90,18 @@ export default {
     tipo: false,
     role: "",
     lastname: "",
+    params: [
+      {
+        id: 1,
+        rol: "ROLE_USER",
+        name: "Usuario",
+      },
+      {
+        id: 2,
+        rol: "ROLE_ADMIN",
+        name: "Administrador",
+      },
+    ],
     nameRules: [
       (v) => !!v || "Name is required",
       (v) => v.length <= 10 || "Name must be less than 10 characters",
@@ -96,6 +115,9 @@ export default {
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
     console.log("role", this.role);
+    if (this.modalUser.type !== "Detail") {
+      this.role = "Usuario";
+    }
     this.request = Object.assign({}, this.modalUser);
   },
   computed: {
@@ -115,15 +137,12 @@ export default {
           this.close();
           this.$emit("reqProject");
         } else if (this.type == "Edit") {
-            console.log("editaaaaarrr", this.modalUser)
           this.$store.dispatch("UPDATE_USER", this.modalUser);
           this.close();
           this.$emit("reqProject");
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Detail") {
-          console.log("debo actualizar el estatus!!!", this.modalReq);
-
           this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
           this.$emit("reqCreated");
           this.close();

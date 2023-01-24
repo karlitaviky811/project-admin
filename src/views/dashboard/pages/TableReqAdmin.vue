@@ -13,9 +13,10 @@
      Envia tus solicitudes de cambio a nuestros administradores
     </v-alert>
    <base-material-card
-      icon="mdi-clipboard-text"
+      icon="mdi-file-check"
       title="Listado"
       class="px-5 py-3"
+      color="primary"
     >
     <div v-if="this.$route.name === 'Solicitudes'">
       <v-card-title class="d-flex justify-space-between">
@@ -187,7 +188,7 @@ export default {
     },
     edit(item) {
       this.id = item._id;
-      this.title = "Prueba Editar Karlita";
+      this.title = "Detalle";
       this.show = true;
       console.log("this.request", item.item);
       this.toggleModal(item._id);
@@ -198,9 +199,8 @@ export default {
     },
     detail(item) {
        this.type = 'Detail';
-      this.title = "Prueba Detalle Karlita";
+      this.title = "Detalle";
       this.request = Object.assign({}, item.item);
-      console.log("item----->", item)
       this.$store.commit("setRequestsUserModal", this.request);
       this.toggleModal(item._id);
     },

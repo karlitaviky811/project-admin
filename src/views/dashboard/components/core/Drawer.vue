@@ -2,14 +2,13 @@
   <v-navigation-drawer
     id="core-navigation-drawer"
     v-model="drawer"
-    class="deep-purple accent-4"
+    class="primary accent-4"
     dark
     permanent
     :right="$vuetify.rtl"
     :src="barImage"
     mobile-break-point="960"
     app
-    width="200"
     v-bind="$attrs"
   >
     <template v-slot:img="props">
@@ -22,13 +21,13 @@
       <v-list-item>
         <v-list-item-avatar class="align-self-center" color="white" contain>
           <v-img
-            src="http://faraute.facyt.uc.edu.ve/public/journals/1/facyt.png"
+            src="https://icones.pro/wp-content/uploads/2022/07/icones-d-administration-orange.png"
             max-height=""
           />
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title class="text-h4" v-text="profile.title" />
+          <v-list-item-title class="text-h4" v-text="'SGC'" />
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -110,6 +109,41 @@ export default {
       },
     */
     ],
+    items2:[
+      {
+        icon: "mdi-view-dashboard",
+        title: "dashboard",
+        to: "/dashboard",
+      },
+      {
+        icon: "mdi-account",
+        title: "Solicitudes",
+        to: "/home/requests/user",
+      },
+      {
+        title: "Proyectos",
+        icon: "mdi-clipboard-outline",
+        to: "/home/projects",
+      },
+      {
+        title: "Buzón opiniones",
+        icon: "mdi-format-font",
+        to: "/home/components/qrs",
+      },
+      
+     /* {
+        title: "google",
+        icon: "mdi-map-marker",
+        to: "/home/maps/google-maps",
+      },
+      {
+        title: "notifications",
+        icon: "mdi-bell",
+        to: "/home/components/notifications",
+      },
+    */
+    ],
+    role : '',
   }),
 
   computed: {
@@ -123,7 +157,9 @@ export default {
       },
     },
     computedItems() {
-      return this.items.map(this.mapItem);
+
+
+      return this.role !== "ROLE_USER"? this.items.map(this.mapItem) : this.items2.map(this.mapItem);
     },
     profile() {
       return {
@@ -132,7 +168,14 @@ export default {
       };
     },
   },
+created(){
+   const user = JSON.parse(localStorage.getItem("user"))._id;
+    this.$store.dispatch("GET_REQUESTS_ALL");
 
+      this.role = JSON.parse(localStorage.getItem("user")).role;
+    console.log("role", this.role);
+    
+},
   methods: {
     mapItem(item) {
       return {

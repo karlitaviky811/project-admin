@@ -1,19 +1,17 @@
 <template>
-  <v-container>
+  <v-container   id="regular-tables"
+    fluid
+    tag="section">
     <div class="py-3" />
-   <v-alert
-      border="top"
-      colored-border
-      type="info"
-      elevation="2"
-    >
-     Proyectos activos
+    <v-alert border="top" colored-border type="info" elevation="2">
+     Por favor compartenos tus opiniones
     </v-alert>
     <base-material-card
-      color="success"
-      icon="mdi-clipboard-plus"
+      color="primary"
+      icon="mdi-account-alert"
       title="Listado"
       class="px-5 py-3"
+      style="width: 100%;"
     >
       <v-container class="d-flex flex-column align-end">
         <v-row>
@@ -51,18 +49,19 @@
         :items-per-page="20"
         :search="search"
         :loading="data"
+        style="width: 100%;"
       >
         <template v-slot:item="row">
           <tr>
-            <td>{{ row.item.title }}</td>
+            <td >{{ row.item.title }}</td>
             <td>{{ row.item.type }}</td>
             <td>{{ convertDate(row.item.date) }}</td>
-            <td>{{ row.item.description }}</td>
-             
+            <td  width="200">{{ row.item.description }}</td>
+
             <td>{{ row.item.status }}</td>
             <td>{{ row.item.user.name }}</td>
 
-            <td v-show="true">
+            <td v-show="true"  width="200">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on: tooltip }">
                   <v-btn

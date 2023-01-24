@@ -1,10 +1,19 @@
 <template>
-  <v-container>
+  <v-container  id="regular-tables"
+    fluid
+    tag="section">
     <div class="py-3" />
-
+ <v-alert
+      border="top"
+      colored-border
+      type="info"
+      elevation="2"
+    >
+     Proyectos activos actualmente
+    </v-alert>
     <base-material-card
-      color="success"
-      icon="mdi-clipboard-plus"
+      color="primary"
+      icon="mdi-bulletin-board"
       title="Proyectos"
       class="px-5 py-3"
     >

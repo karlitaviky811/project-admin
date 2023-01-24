@@ -62,7 +62,8 @@
       <v-icon>mdi-view-dashboard</v-icon>
     </v-btn-->
 
-    <!--v-menu
+  <span color="primary">Sistema de Gestion de Cambios</span>
+    <v-menu
       bottom
       left
       offset-y
@@ -76,18 +77,9 @@
           text
           v-bind="attrs"
           v-on="on"
+      
         >
-          <v-badge
-            color="red"
-            overlap
-            bordered
-          >
-            <template v-slot:badge>
-              <span>5</span>
-            </template>
-
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
+         <v-icon>mdi-account</v-icon>
         </v-btn>
       </template>
 
@@ -99,21 +91,22 @@
           <app-bar-item
             v-for="(n, i) in notifications"
             :key="`item-${i}`"
+            @click="menuActionClick(item.action)"
           >
             <v-list-item-title v-text="n" />
           </app-bar-item>
         </div>
       </v-list>
-    </v-menu-->
+    </v-menu>
 
-    <v-btn
+    <!--v-btn
       class="ml-2"
       min-width="0"
       text
       to="home/"
     >
-      <v-icon>mdi-account</v-icon>
-    </v-btn>
+      <v-icon>mdi-off</v-icon>
+    </v-btn-->
   </v-app-bar>
 </template>
 
@@ -162,11 +155,7 @@
 
     data: () => ({
       notifications: [
-        'Mike John Responded to your email',
-        'You have 5 new tasks',
-        'You\'re now friends with Andrew',
-        'Another Notification',
-        'Another one',
+        'Salir del sistema',
       ],
     }),
 
@@ -178,6 +167,9 @@
       ...mapMutations({
         setDrawer: 'SET_DRAWER',
       }),
+      menuActionClick(){
+        console.log("log out")
+      }
     },
   }
 </script>
