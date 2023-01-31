@@ -33,7 +33,7 @@ const LoginModule = {
         password: '12345678',
         gettoken: true
       }
-
+      //window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
       axios.post('http://localhost:3999/api/login', data).then((response) => {
         console.log("response---->", response)
         localStorage.setItem('user', JSON.stringify(response.data.user))
