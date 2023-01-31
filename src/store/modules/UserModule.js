@@ -30,11 +30,10 @@ const UserModule = {
   actions: {
     GET_USERS_ALL: async function ({ commit }) {
       //let  id= data.replace('""', '')
-    
+   
       axios.get("http://localhost:3999/api/users", {
         "Authorization": localStorage.getItem('token'),
       }).then((response) => {
-        console.log("response admin", response)
         commit('setUsersList', response.data.users)
         return true;
       }, (err) => {
@@ -44,8 +43,6 @@ const UserModule = {
 
     },
     SAVE_NEW_USER: async function ({ commit }, data) {
-     
-      console.log("data", data)
       const user = {
         name: data.name,
         surname: data.surname,
@@ -55,9 +52,6 @@ const UserModule = {
         image: data.image
   
       }
-      console.log("user", user)
-
-
       axios
         .post("http://localhost:3999/api/register", user, {
           headers: {
@@ -78,7 +72,6 @@ const UserModule = {
       const headers = {
         Authorization: localStorage.getItem('token')
       }
-      console.log("data", data, "token", headers)
       const user = {
         _id: data._id,
         name: data.name,
@@ -98,7 +91,6 @@ const UserModule = {
         })
         .then(function (res) {
    
-          console.log("res put user---->", res)
           return true
         })
         .catch(function (res) {

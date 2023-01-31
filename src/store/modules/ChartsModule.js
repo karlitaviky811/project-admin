@@ -9,7 +9,6 @@ const ChartsModule = {
     mutations: {
         setChartsListPSC(state, data) {
             state.chartsListPSC = data;
-            console.log("stateList",state.chartsListPSC)
         },
         setChartsListRPM(state, data) {
             state.chartsListRPM = data.data;
@@ -25,7 +24,6 @@ const ChartsModule = {
                 }
             }
             ).then((response) => {
-                console.log("response list", response)
                 commit('setChartsListPSC', response.data.reqStatus)
                 return true;
             }, (err) => {
@@ -43,7 +41,6 @@ const ChartsModule = {
                 }
             }
             ).then((response) => {
-                console.log("response list chart", response)
                 commit('setChartsListRPM', response.data)
                 return true;
             }, (err) => {

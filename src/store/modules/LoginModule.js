@@ -24,22 +24,24 @@ const LoginModule = {
   actions: {
     LOGIN_USER: async function ({ commit, state }) {
       const data = {
-        email: 'admin@gmail.com',
+        email: 'test@gmail.com',
         password: '12345678',
       }
 
       const data2 = {
-        email: 'admin@gmail.com',
+        email: 'test@gmail.com',
         password: '12345678',
         gettoken: true
       }
 
       axios.post('http://localhost:3999/api/login', data).then((response) => {
-        console.log("response", response)
+        console.log("response---->", response)
         localStorage.setItem('user', JSON.stringify(response.data.user))
         commit('setUser', JSON.stringify(response.data.user))
+
+       
         axios.post('http://localhost:3999/api/login', data2).then((response) => {
-  
+          console.log("response---->", response.data.token)
           commit('setToken',  JSON.stringify(response.data.token))
           localStorage.setItem('token',response.data.token)
           commit('setLogued', true)

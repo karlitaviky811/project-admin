@@ -238,8 +238,6 @@ export default {
     await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
     
-
-    console.log("hey", this.chartsListRPM);
     this.emailsSubscriptionChart.series = this.chartsListRPM;
   },
   data() {

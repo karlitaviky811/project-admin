@@ -45,7 +45,6 @@ const QrsModule = {
                 }
             }
             ).then((response) => {
-                console.log("response list", response)
                 commit('setQrsList', response.data.qrs)
                 return true;
             }, (err) => {

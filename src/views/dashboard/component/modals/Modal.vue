@@ -47,7 +47,7 @@ export default {
 }
 
 .modal-container {
-  width: auto;
+  width: 800px;
   height: auto !important;
   overflow: auto !important;
   margin: 0px auto;

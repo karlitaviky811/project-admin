@@ -109,7 +109,6 @@ export default {
     this.$store.dispatch("GET_USERS_ALL");
     this.data = false;
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
   },
 
   data() {
@@ -205,7 +204,6 @@ export default {
       this.isModalVisible = false;
     },
     showModal: function (id) {
-      console.log("id", this.activeModal == id);
       return this.activeModal == id;
     },
     openModal: function (req) {
@@ -228,7 +226,6 @@ export default {
       this.$store.dispatch("GET_USERS_ALL");
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("role", this.role);
     },
     loadRequests() {
       this.data = true;
@@ -236,7 +233,6 @@ export default {
       this.$store.dispatch("GET_USERS_ALL");
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("role", this.role);
     },
   },
 };

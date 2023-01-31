@@ -1,110 +1,100 @@
 <template>
- <v-container
-    id="regular-tables"
-    fluid
-    tag="section"
-  >
-   <v-alert
-      border="top"
-      colored-border
-      type="info"
-      elevation="2"
-    >
-     Envia tus solicitudes de cambio a nuestros administradores
+  <v-container id="regular-tables" fluid tag="section">
+    <v-alert border="top" colored-border type="info" elevation="2">
+      Envia tus solicitudes de cambio a nuestros administradores
     </v-alert>
-   <base-material-card
+    <base-material-card
       icon="mdi-file-check"
       title="Listado"
       class="px-5 py-3"
       color="primary"
     >
-    <div v-if="this.$route.name === 'Solicitudes'">
-      <v-card-title class="d-flex justify-space-between">
-        <v-container class="d-flex flex-column align-end">
-          <v-row>
-            <v-col v-show="true">
-              <v-tooltip left>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="false"
-                    color="success"
-                    @click.stop="detail(true)"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
+      <div v-if="this.$route.name === 'Solicitudes'">
+        <v-card-title class="d-flex justify-space-between">
+          <v-container class="d-flex flex-column align-end">
+            <v-row>
+              <v-col v-show="true">
+                <v-tooltip left>
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn
+                      v-on="{ ...tooltip }"
+                      fab
+                      small
+                      v-show="false"
+                      color="success"
+                      @click.stop="detail(true)"
+                    >
+                      <v-icon dark>mdi-plus</v-icon>
+                    </v-btn>
                     <modal-request
-                    :id="id"
-                    :req="request"
-                    :show="showModal(true)"
-                    :type="type"
-                    :title="title"
-                    @close="toggleModalClose(true)"
-                    @reqCreated="loadRequests"
-                  />
-                </template>
-                <span>Nuevo</span>
-              </v-tooltip>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-toolbar flat class="d-flex flex-column align-end">
-          <v-spacer />
-          <v-text-field
-            v-model="search"
-            v-bind:label="'Buscar solicitud'"
-            append-icon="mdi-magnify"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-toolbar>
-      </v-card-title>
+                      :id="id"
+                      :req="request"
+                      :show="showModal(true)"
+                      :type="type"
+                      :title="title"
+                      @close="toggleModalClose(true)"
+                      @reqCreated="loadRequests"
+                    />
+                  </template>
+                  <span>Nuevo</span>
+                </v-tooltip>
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-toolbar flat class="d-flex flex-column align-end">
+            <v-spacer />
+            <v-text-field
+              v-model="search"
+              v-bind:label="'Buscar solicitud'"
+              append-icon="mdi-magnify"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-toolbar>
+        </v-card-title>
 
-      <v-data-table
-        :headers="headers"
-        :items="requestList"
-        :items-per-page="20"
-        :search="search"
-        :loading="data"
-      >
-        <template v-slot:item="row">
-          <tr>
-            <td>{{ row.item.title }}</td>
-            <td>{{ convertDate(row.item.date) }}</td>
-            <td>{{ row.item.project }}</td>
-            <td>{{ row.item.type }}</td>
-            <td>{{ row.item.status }}</td>
-            <td width="200">{{ row.item.description }}</td>
-            <td width="200">{{ row.item.user.name }}</td>
-           
-            <td v-show="true">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on: tooltip }">
-                   
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    class="mx-2"
-                    color="white"
-                    @click.stop="detail(row)"
-                  >
-                    <v-icon dark>mdi-chevron-right </v-icon>
-                  </v-btn>
-                </template>
-                <span>Detalle</span>
-              </v-tooltip>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
-    </div>
-    <router-view></router-view>
-   </base-material-card>
- </v-container>
+        <v-data-table
+          :headers="headers"
+          :items="requestList"
+          :items-per-page="20"
+          :search="search"
+          :loading="data"
+        >
+          <template v-slot:item="row">
+            <tr>
+              <td>{{ row.item.title }}</td>
+              <td>{{ convertDate(row.item.date) }}</td>
+              <td>{{ row.item.project }}</td>
+              <td>{{ row.item.type }}</td>
+              <td>{{ row.item.status }}</td>
+              <td width="200">{{ row.item.description }}</td>
+              <td width="200">{{ row.item.user.name }}</td>
+
+              <td v-show="true">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn
+                      v-on="{ ...tooltip }"
+                      fab
+                      small
+                      v-show="true"
+                      class="mx-2"
+                      color="white"
+                      @click.stop="detail(row)"
+                    >
+                      <v-icon dark>mdi-chevron-right </v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Detalle</span>
+                </v-tooltip>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </div>
+      <router-view></router-view>
+    </base-material-card>
+  </v-container>
 </template>
 
 <script>
@@ -117,13 +107,10 @@ export default {
     ModalRequest,
   },
   created() {
- 
     const user = JSON.parse(localStorage.getItem("user"))._id;
     this.$store.dispatch("GET_REQUESTS_ALL");
 
-      this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
-    
+    this.role = JSON.parse(localStorage.getItem("user")).role;
   },
   beforeRouteEnter(to, from, next) {
     this.$store.dispatch("GET_REQUESTS_USER", user);
@@ -160,7 +147,7 @@ export default {
   computed: {
     ...mapGetters(["token"]),
     ...mapGetters(["requestsU"]),
-    ...mapGetters(["requestList"])
+    ...mapGetters(["requestList"]),
   },
   methods: {
     showModal: function (id) {
@@ -183,8 +170,8 @@ export default {
       this.title = "Prueba Crear Karlita";
       this.toggleModal(id);
       this.request = Object.assign({}, {});
-       this.$store.commit("setRequestsUserModal", {});
-      this.type = 'Create';
+      this.$store.commit("setRequestsUserModal", {});
+      this.type = "Create";
     },
     edit(item) {
       this.id = item._id;
@@ -192,13 +179,13 @@ export default {
       this.show = true;
       console.log("this.request", item.item);
       this.toggleModal(item._id);
-      this.type = 'Edit';
+      this.type = "Edit";
       this.request = Object.assign({}, item.item);
       this.$store.commit("setRequestsUserModal", this.request);
       this.dialog = true;
     },
     detail(item) {
-       this.type = 'Detail';
+      this.type = "Detail";
       this.title = "Detalle";
       this.request = Object.assign({}, item.item);
       this.$store.commit("setRequestsUserModal", this.request);
@@ -233,10 +220,8 @@ export default {
     },
     loadRequests() {
       //const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_REQUESTS_ALL");
-
+      this.$store.dispatch("GET_REQUESTS_ALL");
       this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
       this.data = false;
     },
     clickColumn(slotData) {

@@ -83,7 +83,6 @@ export default {
   }),
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
     this.request = Object.assign({}, this.modalProject);
   },
   computed: {

@@ -1,23 +1,12 @@
 <template>
-  <v-container id="dashboard" fluid tag="section">
-      <v-row>
-       <v-alert
-      border="top"
-      colored-border
-      type="info"
-      elevation="2"
-    >
-      Vestibulum ullamcorper mauris at ligula. Nam pretium turpis et arcu. Ut varius tincidunt libero. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Morbi nec metus.
-    </v-alert>
-    </v-row>
-
+   <v-container id="dashboard" fluid tag="section">
     <v-row>
-      <v-col cols="12" md="4">
+      <v-col cols="12" lg="4">
         <base-material-chart-card
           :data="emailsSubscriptionChart.data"
           :options="emailsSubscriptionChart.options"
           :responsive-options="emailsSubscriptionChart.responsiveOptions"
-          color="#E91E63"
+          color="#0088cc"
           hover-reveal
           type="Bar"
         >
@@ -43,28 +32,22 @@
             </v-tooltip>
           </template>
 
-          <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes de Cambio Usuarios </h4>
+          <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes de Cambio</h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            En el año en curso (2022)
+            En el año en curso (2023)
           </p>
 
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
-            <span class="text-caption grey--text font-weight-light"
-              >updated 10 minutes ago</span
-            >
-          </template>
         </base-material-chart-card>
       </v-col>
 
-      <v-col cols="12" md="4">
+      <v-col cols="12" lg="4">
         <base-material-chart-card
           :data="dailySalesChart.data"
           :options="dailySalesChart.options"
           color="success"
           hover-reveal
-          type="Line"
+          type="Bar"
         >
           <template v-slot:reveal-actions>
             <v-tooltip bottom>
@@ -88,27 +71,20 @@
             </v-tooltip>
           </template>
 
-          <h4 class="card-title font-weight-light mt-2 ml-2">Daily Sales</h4>
+          <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes Aceptadas</h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            <v-icon color="green" small> mdi-arrow-up </v-icon>
-            <span class="green--text">55%</span>&nbsp; increase in today's sales
+            En el año en curso (2023)
           </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
-            <span class="text-caption grey--text font-weight-light"
-              >updated 4 minutes ago</span
-            >
-          </template>
         </base-material-chart-card>
       </v-col>
-         <v-col cols="12" md="4">
+
+      <v-col cols="12" lg="4">
         <base-material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
-          color="warning"
+          :data="dataCompletedTasksChart.data"
+          :options="dataCompletedTasksChart.options"
           hover-reveal
+          color="info"
           type="Line"
         >
           <template v-slot:reveal-actions>
@@ -133,25 +109,124 @@
             </v-tooltip>
           </template>
 
-          <h4 class="card-title font-weight-light mt-2 ml-2">Daily Sales</h4>
+          <h3 class="card-title font-weight-light mt-2 ml-2">
+            Solicitudes Rechazadas
+          </h3>
 
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            <v-icon color="green" small> mdi-arrow-up </v-icon>
-            <span class="green--text">55%</span>&nbsp; increase in today's sales
+           <p class="d-inline-flex font-weight-light ml-2 mt-1">
+            En el año en curso (2023)
           </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
-            <span class="text-caption grey--text font-weight-light"
-              >updated 4 minutes ago</span
-            >
-          </template>
         </base-material-chart-card>
       </v-col>
 
 
+      <v-col cols="12" sm="6" lg="3">
+        <base-material-stats-card
+          color="info"
+          icon="mdi-widgets"
+          title="Proyectos"
+          value="5"
+        />
+        
+      </v-col>
 
+      <v-col cols="12" sm="6" lg="3">
+        <base-material-stats-card
+          color="primary"
+          icon="mdi-poll"
+          title="Quejas"
+          value="75"
+        />  
+      </v-col>
+
+      <v-col cols="12" sm="6" lg="3">
+        <base-material-stats-card
+          color="success"
+          icon="mdi-store"
+          title="Reclamos"
+          value="34"
+        />
+      </v-col>
+
+      <v-col cols="12" sm="6" lg="3">
+        <base-material-stats-card
+          color="orange"
+          icon="mdi-sofa"
+          title="Sugerencias"
+          value="184"
+        >
+        </base-material-stats-card>
+      </v-col>
+
+      <v-col cols="12" md="6">
+        <base-material-card color="warning" class="px-5 py-3">
+          <template v-slot:heading>
+            <div class="text-h3 font-weight-light">
+              Proyectos con solicitudes nuevas
+            </div>
+          </template>
+          <v-card-text>
+            <v-data-table :headers="headers" :items="chartsListPSC" />
+          </v-card-text>
+        </base-material-card>
+      </v-col>
+
+      <v-col cols="12" md="6">
+        <base-material-card class="px-5 py-3">
+          <template v-slot:heading>
+            <v-tabs
+              v-model="tabs"
+              background-color="transparent"
+              slider-color="white"
+            >
+              <span
+                class="subheading font-weight-light mx-3"
+                style="align-self: center"
+                >Tasks:</span
+              >
+              <v-tab class="mr-3">
+                <v-icon class="mr-2"> mdi-bug </v-icon>
+               Incidencias
+              </v-tab>
+              <v-tab class="mr-3">
+                <v-icon class="mr-2"> mdi-code-tags </v-icon>
+              Problemas
+              </v-tab>
+              <v-tab>
+                <v-icon class="mr-2"> mdi-cloud </v-icon>
+              Cambios
+              </v-tab>
+            </v-tabs>
+          </template>
+
+          <v-tabs-items v-model="tabs" class="transparent">
+            <v-tab-item v-for="n in 3" :key="n">
+              <v-card-text>
+                <template v-for="(task, i) in tasks[tabs]">
+                  <v-row :key="i" align="center">
+                    <v-col cols="1">
+                      <!--v-list-item-action>
+                        <v-checkbox v-model="task.value" color="secondary" />
+                      </v-list-item-action-->
+                    </v-col>
+
+                    <v-col cols="9">
+                      <div class="font-weight-light" v-text=" i +1  + ') ' + task.text" />
+                    </v-col>
+
+                    <v-col cols="2" class="text-right">
+                      <!--v-icon class="mx-1"> mdi-pencil </v-icon>
+                      <v-icon color="error" class="mx-1"> mdi-close </v-icon-->
+                    </v-col>
+                  </v-row>
+                </template>
+              </v-card-text>
+            </v-tab-item>
+          </v-tabs-items>
+        </base-material-card>
+      </v-col>
     </v-row>
+    
   </v-container>
 </template>
 
@@ -162,9 +237,8 @@ export default {
   async created() {
     await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
-    
+    await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
 
-    console.log("hey", this.chartsListRPM);
     this.emailsSubscriptionChart.series = this.chartsListRPM;
   },
   data() {

@@ -21,8 +21,7 @@ export default {
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
    
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("hey", this.chartsListRPM);
-     console.log("role--->", this.role)
+
     this.emailsSubscriptionChart.series = this.chartsListRPM;
   },
   data() {

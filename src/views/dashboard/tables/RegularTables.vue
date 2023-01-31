@@ -143,7 +143,6 @@ export default {
     this.$store.dispatch("GET_PROJECTS", user);
     this.data = false;
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
   },
   beforeRouteEnter(to, from, next) {
     this.$store.dispatch("GET_REQUESTS_USER", user);
@@ -258,7 +257,6 @@ export default {
       this.$store.dispatch("GET_REQUESTS_USER", user);
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("role", this.role);
       this.data = false;
     },
     clickColumn(slotData) {

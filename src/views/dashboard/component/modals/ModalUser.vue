@@ -49,7 +49,6 @@
                 <v-text-field
                   name="input-7-1"
                   label="Email"
-                  v-show="type == 'Detail'"
                   v-model="modalUser.email"
                 ></v-text-field>
               </v-col>
@@ -114,7 +113,6 @@ export default {
   }),
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
     if (this.modalUser.type !== "Detail") {
       this.role = "Usuario";
     }

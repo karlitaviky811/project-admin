@@ -8,9 +8,13 @@
         <v-form v-model="valid">
           <h4 class="font-weight-medium outline text-left">{{ title }}</h4>
 
-          <v-chip  dark class="font-weight-medium" style="margin-top:25px;" v-show="type !== 'Create'">{{
-            modalReq.status
-          }}</v-chip>
+          <v-chip
+            dark
+            class="font-weight-medium"
+            style="margin-top: 25px"
+            v-show="type !== 'Create'"
+            >{{ modalReq.status }}</v-chip
+          >
           <v-container>
             <v-row>
               <v-col cols="12" md="6">
@@ -25,14 +29,13 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="modalReq.type"
-                  :counter="10"
                   label="Tipo"
                   required
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
             </v-row>
-             <v-row>
+            <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="modalReq.project"
@@ -45,16 +48,13 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="modalReq.priority"
-                  :counter="10"
                   label="Prioridad"
                   required
                   :disabled="type == 'Detail'"
                 ></v-text-field>
               </v-col>
             </v-row>
-            <v-row>
-  
-            </v-row>
+            <v-row> </v-row>
             <v-row v-if="type !== 'Detail' && role == 'ROLE_USER'">
               <v-col cols="12" md="6">
                 <v-text-field
@@ -110,24 +110,33 @@
                 >
                 </v-text-field>
               </v-col>
-
             </v-row>
-            <v-row >
-              <v-col cols="12" sm="6">
+            <v-row>
+              <v-col
+                cols="12"
+                sm="6"
+                style="align-items: center; justify-content: center"
+              >
                 <v-file-input
                   chips
                   multiple
                   label="Archivos"
                   v-model="chosenFile"
                   v-on:change="upload"
+                  v-show="type !== 'Detail'"
                 >
-                  <v-chip small label color="primary" v-show="type !== 'Detail'">{{ chosenFile }}</v-chip>
+                  <v-chip
+                    small
+                    label
+                    color="primary"
+                    v-show="type !== 'Detail'"
+                    >{{ chosenFile }}</v-chip
+                  >
                 </v-file-input>
                 <v-img
                   v-show="urlImgDam !== ''"
-                  max-height="259"
-                  max-width="250"
                   :src="modalReq.image"
+                  @click="downloadImg(modalReq.image)"
                 ></v-img>
               </v-col>
             </v-row>
@@ -161,6 +170,7 @@
 import Modal from "./Modal";
 import { mapGetters } from "vuex";
 import ax from "axios";
+import { saveAs } from "file-saver";
 export default {
   props: ["show", "title", "id", "type"],
   components: { Modal },
@@ -188,11 +198,12 @@ export default {
   }),
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
-    console.log("this.modalReq", this.modalReq);
     this.request = Object.assign({}, this.modalReq);
     this.chosenFile = this.modalReq.image;
-    this.urlImgDam = this.modalReq.image !== "" ? this.modalReq.image : "";
+    this.urlImgDam =
+      this.modalReq.image !== ""
+        ? this.modalReq.image
+        : "https://metrika.com/images/empty-photo.jpg";
   },
   computed: {
     ...mapGetters(["modalReq"]),
@@ -229,16 +240,26 @@ export default {
         }
       }
     },
+    downloadImg(item) {
+      let responseUrl = item;
+      let url = item;
+      fetch(url)
+        .then((response) => response.blob())
+        .then((blob) => {
+          saveAs(blob, "image_name.jpg");
+        });
+      console.log("downloading", url);
+    },
     async upload(e) {
       console.log("e", e);
       const file = e[0];
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "ml_default");
+      formData.append("upload_preset", "eoguktd6");
 
       try {
         const res = await ax.post(
-          "https://api.cloudinary.com/v1_1/newproperly/image/upload",
+          "https://api.cloudinary.com/v1_1/db4ne9cce/image/upload",
           formData,
           {
             headers: {
@@ -265,7 +286,7 @@ export default {
   padding-right: 10px;
 }
 
-.modal-container{
+.modal-container {
   width: 60% !important;
 }
 </style>

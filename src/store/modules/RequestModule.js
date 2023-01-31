@@ -50,7 +50,6 @@ const RequestModule = {
       axios.get("http://localhost:3999/api/req/requests/:1", {
         "Authorization": localStorage.getItem('token'),
       }).then((response) => {
-        console.log("response admin", response)
         commit('setRequestsList', response.data.requests)
         return true;
       }, (err) => {
@@ -61,8 +60,8 @@ const RequestModule = {
     },
     GET_REQUESTS_USER: async function ({ commit }, data) {
       //let  id= data.replace('""', '')
-      console.log("data", data)
       axios.get("http://localhost:3999/api/req/user-requests/" + data).then((response) => {
+        console.log("response", response.data.requests)
         commit('setRequestsUser', response.data.requests)
         return true;
       }, (err) => {
@@ -82,7 +81,7 @@ const RequestModule = {
         priority: data.priority,
         urgency: data.urgency,
         feedBack: '',
-        image: data.image
+        image: data.image !== ''? data.image : 'https://metrika.com/images/empty-photo.jpg'
   
       }
       console.log("req------->", req)
@@ -109,7 +108,7 @@ const RequestModule = {
       const headers = {
         Authorization: localStorage.getItem('token')
       }
-      console.log("data", data, "token", headers)
+      console.log("data----*************", data, "token", headers)
       const req = {
         type: data.type,
         project: data.project,
@@ -119,8 +118,7 @@ const RequestModule = {
         status: data.status,
         urgency: data.urgency,
         feedBack: data.feedBack.comment,
-        image : data.image
-    
+        image: data.image !== ''? data.image : 'https://metrika.com/images/empty-photo.jpg'
       }
       console.log("req", req)
 
@@ -154,7 +152,8 @@ const RequestModule = {
         priority: data.priority,
         status: data.status,
         urgency: data.urgency,
-        feedBack: data.feedBack.comment
+        feedBack: data.feedBack.comment,
+        image: data.image
         
       }
       console.log("req--->>>>", req)

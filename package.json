@@ -13,9 +13,11 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@types/file-saver": "^2.0.5",
     "axios": "^0.26.1",
     "core-js": "^3.6.2",
     "eslint-loader": "^2.1.2",
+    "file-saver": "^2.0.5",
     "vue": "^2.6.11",
     "vue-i18n": "^8.15.3",
     "vue-router": "^3.1.3",

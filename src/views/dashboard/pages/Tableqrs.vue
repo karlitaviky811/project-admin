@@ -218,7 +218,6 @@ export default {
       this.isModalVisible = false;
     },
     showModal: function (id) {
-      console.log("id", this.activeModal == id);
       return this.activeModal == id;
     },
     openModal: function (req) {
@@ -241,14 +240,12 @@ export default {
       this.$store.dispatch("GET_QRS_ALL");
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("role", this.role);
     },
     loadRequests() {
       //const user = JSON.parse(localStorage.getItem("user"))._id;
       this.$store.dispatch("GET_REQUESTS_ALL");
 
       this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("role", this.role);
       this.data = false;
     },
   },

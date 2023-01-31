@@ -51,8 +51,6 @@
       <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
       <div />
     </v-list>
-
-
   </v-navigation-drawer>
 </template>
 
@@ -97,7 +95,7 @@ export default {
         icon: "mdi-chart-bubble",
         to: "/home/components/userslist",
       },
-     /* {
+      /* {
         title: "google",
         icon: "mdi-map-marker",
         to: "/home/maps/google-maps",
@@ -109,7 +107,7 @@ export default {
       },
     */
     ],
-    items2:[
+    items2: [
       {
         icon: "mdi-view-dashboard",
         title: "dashboard",
@@ -130,8 +128,8 @@ export default {
         icon: "mdi-format-font",
         to: "/home/components/qrs",
       },
-      
-     /* {
+
+      /* {
         title: "google",
         icon: "mdi-map-marker",
         to: "/home/maps/google-maps",
@@ -143,7 +141,7 @@ export default {
       },
     */
     ],
-    role : '',
+    role: "",
   }),
 
   computed: {
@@ -157,9 +155,9 @@ export default {
       },
     },
     computedItems() {
-
-
-      return this.role !== "ROLE_USER"? this.items.map(this.mapItem) : this.items2.map(this.mapItem);
+      return this.role !== "ROLE_USER"
+        ? this.items.map(this.mapItem)
+        : this.items2.map(this.mapItem);
     },
     profile() {
       return {
@@ -168,14 +166,11 @@ export default {
       };
     },
   },
-created(){
-   const user = JSON.parse(localStorage.getItem("user"))._id;
+  created() {
+    const user = JSON.parse(localStorage.getItem("user"))._id;
     this.$store.dispatch("GET_REQUESTS_ALL");
-
-      this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role);
-    
-},
+    this.role = JSON.parse(localStorage.getItem("user")).role;
+  },
   methods: {
     mapItem(item) {
       return {
@@ -190,7 +185,6 @@ created(){
 
 <style lang="sass">
 @import '~vuetify/src/styles/tools/_rtl.sass'
-
 
 #core-navigation-drawer
   .v-list-group__header.v-list-item--active:before
@@ -244,19 +238,14 @@ created(){
 
           +rtl()
             margin-left: 8px
-
-
-
-            
 </style>
 
 <style lang="css">
- .v-application .primary{
-
+.v-application .primary {
   background-color: #0088cc !important;
- }
+}
 
- .deep-purple{
+.deep-purple {
   background-color: #5e5e5e !important;
- }
+}
 </style>
