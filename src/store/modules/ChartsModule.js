@@ -4,6 +4,8 @@ const ChartsModule = {
     state: {
         chartsListPSC: [],
         chartsListRPM: {},
+        chartsListRPMA: [],
+        chartsListRPMR: [],
         requestList: []
     },
     mutations: {
@@ -15,6 +17,12 @@ const ChartsModule = {
 
             console.log("state", state.chartsListRPM)
         },
+        setChartsListRSA(state, data){
+            state.chartsListRPMA = data.data
+        },
+        setChartsListRSR(state, data){
+            state.chartsListRPMR = data.data
+        }
     },
     actions: {
         GET_LIST_PROJECTS_STATE_CREATE: async function ({ commit }) {
@@ -50,6 +58,36 @@ const ChartsModule = {
 
         },
 
+        GET_LIST_REQUEST_MONTS_A: async function ({ commit }) {
+            axios.get("http://localhost:3999/api/req/request/graph/montsA", {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                commit('setChartsListRSA', response.data)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+        GET_LIST_REQUEST_MONTS_R: async function ({ commit }) {
+            axios.get("http://localhost:3999/api/req/request/graph/montsR", {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                commit('setChartsListRSR', response.data)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
     },
     getters: {
         chartsListPSC(state) {
@@ -58,6 +96,12 @@ const ChartsModule = {
         chartsListRPM(state) {
             return state.chartsListRPM;
         },
+        chartsListRPMA(state){
+            return state.chartsListRPMA
+        },
+        chartsListRPMR(state){
+            return state.chartsListRPMR
+        }
     },
 };
 export default ChartsModule;

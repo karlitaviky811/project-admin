@@ -202,7 +202,6 @@ export default {
     },
     toggleModalClose: async function (id) {
       if (this.activeModal !== 0) {
-        console.log("aqui caaaayo");
         this.activeModal = 0;
         return false;
       }
@@ -217,16 +216,17 @@ export default {
       this.type = 'Create';
     },
     edit(item) {
+     
+      
       this.id = item._id;
-      this.title = "Editar ";
-      this.show = true;
-      console.log("this.request", item.item);
-      this.toggleModal(item._id);
-      this.type = 'Edit';
+      this.title = "Editar";
+      this.toggleModal(this.id);
       this.request = Object.assign({}, item.item);
-      console.log("this", this.request);
-      this.$store.commit("setRequestsUserModal", this.request);
+      this.$store.commit("setRequestsUserModal",item.item);
+      this.type = 'Edit';
+      this.show = true;
       this.dialog = true;
+   
     },
     detail(item) {
       this.type = 'Detail';

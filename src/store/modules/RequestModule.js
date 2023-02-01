@@ -6,22 +6,21 @@ const RequestModule = {
     modalReq: {
       
     },
-    requestList: []
+    requestList: [],
+    requestListByType: []
   },
   mutations: {
     setRequestsUser(state, data) {
-
       state.requestsU = data;
     },
     setRequestsUserModal(state, data) {
-      console.log("en el set")
-      console.log("dat---->", data)
-      console.log("dat---->", data.image)
+
       let comm = ''
       if(data !== {}){
         comm = data.feedBack?.comment
       }
-      console.log("state", data)
+
+        console.log("req---->", data)
       const req = {
         _id: data._id,
         type: data.type,
@@ -34,14 +33,19 @@ const RequestModule = {
         image: data.image !== undefined ? data.image : 'https://www.hazteveg.com/img/empty-photo.jpg',
         feedBack: {
           comment: comm
-        }
+        },
+        image: data.image
       }
+      console.log("req", req)
       state.modalReq = req;
       console.log("here", state.modalReq)
     },
     setRequestsList(state, data) {
 
       state.requestList = data;
+    },
+    setRequestsListByType(state, data) {
+      state.requestListByType = data;
     },
   },
   actions: {
@@ -51,6 +55,21 @@ const RequestModule = {
         "Authorization": localStorage.getItem('token'),
       }).then((response) => {
         commit('setRequestsList', response.data.requests)
+        return true;
+      }, (err) => {
+        console.log(err)
+        return false;
+      })
+
+    },
+    GET_REQUESTS_ALL_BY_TYPE: async function ({ commit }) {
+   
+      axios.get("http://localhost:3999/api/req/request/group/:1", {
+        "Authorization": localStorage.getItem('token'),
+      }).then((response) => {
+        console.log("response--->", response.data.requests)
+       
+        commit('setRequestsListByType', response.data.requests)
         return true;
       }, (err) => {
         console.log(err)
@@ -185,6 +204,9 @@ const RequestModule = {
     },
     requestList(state) {
       return state.requestList;
+    },
+    requestListByType(state) {
+      return state.requestListByType;
     }
   },
 };
