@@ -22,21 +22,18 @@
               </v-col>
 
               <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="modalQrs.type"
-                  :counter="10"
-                  label="Tipo"
-                  required
-                  :disabled="type == 'Detail'"
-                ></v-text-field>
+            
+              <v-select v-model="modalQrs.type"  required label="Proyecto" requiredpersistent-hint :items="params"
+                :disabled="type == 'Detail'"
+                item-text="name" item-value="type">
+              </v-select>
               </v-col>
                <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="modalQrs.project"
-                  label="Proyecto"
-                  required
-                  :disabled="type == 'Detail'"
-                ></v-text-field>
+                  <v-select v-model="modalQrs.project"  required label="Proyecto" requiredpersistent-hint :items="paramsProject"
+                :disabled="type == 'Detail'"
+                item-text="title" item-value="title">
+              </v-select>
+
               </v-col>
             </v-row>
             <v-row>
@@ -91,15 +88,39 @@ export default {
       (v) => !!v || "E-mail is required",
       (v) => /.+@.+/.test(v) || "E-mail must be valid",
     ],
+      params: [
+      {
+        id: 1,
+        type: "Queja",
+        name: "Queja",
+      },
+      {
+        id: 2,
+        type: "Reclamo",
+        name: "Reclamo",
+      },
+      {
+        id: 3,
+        type: "Sugerencia",
+        name: "Sugerencia",
+      }
+    ],
   }),
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
     this.request = Object.assign({}, this.modalProject);
     console.log("title", this.title)
+        this.$store.dispatch("GET_PROJECTS_ALL");
   },
   computed: {
     ...mapGetters(["modalQrs"]),
     ...mapGetters(["user"]),
+     ...mapGetters(["projectsList"]),
+  },
+  watch : {
+     projectsList(){
+      this.paramsProject = this.projectsList
+    },
   },
   methods: {
     close: function () {

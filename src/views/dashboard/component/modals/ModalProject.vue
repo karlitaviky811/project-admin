@@ -20,13 +20,12 @@
               </v-col>
 
               <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="modalProject.department"
-                  :counter="10"
-                  label="Departamento"
-                  required
-                  :disabled="type == 'Detail'"
-                ></v-text-field>
+
+              <v-select v-model="modalProject.department"  required label="Departamento" requiredpersistent-hint :items="params"
+                :disabled="type == 'Detail'"
+                item-text="name" item-value="type">
+              </v-select>
+               
               </v-col>
                <v-col cols="12" md="4">
                 <v-text-field
@@ -79,6 +78,33 @@ export default {
     emailRules: [
       (v) => !!v || "E-mail is required",
       (v) => /.+@.+/.test(v) || "E-mail must be valid",
+    ],
+         params: [
+      {
+        id: 1,
+        type: "Computación",
+        name: "Computación",
+      },
+      {
+        id: 2,
+        type: "Quimica",
+        name: "Quimica",
+      },
+      {
+        id: 3,
+        type: "Matematica",
+        name: "Matematica",
+      },
+      {
+        id: 4,
+        type: "Biología",
+        name: "Biología",
+      },
+       {
+        id: 5,
+        type: "Física",
+        name: "Física",
+      },
     ],
   }),
   created() {

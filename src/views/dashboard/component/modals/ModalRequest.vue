@@ -6,6 +6,14 @@
       </div>
       <template>
         <v-form v-model="valid">
+              <v-alert
+      dense
+      outlined
+      type="error"
+      v-show="noValid"
+    >
+     Por favor llene todos los campos solicitados
+    </v-alert>
           <h4 class="font-weight-medium outline text-left">{{ title }}</h4>
 
           <v-chip dark class="font-weight-medium" style="marparamsProjectgin-top: 25px" v-show="type !== 'Create'">{{
@@ -14,7 +22,7 @@
           <v-container>
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="modalRequest.title" label="Título solicitud" required
+                <v-text-field   v-model="modalRequest.title" label="Título solicitud" required
                   :disabled="type == 'Detail'"></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
@@ -25,8 +33,10 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="modalRequest.project" label="Proyecto" required
-                  :disabled="type == 'Detail'"></v-text-field>
+              <v-select v-model="modalRequest.project" label="Proyecto" requiredpersistent-hint :items="paramsProject"
+                :disabled="type == 'Detail'"
+                item-text="title" item-value="title">
+              </v-select>
               </v-col>
               <v-col cols="12" md="6">
                 <v-select v-model="modalRequest.priority" label="Prioridad" requiredpersistent-hint :items="paramsPriority"
@@ -44,7 +54,7 @@
                 </v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field v-model="modalReq.description" color="teal" label="Descripción"
+                <v-text-field v-model="modalRequest.description" color="teal" label="Descripción"
                   :disabled="type === 'Detail'">
                 </v-text-field>
               </v-col>
@@ -69,17 +79,16 @@
               <v-col cols="12" sm="6" style="align-items: center; justify-content: center">
                 <div style="display:flex;">
                   <v-file-input 
+                  show-size counter
                   chips multiple 
                   label="Archivos" 
                   v-model="chosenFile" 
                   v-on:change="upload"
                   v-show="type !== 'Detail'">
-                  <v-chip small label color="primary">{{ chosenFile }}</v-chip>
-
-                    
+                  <v-chip small label color="primary">{{chosenFile }}</v-chip>
                 </v-file-input>
                 <v-btn fab small v-show="true" class="mx-2" color="green"
-                @click="downloadImg(chosenFile)">
+                @click="downloadImg(modalRequest)">
                 <v-icon dark>mdi-arrow-down </v-icon>
               </v-btn>
                 </div>
@@ -92,14 +101,13 @@
                     <div>Feedback</div>
                   </template>
                 </v-textarea>
-                <!--v-file-input show-size counter chips multiple label="Arquivo Geral"  v-model="files" ref="file" @change="upload"></v-file-input>
-                 <button @click="submitFile">Upload!</button-->
+                <!--v-file-input show-size counter chips multiple label="Arquivo Geral"  v-model="files" ref="file" @change="upload"></v-file-input-->
               </v-col>
             </v-row>
             <v-row class="mt-5">
               <v-spacer></v-spacer>
               <v-btn color="secondary" text @click="close">Cerrar</v-btn>
-              <v-btn color="primary" text @click="save">Guardar</v-btn>
+              <v-btn color="primary" text @click="save" :disabled="noValid">Guardar</v-btn>
             </v-row>
           </v-container>
         </v-form>
@@ -117,6 +125,7 @@ export default {
   props: ["show", "title", "id", "type"],
   components: { Modal },
   data: () => ({
+    noValid : true,
     valid: false,
     firstname: "",
     request: {},
@@ -138,7 +147,7 @@ export default {
         name: "Incidencia",
       },
       {
-        id: 2,
+        id: 3,
         type: "Problema",
         name: "Problema",
       },
@@ -185,42 +194,68 @@ export default {
   }),
  created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    this.request = Object.assign({}, this.modalReq);
-    this.chosenFile = this.modalReq.image;
-    this.urlImgDam = ""
+    this.request = Object.assign({}, this.modalRequest);
+   
+    this.urlImgDam =this.modalReq.image
     this.$store.dispatch("GET_PROJECTS_ALL");
   },
   computed: {
     ...mapGetters(["modalReq"]),
     ...mapGetters(["user"]),
     ...mapGetters(["projectsList"]),
+     rules() {
+      const valid = (this.values[0] + '').length < (this.values[1] + '').length;
+      return {
+        first: [() => valid || "Must have less characters than second value"], 
+        second: [() => valid || "Must have more characters than first value"]
+      };
+    }
   },
   watch: {
     modalReq(){
       this.modalRequest = this.modalReq
+    },
+    projectsList(){
+      this.paramsProject = this.projectsList
+    },
+    modalRequest(){
+      
+      if(this.modalRequest.title !== ""){
+        return true
+      }
+
+      return false
     }
   },
   methods: {
     close: function () {
       this.$emit("close");
     },
+    validForm(){
+     
+      if(this.modalRequest.title !== ""){
+        return false
+      }
+
+      return true
+    },
     save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("this", this.role, this.type);
       if (this.role === "ROLE_USER") {
         if (this.type == "Create") {
-          this.$store.dispatch("SAVE_REQUESTS_USER", this.modalReq);
+          this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
           this.close();
           this.$emit("reqCreated");
         } else if (this.type == "Edit") {
-          this.$store.dispatch("UPDATE_REQUESTS_USER", this.modalReq);
+          this.$store.dispatch("UPDATE_REQUESTS_USER", this.modalRequest);
           this.close();
           this.$emit("reqCreated");
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Detail") {
           console.log("debo actualizar el estatus!!!", this.modalReq);
-          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
+          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalRequest);
           this.$emit("reqCreated");
           this.close();
         }
@@ -228,8 +263,8 @@ export default {
     },
     downloadImg(item) {
       let responseUrl = item;
-      let url = item;
-      console.log("img", img)
+      let url =  this.modalRequest.image;
+      console.log("img",  this.modalRequest.image)
       fetch(url)
         .then((response) => response.blob())
         .then((blob) => {
@@ -237,26 +272,13 @@ export default {
         });
       console.log("downloading", url);
     },
-    upload(e) {
-      /* console.log("this.refs", this.$refs)
-       console.log("e", e);
- 
- 
-       const reader = new FileReader();
-         reader.readAsDataURL(e[0]);
-         reader.onload = (res) => {
-           console.log("res", res.target.result)
-         };
-         reader.onerror = (error) => reject(error);
-       */
+   async upload(e) {
       const file = e[0];
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "eoguktd6");
-
-
       try {
-        const res = ax.post(
+        const res = await ax.post(
           "https://api.cloudinary.com/v1_1/db4ne9cce/image/upload",
           formData,
           {
@@ -266,9 +288,8 @@ export default {
           }
         );
         this.photoInfo = res.data;
-        this.urlImgDam = this.photoInfo.secure_url;
-
-        this.modalReq.image = this.photoInfo.secure_url;
+      
+        this.modalRequest.image = this.photoInfo.secure_url;
       } catch (e) {
         console.log(e);
       }
