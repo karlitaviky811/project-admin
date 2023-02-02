@@ -105,6 +105,7 @@ export default {
         name: "Sugerencia",
       }
     ],
+    paramsProject : []
   }),
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
@@ -141,10 +142,10 @@ export default {
           this.$emit("reqProject");
         }
       } else if (this.role == "ROLE_ADMIN") {
-        if (this.type === "Detail") {
-          console.log("debo actualizar el estatus!!!", this.modalReq);
+        if (this.type === "Edit") {
+          console.log("debo actualizar el estatus!!!", this.modalQrs);
 
-          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
+          this.$store.dispatch("UPDATE_QRS_FEEDBACK", this.modalQrs);
           this.$emit("reqCreated");
           this.close();
         }

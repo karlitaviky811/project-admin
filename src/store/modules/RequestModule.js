@@ -20,7 +20,7 @@ const RequestModule = {
         comm = data.feedBack?.comment
       }
 
-        console.log("req---->", data)
+      console.log("req---->", data)
       const req = {
         _id: data._id,
         type: data.type,
@@ -127,7 +127,7 @@ const RequestModule = {
       const headers = {
         Authorization: localStorage.getItem('token')
       }
-      console.log("data----*************", data, "token", headers)
+      console.log("data----*************", data, "token", headers, data.feedBack.comment)
       const req = {
         type: data.type,
         project: data.project,
@@ -158,11 +158,11 @@ const RequestModule = {
         });
 
     },
-    UPDATE_REQUESTS_USER_FEEDBACK: async function ({ commit }, data) {
+    UPDATE_REQUESTS_USER_FEEDBACKS: async function ({ commit }, data) {
       const headers = {
         Authorization: localStorage.getItem('token')
       }
-      console.log("data ---->", data)
+      console.log("data ---->>>>>>>>>>>>>>>", data)
       const req = {
         type: data.type,
         project: data.project,
@@ -172,12 +172,11 @@ const RequestModule = {
         status: data.status,
         urgency: data.urgency,
         feedBack: data.feedBack.comment,
-        image: data.image
-        
+        image: data.image !== ''? data.image : 'https://metrika.com/images/empty-photo.jpg'
       }
       console.log("req--->>>>", req)
 
-
+console.log("data", data._id)
       axios
         .put("http://localhost:3999/api/req/request/" +data._id +"/feedback",  req, {
           headers: {

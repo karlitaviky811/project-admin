@@ -22,15 +22,17 @@ const LoginModule = {
     },
   },
   actions: {
-    LOGIN_USER: async function ({ commit, state }) {
+    LOGIN_USER: async function ({ commit }, login) {
+
+      console.log("state",login)
       const data = {
-        email: 'test@gmail.com',
-        password: '12345678',
+        email: login.user,
+        password: login.password,
       }
 
       const data2 = {
-        email: 'test@gmail.com',
-        password: '12345678',
+        email: login.user,
+        password: login.password,
         gettoken: true
       }
       //window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

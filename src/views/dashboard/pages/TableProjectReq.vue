@@ -26,7 +26,7 @@
                     v-on="{ ...tooltip }"
                     fab
                     small
-                    v-show="true"
+                    v-show="role == 'ROLE_USER'"
                     color="success"
                     @click.stop="create(true)"
                   >
@@ -62,7 +62,7 @@
             <td>{{ row.item.department }}</td>
             <td>{{ row.item.tecnology }}</td>
 
-            <td v-show="true">
+            <td v-show="role == 'ROLE_USER'">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on: tooltip }">
                   <v-btn
@@ -117,6 +117,7 @@ export default {
     this.$store.dispatch("GET_PROJECTS_ALL");
     this.data = false;
     this.role = JSON.parse(localStorage.getItem("user")).role;
+    console.log("role", this.role)
   },
 
   data() {

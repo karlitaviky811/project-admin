@@ -159,7 +159,16 @@
             <v-tab-item v-for="n in 3" :key="n">
               <v-card-text>
                 <template v-for="(task, i) in tasks[tabs]" >
-                  <v-row  align="center">
+
+                  <template>
+                    <v-data-table
+                      :headers="headersReq"
+                      :items="tasks[tabs]"
+                      :items-per-page="5"
+                      
+                    ></v-data-table>
+                  </template>
+                  <!--v-row  align="center">
                     <v-col cols="1">
                       <v-list-item-action>
                         <div  v-text="i + 1" />
@@ -175,7 +184,7 @@
                       <div class="font-weight-light" v-text="task.date" />
                     </v-col>
                    
-                  </v-row>
+                  </v-row-->
                 </template>
               </v-card-text>
             </v-tab-item>
@@ -331,7 +340,7 @@ export default {
           ],
         ],
       },
-      rejectedRequestChart: object =  {
+      rejectedRequestChart:  {
         data: {
           labels: [
             "E",
@@ -377,7 +386,7 @@ export default {
           ],
         ],
       },
-      headers: any = [
+      headers: [
         {
           sortable: false,
           text: "Proyecto",
@@ -396,7 +405,7 @@ export default {
           align: "right",
         },
       ],
-      items: any = [
+      items:[
         {
           id: 1,
           name: "Dakota Rice",
@@ -433,7 +442,7 @@ export default {
           salary: "$63,542",
         },
       ],
-      tabs: number = 0,
+      tabs:  0,
       tasks: {
       },
       list: {
@@ -441,7 +450,32 @@ export default {
         1: false,
         2: false,
       },
-      requestByType: object = {}
+      requestByType: {},
+      headersReq:[
+        {
+          sortable: false,
+          text: "",
+          value: "i",
+
+        },
+        {
+          sortable: false,
+          text: "Titulo",
+          value: "title",
+        },
+        {
+          sortable: false,
+          text: "Fecha",
+          value: "date",
+          align: "right",
+        },
+        {
+          sortable: false,
+          text: "Proyecto",
+          value: "project",
+          align: "right",
+        },
+      ],
     };
   },
   computed: {

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
 Vue.use(Vuex)
 
 export default new Vuex.Store({

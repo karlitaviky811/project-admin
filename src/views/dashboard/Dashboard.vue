@@ -17,8 +17,9 @@ export default {
 
   },
   async created() {
-    await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE");
-    await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
+    const user = JSON.parse(localStorage.getItem("user"))._id;
+    await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE_USER");
+    await this.$store.dispatch("GET_LIST_REQUEST_MONTS_USER", user);
    
     this.role = JSON.parse(localStorage.getItem("user")).role;
 
@@ -219,13 +220,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["chartsListRPM"]),
+    ...mapGetters(["chartsListRPMUSER"]),
     ...mapGetters(["chartsListPSC"]),
+    ...mapGetters(["chartsListRPMA"]),
+    ...mapGetters(["chartsListRPMR"]),
+    ...mapGetters(["requestListByType"])
    
   },
   watch:{
-     chartsListRPM(){
-       this.emailsSubscriptionChart.data.series = [this.chartsListRPM.series] ;
+     chartsListRPMUSER(){
+       this.emailsSubscriptionChart.data.series = [this.chartsListRPMUSER.series] ;
     }
   },
   methods: {

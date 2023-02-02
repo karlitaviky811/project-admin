@@ -5,8 +5,10 @@
         <v-icon @click="close">mdi-close</v-icon>
       </div>
       <template>
-        <v-form v-model="valid">
-              <v-alert
+        <v-form
+          @submit.prevent="checkForm"
+        >
+    <v-alert
       dense
       outlined
       type="error"
@@ -26,21 +28,24 @@
                   :disabled="type == 'Detail'"></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-select v-model="modalRequest.type" label="Seleccione tipo" persistent-hint :items="params"
+                <v-select v-model="modalRequest.type" label="Seleccione tipo" persistent-hint :items="params" required
+                :disabled="type == 'Detail'"
                   item-text="name" item-value="rol">
                 </v-select>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-              <v-select v-model="modalRequest.project" label="Proyecto" requiredpersistent-hint :items="paramsProject"
+              <v-select v-if="paramsProject.length" v-model="modalRequest.project" label="Proyecto" requiredpersistent-hint :items="paramsProject"
                 :disabled="type == 'Detail'"
+                :required="title"
                 item-text="title" item-value="title">
               </v-select>
               </v-col>
               <v-col cols="12" md="6">
                 <v-select v-model="modalRequest.priority" label="Prioridad" requiredpersistent-hint :items="paramsPriority"
                 :disabled="type == 'Detail'"
+                required
                 item-text="name" item-value="rol">
               </v-select>
               </v-col>
@@ -50,11 +55,13 @@
             <v-row v-if="type !== 'Detail' && role == 'ROLE_USER'">
               <v-col cols="12" md="6">
                 <v-select v-model="modalRequest.urgency" label="Seleccione tipo" persistent-hint :items="paramsUrgency"
+                
                   item-text="name" item-value="type" :disabled="type == 'Detail'">
                 </v-select>
               </v-col>
               <v-col cols="12" sm="6">
                 <v-text-field v-model="modalRequest.description" color="teal" label="Descripción"
+                required
                   :disabled="type === 'Detail'">
                 </v-text-field>
               </v-col>
@@ -68,16 +75,9 @@
                   :disabled="type == 'Detail'"></v-text-field>
               </v-col>
             </v-row>
-            <v-row v-show="type == 'Detail'">
-              <v-col cols="12" sm="4">
-                <v-text-field v-model="modalRequest.description" color="teal" label="Descripción"
-                  :disabled="type === 'Detail'">
-                </v-text-field>
-              </v-col>
-            </v-row>
             <v-row>
               <v-col cols="12" sm="6" style="align-items: center; justify-content: center">
-                <div style="display:flex;">
+                <div>
                   <v-file-input 
                   show-size counter
                   chips multiple 
@@ -87,16 +87,57 @@
                   v-show="type !== 'Detail'">
                   <v-chip small label color="primary">{{chosenFile }}</v-chip>
                 </v-file-input>
+                </div>
+                <div style="display:flex;">
+                 
+                <v-img
+                v-show="urlImgDam !== ''"
+                :src="modalReq.image"
+                @click="downloadImg(modalReq.image)"
+              ></v-img>
                 <v-btn fab small v-show="true" class="mx-2" color="green"
                 @click="downloadImg(modalRequest)">
                 <v-icon dark>mdi-arrow-down </v-icon>
               </v-btn>
                 </div>
+                <!--div style="display:flex;">
+                  <v-file-input 
+                  show-size counter
+                  chips multiple 
+                  label="Archivos" 
+                  v-model="chosenFile" 
+                  v-on:change="upload"
+                  v-show="type !== 'Detail'">
+                  <v-chip small label color="primary">{{chosenFile }}</v-chip>
+                </v-file-input>
+                <v-img
+                v-show="urlImgDam !== ''"
+                :src="modalReq.image"
+                @click="downloadImg(modalReq.image)"
+              ></v-img>
+                <v-btn fab small v-show="true" class="mx-2" color="green"
+                @click="downloadImg(modalRequest)">
+                <v-icon dark>mdi-arrow-down </v-icon>
+              </v-btn>
+                </div-->
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" sm="6" v-if="type">
-                <v-textarea v-model="modalRequest.feedBack.comment" color="teal" label="Feedback" v-show="type == 'Detail'">
+                <v-textarea v-model="modalRequest.description" color="teal" label="Descripcion" v-if="type == 'Detail'"
+                :disabled="type == 'Detail'"
+                >
+                  <template v-slot:label>
+                    <div>Descripcion</div>
+                  </template>
+                </v-textarea>
+
+                <!--v-file-input show-size counter chips multiple label="Arquivo Geral"  v-model="files" ref="file" @change="upload"></v-file-input-->
+              </v-col>
+              <v-col cols="12" sm="6" v-if="type">
+                <v-textarea v-model="modalRequest.feedBack.comment" color="teal" label="Feedback" v-show="type == 'Detail'"
+                :disabled="role == 'ROLE_USER'"
+                >
                   <template v-slot:label>
                     <div>Feedback</div>
                   </template>
@@ -104,10 +145,11 @@
                 <!--v-file-input show-size counter chips multiple label="Arquivo Geral"  v-model="files" ref="file" @change="upload"></v-file-input-->
               </v-col>
             </v-row>
+
             <v-row class="mt-5">
               <v-spacer></v-spacer>
               <v-btn color="secondary" text @click="close">Cerrar</v-btn>
-              <v-btn color="primary" text @click="save" :disabled="noValid">Guardar</v-btn>
+              <v-btn color="primary" text @click="save" type="submit" >Guardar</v-btn>
             </v-row>
           </v-container>
         </v-form>
@@ -117,15 +159,18 @@
 </template>
 
 <script>
+import { Field, Form, ErrorMessage } from 'vee-validate';
 import Modal from "./Modal";
 import { mapGetters } from "vuex";
 import ax from "axios";
 import { saveAs } from "file-saver";
+import * as yup from 'yup';
 export default {
   props: ["show", "title", "id", "type"],
+  
   components: { Modal },
   data: () => ({
-    noValid : true,
+    noValid : false,
     valid: false,
     firstname: "",
     request: {},
@@ -135,6 +180,13 @@ export default {
     urlImgDam: "",
     chosenFile: [],
     modalRequest: [],
+
+
+schema : yup.object({
+  description: yup.string().email().required(),
+  title: yup.string().required(),
+}),
+
     params: [
       {
         id: 1,
@@ -242,24 +294,34 @@ export default {
     save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("this", this.role, this.type);
-      if (this.role === "ROLE_USER") {
+      console.log("heyyy", this.checkForm())
+      this.checkForm()
+    
+        if (this.role === "ROLE_USER") {
         if (this.type == "Create") {
+          if(!this.noValid){
           this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
           this.close();
           this.$emit("reqCreated");
+
+          }
         } else if (this.type == "Edit") {
+          if(!this.noValid){
           this.$store.dispatch("UPDATE_REQUESTS_USER", this.modalRequest);
           this.close();
           this.$emit("reqCreated");
+          }
         }
       } else if (this.role == "ROLE_ADMIN") {
+        console.log("ereeee babay")
         if (this.type === "Detail") {
-          console.log("debo actualizar el estatus!!!", this.modalReq);
-          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalRequest);
+          console.log("debo actualizar el estatus!!!", this.modalRequest);
+          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACKS", this.modalRequest);
           this.$emit("reqCreated");
           this.close();
         }
       }
+    
     },
     downloadImg(item) {
       let responseUrl = item;
@@ -305,6 +367,24 @@ export default {
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
       });
+    },
+    checkForm(e) {
+  
+      if (this.modalRequest.title && this.modalRequest.description) {
+        this.noValid = false;
+      }
+    
+      this.errors = [];
+
+      if (!this.modalRequest.title) {
+        this.errors.push('Titulo required.');
+        this.noValid = true
+      }
+      if (!this.modalRequest.description) {
+        this.errors.push('Descripcion required.');
+        this.noValid = true
+      }
+    
     }
   },
 };
