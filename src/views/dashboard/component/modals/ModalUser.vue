@@ -32,7 +32,7 @@
                 <v-row>
                   <v-col cols="12">
                     <v-select
-                      v-model="role"
+                      v-model="modalUser.role"
                       label="Seleccione rol"
                       persistent-hint
                       :items="params"

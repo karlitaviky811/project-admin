@@ -3,15 +3,13 @@
     <v-content>
       <v-container fluid fill-height>
         <v-layout align-center justify-center style="flex-direction:column;width:100%;">
-         <div  style="display:flex;flex-direction:column;">
-                <v-flex xs12 sm8 md4>
-              <img
-                :src="'http://www.facyt.uc.edu.ve/sites/default/files/logo-completo_0_0_0_0_0.png'"
-              />
+          <div style="display:flex;flex-direction:column;">
+            <v-flex xs12 sm8 md4>
+              <img :src="'http://www.facyt.uc.edu.ve/sites/default/files/logo-completo_0_0_0_0_0.png'" />
 
-          </v-flex>
-         </div>
-      
+            </v-flex>
+          </div>
+
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12" style="width:480px;">
               <v-toolbar dark color="#0088cc">
@@ -19,17 +17,9 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field
-                    name="login"
-                    label="Login"
-                    type="text"
-                  ></v-text-field>
-                  <v-text-field
-                    id="password"
-                    name="password"
-                    label="Password"
-                    type="password"
-                  ></v-text-field>
+                  <v-text-field v-model="user" name="login" label="Login" type="text"></v-text-field>
+                  <v-text-field v-model="password" id="password" name="password" label="Password"
+                    type="password"></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -50,14 +40,25 @@ export default {
   props: {
     source: String,
   },
+  data: () => ({
+    user: '',
+    password: ''
+  }),
   methods: {
     test() {
+
+      var user = {
+        user: this.user,
+        password: this.password
+      }
       /* this.$router.push({name:'Test',params:{}});
          console.log("helo");*/
-      this.$store.dispatch("LOGIN_USER");
+      this.$store.dispatch("LOGIN_USER", user);
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

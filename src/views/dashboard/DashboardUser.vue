@@ -32,19 +32,20 @@
             </v-tooltip>
           </template>
 
-          <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes de Cambio</h4>
+          <h4 class="card-title font-weight-light mt-2 ml-2">
+            Solicitudes de Cambio
+          </h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
             En el año en curso (2023)
           </p>
-
         </base-material-chart-card>
       </v-col>
 
       <v-col cols="12" lg="4">
         <base-material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
+          :data="activeRequestChartUser.data"
+          :options="activeRequestChartUser.options"
           color="success"
           hover-reveal
           type="Line"
@@ -71,7 +72,9 @@
             </v-tooltip>
           </template>
 
-          <h4 class="card-title font-weight-light mt-2 ml-2">Solicitudes Aceptadas</h4>
+          <h4 class="card-title font-weight-light mt-2 ml-2">
+            Solicitudes Aceptadas
+          </h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
             En el año en curso (2023)
@@ -81,8 +84,8 @@
 
       <v-col cols="12" lg="4">
         <base-material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
+          :data="rejectedRequestChart.data"
+          :options="rejectedRequestChart.options"
           hover-reveal
           color="info"
           type="Line"
@@ -113,12 +116,11 @@
             Solicitudes Rechazadas
           </h3>
 
-           <p class="d-inline-flex font-weight-light ml-2 mt-1">
+          <p class="d-inline-flex font-weight-light ml-2 mt-1">
             En el año en curso (2023)
           </p>
         </base-material-chart-card>
       </v-col>
-
 
       <v-col cols="12" sm="6" lg="3">
         <base-material-stats-card
@@ -127,7 +129,6 @@
           title="Proyectos"
           value="5"
         />
-        
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
@@ -136,7 +137,7 @@
           icon="mdi-poll"
           title="Quejas"
           value="75"
-        />  
+        />
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
@@ -166,7 +167,7 @@
             </div>
           </template>
           <v-card-text>
-            <v-data-table :headers="headers" :items="chartsListPSC" />
+            <v-data-table :headers="headers" :items="chartsListPSCUSER" />
           </v-card-text>
         </base-material-card>
       </v-col>
@@ -186,39 +187,50 @@
               >
               <v-tab class="mr-3">
                 <v-icon class="mr-2"> mdi-bug </v-icon>
-               Incidencias
+                Incidencias
               </v-tab>
               <v-tab class="mr-3">
                 <v-icon class="mr-2"> mdi-code-tags </v-icon>
-              Problemas
+                Problemas
               </v-tab>
               <v-tab>
                 <v-icon class="mr-2"> mdi-cloud </v-icon>
-              Cambios
+                Cambios
               </v-tab>
             </v-tabs>
           </template>
 
+      
           <v-tabs-items v-model="tabs" class="transparent">
             <v-tab-item v-for="n in 3" :key="n">
               <v-card-text>
-                <template v-for="(task, i) in tasks[tabs]">
-                  <v-row :key="i" align="center">
+                <template v-for="(task, i) in tasks[tabs]" >
+
+                  <template>
+                    <v-data-table
+                      :headers="headersReq"
+                      :items="tasks[tabs]"
+                      :items-per-page="5"
+                      :key="i"
+                    ></v-data-table>
+                  </template>
+                  <!--v-row  align="center">
                     <v-col cols="1">
-                      <!--v-list-item-action>
-                        <v-checkbox v-model="task.value" color="secondary" />
-                      </v-list-item-action-->
+                      <v-list-item-action>
+                        <div  v-text="i + 1" />
+                      </v-list-item-action>
                     </v-col>
-
-                    <v-col cols="9">
-                      <div class="font-weight-light" v-text=" i +1  + ') ' + task.text" />
+                    <v-col cols="4">
+                      <div class="font-weight-light" v-text="task.title" />
                     </v-col>
-
-                    <v-col cols="2" class="text-right">
-                      <!--v-icon class="mx-1"> mdi-pencil </v-icon>
-                      <v-icon color="error" class="mx-1"> mdi-close </v-icon-->
+                    <v-col cols="4">
+                      <div class="font-weight-light" v-text="task.project" />
                     </v-col>
-                  </v-row>
+                    <v-col cols="3">
+                      <div class="font-weight-light" v-text="task.date" />
+                    </v-col>
+                   
+                  </v-row-->
                 </template>
               </v-card-text>
             </v-tab-item>
@@ -226,7 +238,6 @@
         </base-material-card>
       </v-col>
     </v-row>
-    
   </v-container>
 </template>
 
@@ -235,10 +246,16 @@ import { mapGetters } from "vuex";
 export default {
   name: "DashboardUser",
   async created() {
-    await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE");
-    await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
-    
-    this.emailsSubscriptionChart.series = this.chartsListRPM;
+    const user = JSON.parse(localStorage.getItem("user"))._id;
+    await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE_USER");
+    await this.$store.dispatch("GET_LIST_REQUEST_MONTS_USER", user);
+
+  
+    await this.$store.dispatch("GET_LIST_REQUEST_MONTS_A_USER");
+    await this.$store.dispatch("GET_LIST_REQUEST_MONTS_R_USER");
+    await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE_USER");
+    this.$store.dispatch("GET_REQUESTS_USER", user);
+
   },
   data() {
     return {
@@ -261,6 +278,72 @@ export default {
           },
         },
       },
+      activeRequestChartUser: {
+        data: {
+          labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+          series: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+        },
+
+        options: {
+          axisX: {
+            showGrid: false,
+          },
+          low: 0,
+          high: 50,
+          chartPadding: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        responsiveOptions: [
+          [
+            "screen and (max-width: 640px)",
+            {
+              seriesBarDistance: 5,
+              axisX: {
+                labelInterpolationFnc: function (value) {
+                  return value[0];
+                },
+              },
+            },
+          ],
+        ],
+      },
+      rejectedRequestChart: {
+        data: {
+          labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+          series: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+        },
+
+        options: {
+          axisX: {
+            showGrid: false,
+          },
+          low: 0,
+          high: 50,
+          chartPadding: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        responsiveOptions: [
+          [
+            "screen and (max-width: 640px)",
+            {
+              seriesBarDistance: 5,
+              axisX: {
+                labelInterpolationFnc: function (value) {
+                  return value[0];
+                },
+              },
+            },
+          ],
+        ],
+      },
       dataCompletedTasksChart: {
         data: {
           labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
@@ -282,20 +365,7 @@ export default {
       },
       emailsSubscriptionChart: {
         data: {
-          labels: [
-            "E",
-            "F",
-            "M",
-            "A",
-            "M",
-            "J",
-            "J",
-            "A",
-            "S",
-            "O",
-            "N",
-            "D",
-          ],
+          labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
           series: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
         },
         options: {
@@ -381,6 +451,31 @@ export default {
           salary: "$63,542",
         },
       ],
+        headersReq:[
+        {
+          sortable: false,
+          text: "",
+          value: "i",
+
+        },
+        {
+          sortable: false,
+          text: "Titulo",
+          value: "title",
+        },
+        {
+          sortable: false,
+          text: "Fecha",
+          value: "date",
+          align: "right",
+        },
+        {
+          sortable: false,
+          text: "Proyecto",
+          value: "project",
+          align: "right",
+        },
+      ],
       tabs: 0,
       tasks: {
         0: [
@@ -392,7 +487,6 @@ export default {
             text: "Redirección link de asignados via OPSU no esta disponible - WEB FACYT",
             value: false,
           },
-
         ],
         1: [
           {
@@ -400,7 +494,7 @@ export default {
             value: true,
           },
           {
-            text: 'Diseño de header - Web Facyt',
+            text: "Diseño de header - Web Facyt",
             value: false,
           },
         ],
@@ -414,7 +508,7 @@ export default {
             value: true,
           },
           {
-            text: 'Cambio de formato en reporte de notas - SICE FACYT',
+            text: "Cambio de formato en reporte de notas - SICE FACYT",
             value: true,
           },
         ],
@@ -427,20 +521,51 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["chartsListRPM"]),
-    ...mapGetters(["chartsListPSC"]),
-   
+    ...mapGetters(["chartsListRPMUSER"]),
+    ...mapGetters(["chartsListRPMAUSER"]),
+    ...mapGetters(["chartsListRPMR"]),
+    ...mapGetters(["chartsListPSCUSER"]),
+     ...mapGetters(["requestsU"])
   },
-  watch:{
-     chartsListRPM(){
-       this.emailsSubscriptionChart.data.series = [this.chartsListRPM.series] ;
-    }
+  watch: {
+    chartsListRPMUSER() {
+      this.emailsSubscriptionChart.data.series = [
+        this.chartsListRPMUSER.series,
+      ];
+    },
+    chartsListRPMAUSER() {
+      this.activeRequestChartUser.data.series = [this.chartsListRPMAUSER.series];
+    },
+    chartsListRPMR() {
+      this.rejectedRequestChartUser.data.series = [this.chartsListRPMRUSER.series];
+    },
+   requestsU(){
+    let data = []
+      let typeArr = []
+      let type = ['Incidencia', 'Problema', 'Cambio']
+      type.forEach(type=>{
+        this.requestsU.forEach(item=>{
+        if(item.type == type){
+          data.push(item)
+        }
+        
+
+
+      })
+
+      typeArr.push(data)
+      data = []
+      })
+     this.tasks = typeArr
+      //console.log("hey", this.requestListByType)
+      //this.rtasks = this.requestListByType
+      console.log("request",  this.tasks)
+   }
   },
   methods: {
     complete(index) {
       this.list[index] = !this.list[index];
     },
-   
   },
 };
 </script>

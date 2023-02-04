@@ -98,7 +98,7 @@ const UserModule = {
         });
 
     },
-    UPDATE_REQUESTS_USER_FEEDBACK: async function ({ commit }, data) {
+    UPDATE_REQUESTS_USER_FEEDBACK_QRS: async function ({ commit }, data) {
       const headers = {
         Authorization: localStorage.getItem('token')
       }
@@ -110,7 +110,6 @@ const UserModule = {
         description: data.description,
         priority: data.priority,
         status: data.status,
-        urgency: data.urgency,
         feedBack: data.feedBack.comment,
         
       }
@@ -118,7 +117,7 @@ const UserModule = {
 
 
       axios
-        .put("http://localhost:3999/api/req/request/" +data._id +"/feedback",  req, {
+        .put("http://localhost:3999/api/qrs/update/status/" +data._id +"/feedback",  req, {
           headers: {
             "Authorization": localStorage.getItem('token'),
           }
