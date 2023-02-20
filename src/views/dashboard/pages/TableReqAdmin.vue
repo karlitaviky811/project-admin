@@ -3,6 +3,15 @@
     <v-alert border="top" colored-border type="info" elevation="2">
       Envia tus solicitudes de cambio a nuestros administradores
     </v-alert>
+
+    <v-alert
+    color="success"
+    icon="$success"
+    title="Alert title"
+    closable
+    v-if="alert"
+    text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione debitis quis est labore voluptatibus..."
+></v-alert>
     <base-material-card
       icon="mdi-file-check"
       title="Listado"
@@ -128,6 +137,7 @@ export default {
       singleExpand: false,
       dialog: false,
       type: false,
+      alert: false,
       props: {
         expanded: false,
       },
@@ -172,6 +182,7 @@ export default {
       this.request = Object.assign({}, {});
       this.$store.commit("setRequestsUserModal", {});
       this.type = "Create";
+      this.alert = true;
     },
     edit(item) {
       this.id = item._id;
@@ -220,9 +231,11 @@ export default {
     },
     loadRequests() {
       //const user = JSON.parse(localStorage.getItem("user"))._id;
+      console.log("herereeeeee")
       this.$store.dispatch("GET_REQUESTS_ALL");
       this.role = JSON.parse(localStorage.getItem("user")).role;
       this.data = false;
+      
     },
     clickColumn(slotData) {
       console.log("say hi");

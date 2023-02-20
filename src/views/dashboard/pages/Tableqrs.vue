@@ -86,7 +86,7 @@
                     fab
                     small
                     color="red"
-                    @click="openModal(1)"
+                    @click="deleted(row)"
                   >
                     <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
@@ -211,6 +211,18 @@ export default {
       this.$store.commit("setRequestsUserModal", this.request);
       this.toggleModal(item._id);
     },
+     deleted(item){
+      console.log("here", item)
+      this.id = item._id;
+      this.title = "Editar";
+      this.toggleModal(this.id);
+      this.request = Object.assign({}, item.item);
+      this.$store.commit("setQrsModal",this.request);
+      this.type = 'Delete';
+      this.show = true;
+      this.dialog = true;
+
+    },
     toggleModal: async function (id) {
       this.activeModal = !this.activeModal;
     },
@@ -234,10 +246,11 @@ export default {
 
       this.activeModal = id;
     },
-    loadProjects() {
+  async  loadProjects() {
       this.data = true;
       const user = JSON.parse(localStorage.getItem("user"))._id;
-      this.$store.dispatch("GET_QRS_ALL");
+    await  this.$store.dispatch("GET_QRS_ALL");
+    console.log("data type", this.data)
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
     },

@@ -176,7 +176,7 @@ const RequestModule = {
       }
       console.log("req--->>>>", req)
 
-console.log("data", data._id)
+
       axios
         .put("http://localhost:3999/api/req/request/" +data._id +"/feedback",  req, {
           headers: {
@@ -186,6 +186,30 @@ console.log("data", data._id)
         .then(function (res) {
 
           console.log("res put request---->", res)
+          return true
+        })
+        .catch(function (res) {
+          console.log("FAILURE!!", res);
+        });
+
+    },
+  DELETE_REQUEST: async function ({ commit }, data) {
+      const headers = {
+        Authorization: localStorage.getItem('token')
+      }
+  
+      console.log("req--->>>>", data)
+
+
+      axios
+        .delete("http://localhost:3999/api/req/request/" +data, {
+          headers: {
+            "Authorization": localStorage.getItem('token'),
+          }
+        })
+        .then(function (res) {
+
+          console.log("res delete request---->", res)
           return true
         })
         .catch(function (res) {

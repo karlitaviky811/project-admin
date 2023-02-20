@@ -87,7 +87,7 @@
                     fab
                     small
                     color="red"
-                    @click="openModal(1)"
+                    @click="deleted(row)"
                   >
                     <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
@@ -198,8 +198,19 @@ export default {
       this.title = "Detalle";
       this.request = Object.assign({}, item.item);
       console.log("item", item);
-      this.$store.commit("setRequestsUserModal", this.request);
+      this.$store.commit("setRequestsProjectModal", this.request);
       this.toggleModal(item._id);
+    },
+      deleted(item){
+      this.id = item._id;
+      this.title = "Editar";
+      this.toggleModal(this.id);
+      this.request = Object.assign({}, item.item);
+      this.$store.commit("setRequestsProjectModal",item.item);
+      this.type = 'Delete';
+      this.show = true;
+      this.dialog = true;
+
     },
     toggleModal: async function (id) {
      
@@ -227,10 +238,12 @@ export default {
     },
     loadProjects() {
       this.data = true;
+            this.role = JSON.parse(localStorage.getItem("user")).role;
+      console.log("hiiiii aquii-------->")
       const user = JSON.parse(localStorage.getItem("user"))._id;
       this.$store.dispatch("GET_PROJECTS_ALL");
       this.data = false;
-      this.role = JSON.parse(localStorage.getItem("user")).role;
+
     },
       loadRequests() {
       //const user = JSON.parse(localStorage.getItem("user"))._id;

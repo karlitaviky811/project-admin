@@ -121,15 +121,10 @@ const QrsModule = {
             })
 
         },
-        DELETE_PROJECT_REQ: async function ({ commit }) {
-            const proj = {
-                title: data.title,
-                description: data.description,
-                department: data.department,
-                tecnology: data.tecnology,
-
-            }
-            axios.put("http://localhost:3999/api/project/delete/" + data._id, {
+        DELETE_QRS: async function ({ commit }, data) {
+         
+            console.log("data", data)
+            axios.delete("http://localhost:3999/api/qrs/delete/" + data, {
                 headers: {
                     "Authorization": localStorage.getItem('token'),
                 }

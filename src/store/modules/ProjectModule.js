@@ -82,19 +82,15 @@ const ProjectsModule = {
       })
 
     },
-    DELETE_PROJECT_REQ: async function ({ commit }) {
-      const proj = {
-        title : data.title,
-        description : data.description,
-        department : data.department,
-        tecnology : data.tecnology
-      }
-      axios.put("http://localhost:3999/api/project/delete/"+data._id, {
+    DELETE_PROJECT_REQ: async function ({ commit }, data) {
+      console.log("data", data)
+    
+      axios.delete("http://localhost:3999/api/project/delete/"+data, {
         headers: {
           "Authorization": localStorage.getItem('token'),
         }
       }).then((response) => {
-        console.log("response project update", response)
+        console.log("response project delete", response)
         return true;
       }, (err) => {
         console.log(err)

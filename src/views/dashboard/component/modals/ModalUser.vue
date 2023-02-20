@@ -126,22 +126,22 @@ export default {
     close: function () {
       this.$emit("close");
     },
-    save() {
+  async  save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("this", this.role, this.type, this.modalUser);
       if (this.role === "ROLE_ADMIN") {
         if (this.type == "Create") {
-          this.$store.dispatch("SAVE_NEW_USER", this.modalUser);
+        await  this.$store.dispatch("SAVE_NEW_USER", this.modalUser);
           this.close();
           this.$emit("reqProject");
         } else if (this.type == "Edit") {
-          this.$store.dispatch("UPDATE_USER", this.modalUser);
+       await  this.$store.dispatch("UPDATE_USER", this.modalUser);
           this.close();
           this.$emit("reqProject");
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Detail") {
-          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
+        await  this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
           this.$emit("reqCreated");
           this.close();
         }

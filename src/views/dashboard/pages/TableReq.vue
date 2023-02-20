@@ -104,7 +104,7 @@
                     fab
                     small
                     color="red"
-                    @click="openModal(1)"
+                    @click.stop="deleted(row)"
                   >
                     <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
@@ -132,7 +132,10 @@
             </td>
           </tr>
         </template>
+
+        
       </v-data-table>
+
     </div>
     <router-view></router-view>
   </base-material-card>
@@ -175,6 +178,8 @@ export default {
       props: {
         expanded: false,
       },
+      itemSelected: {},
+      showMessage: false,
       request: {},
       headers: [
         { text: "Título", value: "title" },
@@ -208,6 +213,18 @@ export default {
 
       this.activeModal = id;
     },
+    deleted(item){
+      console.log("here", item)
+        this.id = item._id;
+      this.title = "Editar";
+      this.toggleModal(this.id);
+      this.request = Object.assign({}, item.item);
+      this.$store.commit("setRequestsUserModal",item.item);
+      this.type = 'Delete';
+      this.show = true;
+      this.dialog = true;
+
+    },
     create(id) {
       this.title = "Crear Solicitud";
       this.toggleModal(id);
@@ -216,8 +233,6 @@ export default {
       this.type = 'Create';
     },
     edit(item) {
-     
-      
       this.id = item._id;
       this.title = "Editar";
       this.toggleModal(this.id);

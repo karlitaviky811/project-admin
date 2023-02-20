@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal :show="show" v-if="modalRequest">
+    <modal :show="show" v-if="modalRequest && type !== 'Delete'">
       <div class="text-end">
         <v-icon @click="close">mdi-close</v-icon>
       </div>
@@ -14,8 +14,18 @@
       type="error"
       v-show="noValid"
     >
-     Por favor llene todos los campos solicitados
+     Por favor llene todos los campos solicitados type
     </v-alert>
+
+     <v-progress-linear
+        :active="loading"
+        :indeterminate="loading"
+        absolute
+        bottom
+        color="deep-purple-accent-4"
+      ></v-progress-linear>
+
+
           <h4 class="font-weight-medium outline text-left">{{ title }}</h4>
 
           <v-chip dark class="font-weight-medium" style="marparamsProjectgin-top: 25px" v-show="type !== 'Create'">{{
@@ -155,6 +165,37 @@
         </v-form>
       </template>
     </modal>
+
+
+
+      <modal :show="show" v-if=" type == 'Delete'"    max-width="180">
+    
+        <v-card-title class="headline">Eliminar</v-card-title>
+
+        <v-card-text>
+          ¿Esta seguro(a) de eliminar el elemento seleccionado ?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="show = false"
+          >
+            Cancelar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleted()"
+          >
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+    </modal>
   </div>
 </template>
 
@@ -179,7 +220,7 @@ export default {
     urlImgDam: "",
     chosenFile: [],
     modalRequest: [],
-
+    loading: false,
     params: [
       {
         id: 1,
@@ -240,9 +281,9 @@ export default {
  created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
     this.request = Object.assign({}, this.modalRequest);
-   
     this.urlImgDam =this.modalReq.image
     this.$store.dispatch("GET_PROJECTS_ALL");
+    console.log("heree type", this.type)
   },
   computed: {
     ...mapGetters(["modalReq"]),
@@ -284,37 +325,48 @@ export default {
 
       return true
     },
-    save() {
+   async save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("this", this.role, this.type);
-      console.log("heyyy", this.checkForm())
       this.checkForm()
-    
+       this.loading = true;
         if (this.role === "ROLE_USER") {
         if (this.type == "Create") {
           if(!this.noValid){
-          this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
+       
+         await  this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
           this.close();
+          this.loading = false;
           this.$emit("reqCreated");
 
           }
         } else if (this.type == "Edit") {
           if(!this.noValid){
-          this.$store.dispatch("UPDATE_REQUESTS_USER", this.modalRequest);
+          await this.$store.dispatch("UPDATE_REQUESTS_USER", this.modalRequest);
           this.close();
-          this.$emit("reqCreated");
+           this.$emit("reqCreated");
+        
           }
         }
       } else if (this.role == "ROLE_ADMIN") {
-        console.log("ereeee babay")
         if (this.type === "Detail") {
-          console.log("debo actualizar el estatus!!!", this.modalRequest);
-          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACKS", this.modalRequest);
+         await  this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACKS", this.modalRequest);
           this.$emit("reqCreated");
           this.close();
         }
       }
     
+    },
+     async deleted() {
+      this.role = JSON.parse(localStorage.getItem("user")).role;
+      this.checkForm()
+       this.loading = true;
+     
+       
+         await  this.$store.dispatch("DELETE_REQUEST", this.modalRequest._id);
+          this.close();
+          this.show = false;
+         await this.$emit("reqCreated");
+
     },
     downloadImg(item) {
       let responseUrl = item;

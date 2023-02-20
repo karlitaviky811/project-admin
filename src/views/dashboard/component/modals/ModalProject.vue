@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal :show="show">
+    <modal :show="show" v-if="type !== 'Delete'">
       <div class="text-end">
         <v-icon @click="close">mdi-close</v-icon>
       </div>
@@ -53,6 +53,35 @@
           </v-container>
         </v-form>
       </template>
+    </modal>
+
+          <modal :show="show" v-if=" type == 'Delete'"    max-width="180">
+    
+        <v-card-title class="headline">Eliminar</v-card-title>
+
+        <v-card-text>
+          ¿Esta seguro(a) de eliminar el elemento seleccionado ?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="show = false"
+          >
+            Cancelar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleted()"
+          >
+            Aceptar
+          </v-btn>
+        </v-card-actions>
     </modal>
   </div>
 </template>
@@ -109,6 +138,7 @@ export default {
   }),
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
+      console.log("hiii------------->", this.modalProject)
     this.request = Object.assign({}, this.modalProject);
   },
   computed: {
@@ -119,25 +149,31 @@ export default {
     close: function () {
       this.$emit("close");
     },
-    save() {
+      async deleted() {
+        console.log("hiii------------->", this.modalProject)
+        await  this.$store.dispatch("DELETE_PROJECT_REQ", this.modalProject._id);
+        this.close();
+      await  this.$emit("loadProjects");
+
+    },
+  async  save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("this", this.role, this.type);
       if (this.role === "ROLE_ADMIN") {
         if (this.type == "Create") {
-          this.$store.dispatch("SAVE_PROJECT_REQ", this.modalProject);
+       await   this.$store.dispatch("SAVE_PROJECT_REQ", this.modalProject);
           this.close();
-          this.$emit("reqProject");
+          this.$emit("loadProjects");
         } else if (this.type == "Edit") {
-          this.$store.dispatch("UPDATE_PROJECT_REQ", this.modalProject);
+        await  this.$store.dispatch("UPDATE_PROJECT_REQ", this.modalProject);
           this.close();
-          this.$emit("reqProject");
+          this.$emit("loadProjects");
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Detail") {
           console.log("debo actualizar el estatus!!!", this.modalReq);
-
-          this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
-          this.$emit("reqCreated");
+        await  this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
+          this.$emit("loadProjects");
           this.close();
         }
       }

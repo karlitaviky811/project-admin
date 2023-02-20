@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal :show="show">
+    <modal :show="show" v-if="type !== 'Delete'">
       <div class="text-end">
         <v-icon @click="close">mdi-close</v-icon>
       </div>
@@ -63,6 +63,36 @@
         </v-form>
       </template>
     </modal>
+    
+      <modal :show="show" v-if=" type == 'Delete'"    max-width="180">
+    
+        <v-card-title class="headline">Eliminar</v-card-title>
+
+        <v-card-text>
+          ¿Esta seguro(a) de eliminar el elemento seleccionado ?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="show = false"
+          >
+            Cancelar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleted()"
+          >
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+    </modal>
+
   </div>
 </template>
 
@@ -127,31 +157,37 @@ export default {
     close: function () {
       this.$emit("close");
     },
-    save() {
+  async  save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("this", this.role, this.type, this.modalQrs);
       if (this.role === "ROLE_USER") {
         if (this.type == "Create") {
-          this.$store.dispatch("SAVE_QRS", this.modalQrs);
+        await  this.$store.dispatch("SAVE_QRS", this.modalQrs);
           this.close();
           this.$emit("reqProject");
         } else if (this.type == "Edit") {
-            console.log("editaaaaarrr", this.modalQrs)
-          this.$store.dispatch("UPDATE_QRS", this.modalQrs);
-          this.close();
+        await this.$store.dispatch("UPDATE_QRS", this.modalQrs);
+        await  this.close();
           this.$emit("reqProject");
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Edit") {
           console.log("debo actualizar el estatus!!!", this.modalQrs);
 
-          this.$store.dispatch("UPDATE_QRS_FEEDBACK", this.modalQrs);
-          this.$emit("reqCreated");
+        await  this.$store.dispatch("UPDATE_QRS_FEEDBACK", this.modalQrs);
+             this.$emit("reqProject");
           this.close();
         }
       }
     },
+    async deleted() {
+        await  this.$store.dispatch("DELETE_QRS", this.modalQrs._id);
+        this.close();
+        this.$emit("reqProject");
+
+    }
   },
+  
 };
 </script>
 

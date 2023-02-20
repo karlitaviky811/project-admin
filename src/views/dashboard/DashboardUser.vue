@@ -183,7 +183,7 @@
               <span
                 class="subheading font-weight-light mx-3"
                 style="align-self: center"
-                >Tasks:</span
+                >Solicitudes:</span
               >
               <v-tab class="mr-3">
                 <v-icon class="mr-2"> mdi-bug </v-icon>
@@ -202,38 +202,35 @@
 
       
           <v-tabs-items v-model="tabs" class="transparent">
-            <v-tab-item v-for="n in 3" :key="n">
-              <v-card-text>
-                <template v-for="(task, i) in tasks[tabs]" >
 
-                  <template>
+            <v-tab-item>      <template>
                     <v-data-table
                       :headers="headersReq"
-                      :items="tasks[tabs]"
+                      :items="tasks[0]"
+                      :items-per-page="5"
+                      :key="i"
+                    ></v-data-table>
+                  </template> </v-tab-item>
+        <v-tab-item> 
+              <template>
+                    <v-data-table
+                      :headers="headersReq"
+                      :items="tasks[1]"
                       :items-per-page="5"
                       :key="i"
                     ></v-data-table>
                   </template>
-                  <!--v-row  align="center">
-                    <v-col cols="1">
-                      <v-list-item-action>
-                        <div  v-text="i + 1" />
-                      </v-list-item-action>
-                    </v-col>
-                    <v-col cols="4">
-                      <div class="font-weight-light" v-text="task.title" />
-                    </v-col>
-                    <v-col cols="4">
-                      <div class="font-weight-light" v-text="task.project" />
-                    </v-col>
-                    <v-col cols="3">
-                      <div class="font-weight-light" v-text="task.date" />
-                    </v-col>
-                   
-                  </v-row-->
-                </template>
-              </v-card-text>
-            </v-tab-item>
+         </v-tab-item>
+           <v-tab-item> 
+              <template>
+                    <v-data-table
+                      :headers="headersReq"
+                      :items="tasks[2]"
+                      :items-per-page="5"
+                      :key="i"
+                    ></v-data-table>
+                  </template>
+         </v-tab-item>
           </v-tabs-items>
         </base-material-card>
       </v-col>
@@ -559,7 +556,7 @@ export default {
      this.tasks = typeArr
       //console.log("hey", this.requestListByType)
       //this.rtasks = this.requestListByType
-      console.log("request",  this.tasks)
+      console.log("request------>",  this.tasks)
    }
   },
   methods: {

@@ -27,7 +27,7 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title class="text-h4" v-text="'SGC'" />
+          <v-list-item-title class="text-h4" v-text="'User : '+nameUser" />
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -142,6 +142,7 @@ export default {
     */
     ],
     role: "",
+    nameUser: ""
   }),
 
   computed: {
@@ -168,6 +169,8 @@ export default {
   },
   created() {
     const user = JSON.parse(localStorage.getItem("user"))._id;
+    this.nameUser = JSON.parse(localStorage.getItem("user")).surname;
+    console.log("nameUser", this.nameUser)
     this.$store.dispatch("GET_REQUESTS_ALL");
     this.role = JSON.parse(localStorage.getItem("user")).role;
   },
