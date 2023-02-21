@@ -1,17 +1,16 @@
 <template>
   <v-app id="inspire">
-    <v-content>
-      <v-container fluid fill-height>
+    <v-content  >
+      <v-container fluid fill-height >
         <v-layout align-center justify-center style="flex-direction:column;width:100%;">
-          <div style="display:flex;flex-direction:column;">
+          <v-flex xs12 sm8 md4>
+            <div style="display:flex;flex-direction:column;">
             <v-flex xs12 sm8 md4>
               <img :src="'http://www.facyt.uc.edu.ve/sites/default/files/logo-completo_0_0_0_0_0.png'" />
 
             </v-flex>
           </div>
-
-          <v-flex xs12 sm8 md4>
-            <v-card class="elevation-12" style="width:480px;">
+            <v-card class="elevation-12 body" style="width:480px;" >
               <v-toolbar dark color="#0088cc">
                 <v-toolbar-title>Login</v-toolbar-title>
               </v-toolbar>
@@ -60,5 +59,12 @@ export default {
 </script>
 
 <style>
-
+.body{
+background: rgba( 255, 255, 255, 0.2 ) !important;
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ) !important;
+backdrop-filter: blur( 10px ) !important;
+-webkit-backdrop-filter: blur( 4px ) !important;
+border-radius: 10px !important;
+border: 1px solid rgba( 255, 255, 255, 0.18 ) !important;
+}
 </style>

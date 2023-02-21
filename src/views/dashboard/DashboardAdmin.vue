@@ -1,6 +1,8 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
+
     <v-row>
+    
       <v-col cols="12" lg="4">
         <base-material-chart-card :data="emailsSubscriptionChart.data" :options="emailsSubscriptionChart.options"
           :responsive-options="emailsSubscriptionChart.responsiveOptions" color="#0088cc" hover-reveal type="Bar">
@@ -105,20 +107,20 @@
 
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card color="info" icon="mdi-widgets" title="Proyectos" value="5" />
+        <base-material-stats-card color="info" icon="mdi-widgets" title="Proyectos" :value="paramsProject.length" />
 
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card color="primary" icon="mdi-poll" title="Quejas" value="75" />
+        <base-material-stats-card color="primary" icon="mdi-poll" title="Quejas" :value="qrs[0].cont" />
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card color="success" icon="mdi-store" title="Reclamos" value="34" />
+        <base-material-stats-card color="success" icon="mdi-store" title="Reclamos"  :value="qrs[1].cont" />
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card color="orange" icon="mdi-sofa" title="Sugerencias" value="184">
+        <base-material-stats-card color="orange" icon="mdi-sofa" title="Sugerencias"  :value="qrs[2].cont">
         </base-material-stats-card>
       </v-col>
 
@@ -135,11 +137,20 @@
         </base-material-card>
       </v-col>
 
+     
       <v-col cols="12" md="6">
         <base-material-card class="px-5 py-3">
           <template v-slot:heading>
-            <v-tabs v-model="tabs" background-color="transparent" slider-color="white">
-              <span class="subheading font-weight-light mx-3" style="align-self: center">Tasks:</span>
+            <v-tabs
+              v-model="tabs"
+              background-color="transparent"
+              slider-color="white"
+            >
+              <span
+                class="subheading font-weight-light mx-3"
+                style="align-self: center"
+                >Solicitudes:</span
+              >
               <v-tab class="mr-3">
                 <v-icon class="mr-2"> mdi-bug </v-icon>
                 Incidencias
@@ -155,39 +166,35 @@
             </v-tabs>
           </template>
 
+      
           <v-tabs-items v-model="tabs" class="transparent">
-            <v-tab-item v-for="n in 3" :key="n">
-              <v-card-text>
-                <template v-for="(task, i) in tasks[tabs]" >
 
-                  <template>
+            <v-tab-item>      
+            <template>
                     <v-data-table
                       :headers="headersReq"
-                      :items="tasks[tabs]"
+                      :items="tasks[0]"
                       :items-per-page="5"
-                      :key="i"
+                    ></v-data-table>
+                  </template> </v-tab-item>
+        <v-tab-item> 
+              <template>
+                    <v-data-table
+                      :headers="headersReq"
+                      :items="tasks[1]"
+                      :items-per-page="5"
                     ></v-data-table>
                   </template>
-                  <!--v-row  align="center">
-                    <v-col cols="1">
-                      <v-list-item-action>
-                        <div  v-text="i + 1" />
-                      </v-list-item-action>
-                    </v-col>
-                    <v-col cols="4">
-                      <div class="font-weight-light" v-text="task.title" />
-                    </v-col>
-                    <v-col cols="4">
-                      <div class="font-weight-light" v-text="task.project" />
-                    </v-col>
-                    <v-col cols="3">
-                      <div class="font-weight-light" v-text="task.date" />
-                    </v-col>
-                   
-                  </v-row-->
-                </template>
-              </v-card-text>
-            </v-tab-item>
+         </v-tab-item>
+           <v-tab-item> 
+              <template>
+                    <v-data-table
+                      :headers="headersReq"
+                      :items="tasks[2]"
+                      :items-per-page="5"
+                    ></v-data-table>
+                  </template>
+         </v-tab-item>
           </v-tabs-items>
         </base-material-card>
       </v-col>
@@ -202,11 +209,16 @@ import { mapGetters } from "vuex";
 export default {
   name: "DashboardAdmin",
   async created() {
+    this.loading = true
     await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_A");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_R");
     await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE");
+   await this.$store.dispatch("GET_LIST_QRS");
+   await  this.$store.dispatch("GET_PROJECTS_ALL");
+    
+    this.loading = false;
   },
   data() {
     return {
@@ -450,7 +462,10 @@ export default {
         1: false,
         2: false,
       },
+      paramsProject: [],
+      qrs: [],
       requestByType: {},
+      loading : false,
       headersReq:[
         {
           sortable: false,
@@ -483,7 +498,9 @@ export default {
     ...mapGetters(["chartsListPSC"]),
     ...mapGetters(["chartsListRPMA"]),
     ...mapGetters(["chartsListRPMR"]),
-    ...mapGetters(["requestListByType"])
+    ...mapGetters(["requestListByType"]),
+    ...mapGetters(["chartsListQRSUsers"]),
+     ...mapGetters(["projectsList"]),
   },
   watch: {
     chartsListRPM() {
@@ -495,6 +512,10 @@ export default {
     },
     chartsListRPMR() {
       this.rejectedRequestChart.data.series = [this.chartsListRPMR.series];
+    },
+    chartsListQRSUsers(){
+      console.log("aquiiiiiii", this.chartsListQRSUsers)
+      this.qrs =  this.chartsListQRSUsers
     },
     requestListByType(){
       let data = []
@@ -517,7 +538,10 @@ export default {
       //console.log("hey", this.requestListByType)
       //this.rtasks = this.requestListByType
       console.log("request",  this.tasks)
-    }
+    },
+      projectsList(){
+      this.paramsProject = this.projectsList
+    },
   },
   methods: {
     complete(index) {

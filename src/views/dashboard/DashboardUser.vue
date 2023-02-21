@@ -127,7 +127,7 @@
           color="info"
           icon="mdi-widgets"
           title="Proyectos"
-          value="5"
+          :value="paramsProject.length"
         />
       </v-col>
 
@@ -136,7 +136,7 @@
           color="primary"
           icon="mdi-poll"
           title="Quejas"
-          value="75"
+          :value="qrs[0].cont"
         />
       </v-col>
 
@@ -145,7 +145,7 @@
           color="success"
           icon="mdi-store"
           title="Reclamos"
-          value="34"
+           :value="qrs[1].cont"
         />
       </v-col>
 
@@ -154,7 +154,7 @@
           color="orange"
           icon="mdi-sofa"
           title="Sugerencias"
-          value="184"
+           :value="qrs[2].cont"
         >
         </base-material-stats-card>
       </v-col>
@@ -203,12 +203,12 @@
       
           <v-tabs-items v-model="tabs" class="transparent">
 
-            <v-tab-item>      <template>
+            <v-tab-item>      
+              <template>
                     <v-data-table
                       :headers="headersReq"
                       :items="tasks[0]"
                       :items-per-page="5"
-                      :key="i"
                     ></v-data-table>
                   </template> </v-tab-item>
         <v-tab-item> 
@@ -217,7 +217,6 @@
                       :headers="headersReq"
                       :items="tasks[1]"
                       :items-per-page="5"
-                      :key="i"
                     ></v-data-table>
                   </template>
          </v-tab-item>
@@ -227,7 +226,6 @@
                       :headers="headersReq"
                       :items="tasks[2]"
                       :items-per-page="5"
-                      :key="i"
                     ></v-data-table>
                   </template>
          </v-tab-item>
@@ -251,6 +249,8 @@ export default {
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_A_USER");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_R_USER");
     await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE_USER");
+    await this.$store.dispatch("GET_LIST_QRS_USER", user);
+      await  this.$store.dispatch("GET_PROJECTS_ALL");
     this.$store.dispatch("GET_REQUESTS_USER", user);
 
   },
@@ -341,6 +341,7 @@ export default {
           ],
         ],
       },
+      qrs: [],
       dataCompletedTasksChart: {
         data: {
           labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
@@ -360,6 +361,7 @@ export default {
           },
         },
       },
+      paramsProject: [],
       emailsSubscriptionChart: {
         data: {
           labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
@@ -522,7 +524,9 @@ export default {
     ...mapGetters(["chartsListRPMAUSER"]),
     ...mapGetters(["chartsListRPMR"]),
     ...mapGetters(["chartsListPSCUSER"]),
-     ...mapGetters(["requestsU"])
+     ...mapGetters(["requestsU"]),
+     ...mapGetters(["chartsListQRSByUser"]),
+      ...mapGetters(["projectsList"]),
   },
   watch: {
     chartsListRPMUSER() {
@@ -535,6 +539,13 @@ export default {
     },
     chartsListRPMR() {
       this.rejectedRequestChartUser.data.series = [this.chartsListRPMRUSER.series];
+    },
+      chartsListQRSByUser(){
+      console.log("aquiiiiiii", this.chartsListQRSByUser)
+      this.qrs =  this.chartsListQRSByUser
+    },
+     projectsList(){
+      this.paramsProject = this.projectsList
     },
    requestsU(){
     let data = []
@@ -566,3 +577,12 @@ export default {
   },
 };
 </script>
+<style>
+.body{
+background: rgba( 120, 227, 236, 0.15 ) !important;
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+}
+</style>

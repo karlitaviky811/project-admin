@@ -3,6 +3,7 @@ import router from "@/router";
 const QrsModule = {
     state: {
         QrsList: [],
+        QrsListUser: [],
         modalQrs: {
             feedBack: {
                 comment: ''
@@ -33,8 +34,11 @@ const QrsModule = {
             state.modalQrs = qrs;
         },
         setRequestsList(state, data) {
-
             state.requestList = data;
+        },
+        setRQrsListUser(state, data) {
+
+            state.QrsListUser = data;
         },
     },
     actions: {
@@ -90,7 +94,18 @@ const QrsModule = {
                 }
             }).then((response) => {
                 console.log("response qrs update", response)
-                return true;
+                axios.get("http://localhost:3999/api/qrs/list", {
+                    headers: {
+                        "Authorization": localStorage.getItem('token'),
+                    }
+                }
+                ).then((response) => {
+                    commit('setQrsList', response.data.qrs)
+                    return true;
+                }, (err) => {
+                    console.log(err)
+                    return false;
+                })
             }, (err) => {
                 console.log(err)
                 return false;
@@ -122,7 +137,7 @@ const QrsModule = {
 
         },
         DELETE_QRS: async function ({ commit }, data) {
-         
+            const user = JSON.parse(localStorage.getItem("user"))._id;
             console.log("data", data)
             axios.delete("http://localhost:3999/api/qrs/delete/" + data, {
                 headers: {
@@ -130,6 +145,33 @@ const QrsModule = {
                 }
             }).then((response) => {
                 console.log("response project update", response)
+                axios.get("http://localhost:3999/api/qrs/list", {
+                    headers: {
+                        "Authorization": localStorage.getItem('token'),
+                    }
+                }
+                ).then((response) => {
+                    commit('setQrsList', response.data.qrs)
+                    return true;
+                }, (err) => {
+                    console.log(err)
+                    return false;
+                })
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+        GET_QRS_USER:async function({commit}, data){
+            axios.get("http://localhost:3999/api/qrs/listUser/"+data, {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                  }
+            }
+            ).then((response) => {
+                console.log("res", res)
+                commit('setQrsList', response.data.qrs)
                 return true;
             }, (err) => {
                 console.log(err)
@@ -140,6 +182,9 @@ const QrsModule = {
     },
     getters: {
         QrsList(state) {
+            return state.QrsList;
+        },
+        QrsListUser(state) {
             return state.QrsList;
         },
         modalQrs(state) {

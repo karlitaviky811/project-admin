@@ -78,7 +78,7 @@
           <v-btn
             color="green darken-1"
             text
-            @click="show = false"
+            @click="desagree()"
           >
             Cancelar
           </v-btn>
@@ -141,7 +141,7 @@ export default {
     this.role = JSON.parse(localStorage.getItem("user")).role;
     this.request = Object.assign({}, this.modalProject);
     console.log("title", this.title)
-        this.$store.dispatch("GET_PROJECTS_ALL");
+      this.$store.dispatch("GET_PROJECTS_ALL");
   },
   computed: {
     ...mapGetters(["modalQrs"]),
@@ -167,23 +167,27 @@ export default {
           this.$emit("reqProject");
         } else if (this.type == "Edit") {
         await this.$store.dispatch("UPDATE_QRS", this.modalQrs);
+        await this.$store.dispatch("GET_QRS_ALL");
         await  this.close();
           this.$emit("reqProject");
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Edit") {
-          console.log("debo actualizar el estatus!!!", this.modalQrs);
-
+  
         await  this.$store.dispatch("UPDATE_QRS_FEEDBACK", this.modalQrs);
-             this.$emit("reqProject");
-          this.close();
+        await this.$store.dispatch("GET_QRS_ALL");
+        this.close();
         }
       }
     },
+       desagree(){
+      this.close();
+this.show = false
+    },
     async deleted() {
         await  this.$store.dispatch("DELETE_QRS", this.modalQrs._id);
+        await this.$store.dispatch("GET_QRS_ALL");
         this.close();
-        this.$emit("reqProject");
 
     }
   },

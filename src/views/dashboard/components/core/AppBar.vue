@@ -173,3 +173,13 @@
     },
   }
 </script>
+<style>
+.body{
+background: rgba( 255, 255, 255, 0.2 ) !important;
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ) !important;
+backdrop-filter: blur( 10px ) !important;
+-webkit-backdrop-filter: blur( 4px ) !important;
+border-radius: 10px !important;
+border: 1px solid rgba( 255, 255, 255, 0.18 ) !important;
+}
+</style>

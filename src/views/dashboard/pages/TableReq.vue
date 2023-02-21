@@ -285,6 +285,7 @@ export default {
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
       this.data = false;
+          this.show = false;
     },
     clickColumn(slotData) {
       console.log("say hi");

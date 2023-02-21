@@ -80,7 +80,7 @@
                     fab
                     small
                     color="red"
-                    @click="openModal(1)"
+                    @click="deleted(row)"
                   >
                     <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
@@ -195,6 +195,14 @@ export default {
       this.request = Object.assign({}, item.item);
       console.log("item", item);
       this.$store.commit("setRequestsUserModal", this.request);
+      this.toggleModal(item._id);
+    },
+     deleted(item) {
+      this.type = "Delete";
+      this.title = "Detalle";
+      this.request = Object.assign({}, item.item);
+      console.log("item---->", item._id);
+      this.$store.commit("setUserModal", this.request);
       this.toggleModal(item._id);
     },
     toggleModal: async function (id) {

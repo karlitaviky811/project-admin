@@ -69,7 +69,7 @@
           <v-btn
             color="green darken-1"
             text
-            @click="show = false"
+            @click="desagree()"
           >
             Cancelar
           </v-btn>
@@ -152,9 +152,13 @@ export default {
       async deleted() {
         console.log("hiii------------->", this.modalProject)
         await  this.$store.dispatch("DELETE_PROJECT_REQ", this.modalProject._id);
+        await   this.$store.dispatch("GET_PROJECTS_ALL");
         this.close();
-      await  this.$emit("loadProjects");
 
+    },
+    desagree(){
+      this.close();
+this.show = false
     },
   async  save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
@@ -162,19 +166,20 @@ export default {
       if (this.role === "ROLE_ADMIN") {
         if (this.type == "Create") {
        await   this.$store.dispatch("SAVE_PROJECT_REQ", this.modalProject);
-          this.close();
-          this.$emit("loadProjects");
+         
+           await   this.$store.dispatch("GET_PROJECTS_ALL");
+        this.close();
         } else if (this.type == "Edit") {
         await  this.$store.dispatch("UPDATE_PROJECT_REQ", this.modalProject);
-          this.close();
-          this.$emit("loadProjects");
+           await   this.$store.dispatch("GET_PROJECTS_ALL");
+        this.close();
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Detail") {
           console.log("debo actualizar el estatus!!!", this.modalReq);
         await  this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACK", this.modalReq);
-          this.$emit("loadProjects");
-          this.close();
+           await   this.$store.dispatch("GET_PROJECTS_ALL");
+        this.close();
         }
       }
     },

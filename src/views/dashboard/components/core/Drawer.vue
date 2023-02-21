@@ -17,11 +17,11 @@
 
     <v-divider class="mb-1" />
 
-    <v-list dense nav>
-      <v-list-item>
+    <v-list dense nav >
+      <v-list-item class="body">
         <v-list-item-avatar class="align-self-center" color="white" contain>
           <v-img
-            src="https://icones.pro/wp-content/uploads/2022/07/icones-d-administration-orange.png"
+            src="https://i.pinimg.com/564x/ed/82/f4/ed82f4f6c52e37284a0c5fa2bcaf6911.jpg"
             max-height=""
           />
         </v-list-item-avatar>
@@ -250,5 +250,14 @@ export default {
 
 .deep-purple {
   background-color: #5e5e5e !important;
+}
+
+.body{
+background: rgba( 255, 255, 255, 0.2 ) !important;
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ) !important;
+backdrop-filter: blur( 10px ) !important;
+-webkit-backdrop-filter: blur( 4px ) !important;
+border-radius: 10px !important;
+border: 1px solid rgba( 255, 255, 255, 0.18 ) !important;
 }
 </style>

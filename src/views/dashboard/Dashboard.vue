@@ -220,11 +220,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["chartsListRPMUSER"]),
-    ...mapGetters(["chartsListPSC"]),
-    ...mapGetters(["chartsListRPMA"]),
-    ...mapGetters(["chartsListRPMR"]),
-    ...mapGetters(["requestListByType"])
+  
    
   },
   watch:{
@@ -241,5 +237,11 @@ export default {
 };
 </script>
 <style>
-
+.body{
+background: rgba( 120, 227, 236, 0.15 ) !important;
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+}
 </style>

@@ -110,6 +110,7 @@ export default {
     ModalQrs,
   },
   created() {
+    const user = JSON.parse(localStorage.getItem("user"))._id;
     this.data = true;
     this.$store.dispatch("GET_QRS_ALL");
     this.data = false;
@@ -233,13 +234,12 @@ export default {
       return this.activeModal == id;
     },
     openModal: function (req) {
-      console.log("req", req);
       this.request = Object.assign({}, req);
       this.dialog = true;
     },
     toggleModalClose: async function (id) {
       if (this.activeModal !== 0) {
-        console.log("aqui caaaayo");
+
         this.activeModal = 0;
         return false;
       }
@@ -256,8 +256,7 @@ export default {
     },
     loadRequests() {
       //const user = JSON.parse(localStorage.getItem("user"))._id;
-      this.$store.dispatch("GET_REQUESTS_ALL");
-
+     this.$store.dispatch("GET_QRS_ALL");
       this.role = JSON.parse(localStorage.getItem("user")).role;
       this.data = false;
     },

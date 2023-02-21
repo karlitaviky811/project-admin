@@ -90,8 +90,7 @@ const RequestModule = {
 
     },
     SAVE_REQUESTS_USER: async function ({ commit }, data) {
-     
-      console.log("data----->", data)
+   
       const req = {
         type: data.type,
         project: data.project,
@@ -150,8 +149,15 @@ const RequestModule = {
         })
         .then(function (res) {
    
-          console.log("res put request---->", res)
-          return true
+          axios.get("http://localhost:3999/api/req/user-requests/" + user).then((response) => {
+        console.log("response", response.data.requests)
+        commit('setRequestsUser', response.data.requests)
+        return true;
+      }, (err) => {
+        console.log(err)
+        return false;
+      })
+      
         })
         .catch(function (res) {
           console.log("FAILURE!!", res);
@@ -193,7 +199,8 @@ const RequestModule = {
         });
 
     },
-  DELETE_REQUEST: async function ({ commit }, data) {
+    DELETE_REQUEST: async function ({ commit }, data) {
+      const user = JSON.parse(localStorage.getItem("user"))._id;
       const headers = {
         Authorization: localStorage.getItem('token')
       }
@@ -208,9 +215,14 @@ const RequestModule = {
           }
         })
         .then(function (res) {
-
-          console.log("res delete request---->", res)
-          return true
+     axios.get("http://localhost:3999/api/req/user-requests/" + user).then((response) => {
+        console.log("response", response.data.requests)
+        commit('setRequestsUser', response.data.requests)
+        return true;
+      }, (err) => {
+        console.log(err)
+        return false;
+      })
         })
         .catch(function (res) {
           console.log("FAILURE!!", res);

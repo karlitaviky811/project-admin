@@ -59,7 +59,15 @@ const UserModule = {
           }
         })
         .then(function (res) {
-         console.log("res register", res)
+          axios.get("http://localhost:3999/api/users", {
+            "Authorization": localStorage.getItem('token'),
+          }).then((response) => {
+            commit('setUsersList', response.data.users)
+            return true;
+          }, (err) => {
+            console.log(err)
+            return false;
+          })
 
           return true
         })
@@ -90,7 +98,15 @@ const UserModule = {
           }
         })
         .then(function (res) {
-   
+          axios.get("http://localhost:3999/api/users", {
+            "Authorization": localStorage.getItem('token'),
+          }).then((response) => {
+            commit('setUsersList', response.data.users)
+            return true;
+          }, (err) => {
+            console.log(err)
+            return false;
+          })
           return true
         })
         .catch(function (res) {
@@ -125,6 +141,34 @@ const UserModule = {
         .then(function (res) {
 
           console.log("res put request---->", res)
+          return true
+        })
+        .catch(function (res) {
+          console.log("FAILURE!!", res);
+        });
+
+    },
+    DELETE_USER: async function ({ commit }, data) {
+      const headers = {
+        Authorization: localStorage.getItem('token')
+      }
+      axios
+        .delete("http://localhost:3999/api/user/" +data, {
+          headers: {
+            "Authorization": localStorage.getItem('token'),
+          }
+        })
+        .then(function (res) {
+
+          axios.get("http://localhost:3999/api/users", {
+            "Authorization": localStorage.getItem('token'),
+          }).then((response) => {
+            commit('setUsersList', response.data.users)
+            return true;
+          }, (err) => {
+            console.log(err)
+            return false;
+          })
           return true
         })
         .catch(function (res) {

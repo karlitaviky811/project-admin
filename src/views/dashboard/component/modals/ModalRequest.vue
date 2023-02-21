@@ -78,7 +78,12 @@
             </v-row>
             <v-row v-if="type == 'Detail' && role == 'ROLE_ADMIN'">
               <v-col cols="12" md="6">
-                <v-text-field label="Estatus" required v-model="modalRequest.status"></v-text-field>
+             
+                     <v-select v-model="modalRequest.status" label="Estatus" requiredpersistent-hint :items="paramsStatus"
+                :disabled="type !== 'Detail'"
+                required
+                item-text="name" item-value="type">
+              </v-select>
               </v-col>
               <v-col cols="12" md="6">
                 <v-text-field label="Urgencia" required v-model="modalReq.urgency"
@@ -92,20 +97,20 @@
                   show-size counter
                   chips multiple 
                   label="Archivos" 
-                  v-model="chosenFile" 
+                  v-model="modalReq.image" 
                   v-on:change="upload"
                   v-show="type !== 'Detail'">
-                  <v-chip small label color="primary">{{chosenFile }}</v-chip>
+                  <v-chip small label color="primary">{{modalReq.image}}</v-chip>
                 </v-file-input>
                 </div>
                 <div style="display:flex;">
                  
                 <v-img
-                v-show="urlImgDam !== ''"
+                v-show="modalReq.image!== ''"
                 :src="modalReq.image"
                 @click="downloadImg(modalReq.image)"
               ></v-img>
-                <v-btn fab small v-show="true" class="mx-2" color="green"
+                <v-btn fab small  v-show="modalReq.image!== ''" class="mx-2" color="green"
                 @click="downloadImg(modalRequest)">
                 <v-icon dark>mdi-arrow-down </v-icon>
               </v-btn>
@@ -182,7 +187,7 @@
           <v-btn
             color="green darken-1"
             text
-            @click="show = false"
+            @click="desagree()"
           >
             Cancelar
           </v-btn>
@@ -267,6 +272,28 @@ export default {
         name: "Baja",
       }
     ],
+     paramsStatus: [
+      {
+        id: 1,
+        type: "Approved",
+        name: "Aprobada",
+      },
+      {
+        id: 2,
+        type: "Created",
+        name: "Creada",
+      },
+      {
+        id: 3,
+        type: "Review",
+        name: "En revisión",
+      },
+      {
+        id: 4,
+        type: "Rejected",
+        name: "Rechazada",
+      }
+    ],
     paramsProject:[],
     nameRules: [
       (v) => !!v || "Name is required",
@@ -305,11 +332,9 @@ export default {
       this.paramsProject = this.projectsList
     },
     modalRequest(){
-      
       if(this.modalRequest.title !== ""){
         return true
       }
-
       return false
     }
   },
@@ -325,47 +350,50 @@ export default {
 
       return true
     },
-   async save() {
+  async  save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
+          const user = JSON.parse(localStorage.getItem("user"))._id;
       this.checkForm()
        this.loading = true;
         if (this.role === "ROLE_USER") {
         if (this.type == "Create") {
           if(!this.noValid){
        
-         await  this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
+        await  this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
+        await  this.$store.dispatch("GET_REQUESTS_USER", user);
           this.close();
           this.loading = false;
-          this.$emit("reqCreated");
+           
 
           }
         } else if (this.type == "Edit") {
           if(!this.noValid){
           await this.$store.dispatch("UPDATE_REQUESTS_USER", this.modalRequest);
+          await  this.$store.dispatch("GET_REQUESTS_USER", user);
           this.close();
-           this.$emit("reqCreated");
+            
         
           }
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Detail") {
-         await  this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACKS", this.modalRequest);
-          this.$emit("reqCreated");
+        await  this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACKS", this.modalRequest);
+        await  this.$store.dispatch("GET_REQUESTS_USER", user);
           this.close();
         }
       }
     
     },
      async deleted() {
-      this.role = JSON.parse(localStorage.getItem("user")).role;
-      this.checkForm()
-       this.loading = true;
-     
+                const user = JSON.parse(localStorage.getItem("user"))._id;
+       await  this.$store.dispatch("DELETE_REQUEST", this.modalRequest._id);
+       if(this.role === "ROLE_USER"){
+        await this.$store.dispatch("GET_REQUESTS_USER", user);
+
+
+       }
        
-         await  this.$store.dispatch("DELETE_REQUEST", this.modalRequest._id);
-          this.close();
-          this.show = false;
-         await this.$emit("reqCreated");
+      this.close();
 
     },
     downloadImg(item) {
@@ -395,7 +423,7 @@ export default {
           }
         );
         this.photoInfo = res.data;
-      
+      this.chosenFile = this.photoInfo.name
         this.modalRequest.image = this.photoInfo.secure_url;
       } catch (e) {
         console.log(e);
@@ -411,6 +439,10 @@ export default {
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
       });
+    },
+     desagree(){
+      this.close();
+this.show = false
     },
     checkForm(e) {
   

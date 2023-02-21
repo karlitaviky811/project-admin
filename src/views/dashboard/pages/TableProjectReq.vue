@@ -55,6 +55,7 @@
         :loading="data"
       >
         <template v-slot:item="row">
+        
           <tr>
             <td>{{ row.item.title }}</td>
             <td>{{ row.item.description }}</td>

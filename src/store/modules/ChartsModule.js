@@ -10,6 +10,8 @@ const ChartsModule = {
         chartsListRPMUSER: {},
         chartsListRPMAUSER: [],
         chartsListRPMRUSER: [],
+        chartsListQRSUsers: [],
+        chartsListQRSByUser: [],
         requestList: []
     },
     mutations: {
@@ -36,6 +38,13 @@ const ChartsModule = {
         },
         setChartsListRSRUSER(state, data){
             state.chartsListRPMRUSER = data.data
+        },
+        setChartsListQRSUsers(state, data){
+            console.log("data", data)
+            state.chartsListQRSUsers = data
+        },
+        setChartsListQRSByUser(state, data){
+            state.chartsListQRSByUser = data
         }
     },
     actions: {
@@ -164,6 +173,40 @@ const ChartsModule = {
             })
 
         },
+        GET_LIST_QRS: async function ({ commit }) {
+           
+            axios.get("http://localhost:3999/api/req/request/graph/project/qrsT", {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                console.log("hereeeeeeeeeeeeeeeeeeee***********", response)
+                commit('setChartsListQRSUsers', response.data.reqStatus)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+        GET_LIST_QRS_USER: async function ({ commit }, data) {
+           
+            axios.get("http://localhost:3999/api/req/request/graph/project/qrsT/"+data, {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                console.log("hereeeeeeeeeeeeeeeeeeee***********", response)
+                commit('setChartsListQRSByUser', response.data.reqStatus)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
     },
     getters: {
         chartsListPSC(state) {
@@ -189,6 +232,13 @@ const ChartsModule = {
         },
         chartsListRPMRUSER(state){
             return state.chartsListRPMRUSER;
+        },
+        chartsListQRSUsers(state){
+            console.log("heree state", state.chartsListQRSUsers)
+            return state.chartsListQRSUsers;
+        },
+        chartsListQRSByUser(state){
+           return  state.chartsListQRSByUser
         }
     },
 };

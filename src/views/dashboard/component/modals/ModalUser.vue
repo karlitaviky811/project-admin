@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal :show="show">
+    <modal :show="show && type !== 'Delete'">
       <div class="text-end">
         <v-icon @click="close">mdi-close</v-icon>
       </div>
@@ -73,6 +73,35 @@
         </v-form>
       </template>
     </modal>
+
+  <modal :show="show" v-if=" type == 'Delete'"    max-width="180">
+    
+        <v-card-title class="headline">Eliminar</v-card-title>
+
+        <v-card-text>
+          ¿Esta seguro(a) de eliminar el elemento seleccionado ?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="desagree()"
+          >
+            Cancelar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleted()"
+          >
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+    </modal>
   </div>
 </template>
 
@@ -126,6 +155,18 @@ export default {
     close: function () {
       this.$emit("close");
     },
+     async deleted() {
+                const user = JSON.parse(localStorage.getItem("user"))._id;
+                console.log("hiii", this.modalUser)
+       await  this.$store.dispatch("DELETE_USER", this.modalUser._id);
+       
+      this.close();
+
+    },
+     desagree(){
+      this.close();
+this.show = false
+    },
   async  save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       console.log("this", this.role, this.type, this.modalUser);
@@ -148,6 +189,7 @@ export default {
       }
     },
   },
+  
 };
 </script>
 
