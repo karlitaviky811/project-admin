@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router";
+import Vue from 'vue';
 const QrsModule = {
     state: {
         QrsList: [],
@@ -70,7 +71,24 @@ const QrsModule = {
                     "Authorization": localStorage.getItem('token'),
                 }
             }).then((response) => {
-                console.log("response pqrs create", response)
+                axios.get("http://localhost:3999/api/qrs/list", {
+                    headers: {
+                        "Authorization": localStorage.getItem('token'),
+                    }
+                }
+                ).then((response) => {
+                    commit('setQrsList', response.data.qrs)
+                    Vue.$toast.open({
+                        message: 'Opinión guardada con éxito!',
+                        type: 'success',
+                        position: 'top-right'
+                        // all of other options may go here
+                    });
+                    return true;
+                }, (err) => {
+                    console.log(err)
+                    return false;
+                })
                 return true;
             }, (err) => {
                 console.log(err)
@@ -100,6 +118,12 @@ const QrsModule = {
                     }
                 }
                 ).then((response) => {
+                    Vue.$toast.open({
+                        message: 'Opinión actualizada con éxito!',
+                        type: 'success',
+                        position: 'top-right'
+                        // all of other options may go here
+                    });
                     commit('setQrsList', response.data.qrs)
                     return true;
                 }, (err) => {
@@ -128,7 +152,18 @@ const QrsModule = {
                     "Authorization": localStorage.getItem('token'),
                 }
             }).then((response) => {
-                console.log("response qrs update", response)
+                axios.get("http://localhost:3999/api/qrs/list", {
+                    headers: {
+                        "Authorization": localStorage.getItem('token'),
+                    }
+                }
+                ).then((response) => {
+                    commit('setQrsList', response.data.qrs)
+                    return true;
+                }, (err) => {
+                    console.log(err)
+                    return false;
+                })
                 return true;
             }, (err) => {
                 console.log(err)
@@ -151,6 +186,13 @@ const QrsModule = {
                     }
                 }
                 ).then((response) => {
+
+                    Vue.$toast.open({
+                        message: 'Opinión eliminada con éxito!',
+                        type: 'success',
+                        position: 'top-right'
+                        // all of other options may go here
+                    });
                     commit('setQrsList', response.data.qrs)
                     return true;
                 }, (err) => {

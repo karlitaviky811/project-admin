@@ -24,10 +24,6 @@ export default {
     this.role = JSON.parse(localStorage.getItem("user")).role;
 
     this.emailsSubscriptionChart.series = this.chartsListRPM;
-
-    console.log("this.projectList", this.projectsList)
-
-
   },
   computed: {
   },

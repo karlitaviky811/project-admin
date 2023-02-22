@@ -21,11 +21,15 @@
 
               <v-col cols="12" md="4">
 
-              <v-select v-model="modalProject.department"  required label="Departamento" requiredpersistent-hint :items="params"
+              <v-select v-model="modalProject.department"  
+                required 
+                label="Departamento" 
+                required
+                persistent-hint 
+                :items="params"
                 :disabled="type == 'Detail'"
                 item-text="name" item-value="type">
               </v-select>
-               
               </v-col>
                <v-col cols="12" md="4">
                 <v-text-field
@@ -55,17 +59,14 @@
       </template>
     </modal>
 
-          <modal :show="show" v-if=" type == 'Delete'"    max-width="180">
+      <modal :show="show" v-if=" type == 'Delete'"    max-width="180">
     
         <v-card-title class="headline">Eliminar</v-card-title>
-
         <v-card-text>
           ¿Esta seguro(a) de eliminar el elemento seleccionado ?
         </v-card-text>
-
         <v-card-actions>
           <v-spacer></v-spacer>
-
           <v-btn
             color="green darken-1"
             text

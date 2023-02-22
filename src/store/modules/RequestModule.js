@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router";
+import Vue from 'vue';
 const RequestModule = {
   state: {
     requestsU: [],
@@ -112,9 +113,13 @@ const RequestModule = {
           }
         })
         .then(function (res) {
-          //console.log("SUCCESS!!", res);
-          //that.$refs.form.reset()
-          console.log(res)
+     
+          Vue.$toast.open({
+            message: 'Solicitud guardada con éxito!',
+            type: 'success',
+            position: 'top-right'
+            // all of other options may go here
+        });
           return true
         })
         .catch(function (res) {
@@ -152,7 +157,12 @@ const RequestModule = {
         .then(function (res) {
           axios.get("http://localhost:3999/api/req/user-requests/" + user).then((response) => {
             commit('setRequestsUser', response.data.requests)
-            return true;
+            Vue.$toast.open({
+              message: 'Solicitud actualizada con éxito!',
+              type: 'success',
+              position: 'top-right'
+              // all of other options may go here
+          });
           }, (err) => {
             console.log(err)
             return false;
@@ -191,7 +201,7 @@ const RequestModule = {
         })
         .then(function (res) {
 
-          console.log("res put request---->", res)
+          Vue.$toast.open('Solicitud actualizada con éxito');
           return true
         })
         .catch(function (res) {
@@ -218,6 +228,7 @@ const RequestModule = {
           axios.get("http://localhost:3999/api/req/user-requests/" + user).then((response) => {
             console.log("response", response.data.requests)
             commit('setRequestsUser', response.data.requests)
+            Vue.$toast.open('Solicitud eliminada con éxito');
             return true;
           }, (err) => {
             console.log(err)

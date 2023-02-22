@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router";
+import Vue from 'vue';
 const LoginModule = {
   state: {
     token: "",
@@ -23,7 +24,6 @@ const LoginModule = {
   },
   actions: {
     LOGIN_USER: async function ({ commit }, login) {
-
       console.log("state",login)
       const data = {
         email: login.user,
@@ -48,7 +48,6 @@ const LoginModule = {
           localStorage.setItem('token',response.data.token)
           commit('setLogued', true)
         })
-
         
         router.push("/home")
        

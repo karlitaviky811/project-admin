@@ -86,7 +86,8 @@ const ChartsModule = {
                 }
             }
             ).then((response) => {
-                commit('setChartsListRSA', response.data)
+                console.log("res-------------------------------", response)
+                commit('setChartsListRSA', response.data.reqStatus)
                 return true;
             }, (err) => {
                 console.log(err)
@@ -101,6 +102,7 @@ const ChartsModule = {
                 }
             }
             ).then((response) => {
+                console.log("response0000000000000000000", response)
                 commit('setChartsListRSR', response.data)
                 return true;
             }, (err) => {

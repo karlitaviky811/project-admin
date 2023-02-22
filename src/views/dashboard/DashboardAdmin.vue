@@ -109,15 +109,15 @@
 
       </v-col>
 
-      <v-col cols="12" sm="6" lg="3">
+      <v-col cols="12" sm="6" lg="3" v-if="qrs.length">
         <base-material-stats-card color="primary" icon="mdi-poll" title="Quejas" :value="qrs[0]?.cont" />
       </v-col>
 
-      <v-col cols="12" sm="6" lg="3">
+      <v-col cols="12" sm="6" lg="3"  v-if="qrs.length">
         <base-material-stats-card color="success" icon="mdi-store" title="Reclamos"  :value="qrs[1]?.cont" />
       </v-col>
 
-      <v-col cols="12" sm="6" lg="3">
+      <v-col cols="12" sm="6" lg="3"  v-if="qrs.length">
         <base-material-stats-card color="orange" icon="mdi-sofa" title="Sugerencias"  :value="qrs[2]?.cont">
         </base-material-stats-card>
       </v-col>
@@ -208,16 +208,16 @@ import { mapGetters } from "vuex";
 export default {
   name: "DashboardAdmin",
   async created() {
-    this.loading = true
+    
     await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_A");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_R");
     await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE");
-   await this.$store.dispatch("GET_LIST_QRS");
-   await  this.$store.dispatch("GET_PROJECTS_ALL");
+    await this.$store.dispatch("GET_LIST_QRS");
+    await  this.$store.dispatch("GET_PROJECTS_ALL");
     
-    this.loading = false;
+
   },
   data() {
     return {

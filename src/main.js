@@ -23,10 +23,12 @@ import i18n from './i18n'
 
 Vue.config.productionTip = false
 // import + use
-import Toasted from 'vue-toasted';
-Vue.use(Toasted, {
-  duration: 1500
-})
+import VueToast from 'vue-toast-notification';
+// Import one of the available themes
+//import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toast-notification/dist/theme-sugar.css';
+
+Vue.use(VueToast);
 
 new Vue({
   router,

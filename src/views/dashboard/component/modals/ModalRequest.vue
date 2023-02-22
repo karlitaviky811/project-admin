@@ -164,26 +164,6 @@
                     <v-icon dark>mdi-arrow-down </v-icon>
                   </v-btn>
                 </div>
-                <!--div style="display:flex;">
-                  <v-file-input 
-                  show-size counter
-                  chips multiple 
-                  label="Archivos" 
-                  v-model="chosenFile" 
-                  v-on:change="upload"
-                  v-show="type !== 'Detail'">
-                  <v-chip small label color="primary">{{chosenFile }}</v-chip>
-                </v-file-input>
-                <v-img
-                v-show="urlImgDam !== ''"
-                :src="modalReq.image"
-                @click="downloadImg(modalReq.image)"
-              ></v-img>
-                <v-btn fab small v-show="true" class="mx-2" color="green"
-                @click="downloadImg(modalRequest)">
-                <v-icon dark>mdi-arrow-down </v-icon>
-              </v-btn>
-                </div-->
               </v-col>
             </v-row>
             <v-row>
@@ -199,8 +179,6 @@
                     <div>Descripcion</div>
                   </template>
                 </v-textarea>
-
-                <!--v-file-input show-size counter chips multiple label="Arquivo Geral"  v-model="files" ref="file" @change="upload"></v-file-input-->
               </v-col>
               <v-col cols="12" sm="6" v-if="type">
                 <v-textarea
@@ -345,11 +323,13 @@ export default {
         name: "Rechazada",
       },
     ],
-    paramsProject: [],
+    paramsProject: [
+    ],
   }),
   created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
     this.request = Object.assign({}, this.modalRequest);
+    console.log("model.request", this.request)
     this.urlImgDam = this.modalReq.image;
     this.$store.dispatch("GET_PROJECTS_ALL");
   },
@@ -464,7 +444,6 @@ export default {
     },
     submitFile() {
       return new Promise((resolve, reject) => {
-        console.log("file", file);
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
@@ -479,9 +458,7 @@ export default {
       if (this.modalRequest.title && this.modalRequest.description) {
         this.noValid = false;
       }
-
       this.errors = [];
-
       if (!this.modalRequest.title) {
         this.errors.push("Titulo required.");
         this.noValid = true;
