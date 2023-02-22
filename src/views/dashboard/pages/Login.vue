@@ -7,7 +7,6 @@
             <div style="display:flex;flex-direction:column;">
             <v-flex xs12 sm8 md4>
               <img :src="'http://www.facyt.uc.edu.ve/sites/default/files/logo-completo_0_0_0_0_0.png'" />
-
             </v-flex>
           </div>
             <v-card class="elevation-12 body" style="width:480px;" >

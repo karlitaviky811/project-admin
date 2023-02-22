@@ -69,15 +69,18 @@
           :search="search"
           :loading="data"
         >
-          <template v-slot:item="row">
+          <template  v-slot:item="{item, index}">
             <tr>
-              <td>{{ row.item.title }}</td>
-              <td>{{ convertDate(row.item.date) }}</td>
-              <td>{{ row.item.project }}</td>
-              <td>{{ row.item.type }}</td>
-              <td>{{ row.item.status }}</td>
-              <td width="200">{{ row.item.description }}</td>
-              <td width="200">{{ row.item.user.name }}</td>
+              <td>{{ index + 1 }}</td>
+              <td>{{ 'REQ'+ item._id.slice(-10) }}</td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.project }}</td>
+              <td>{{ convertDate(item.date) }}</td>
+         
+              <td>{{ item.type }}</td>
+              <td>{{ item.status }}</td>
+              <td width="200">{{ item.description }}</td>
+              <td width="200">{{ item.user.name }}</td>
 
               <td v-show="true">
                 <v-tooltip bottom>
@@ -89,7 +92,7 @@
                       v-show="true"
                       class="mx-2"
                       color="white"
-                      @click.stop="detail(row)"
+                      @click.stop="detail(item)"
                     >
                       <v-icon dark>mdi-chevron-right </v-icon>
                     </v-btn>
@@ -143,6 +146,8 @@ export default {
       },
       request: {},
       headers: [
+        { text: "#", value: "" },
+        { text: "ID", value: "_id" },
         { text: "Título", value: "title" },
         { text: "Proyecto", value: "project" },
         { text: "Fecha", value: "date", sortable: false },
@@ -188,17 +193,17 @@ export default {
       this.id = item._id;
       this.title = "Detalle";
       this.show = true;
-      console.log("this.request", item.item);
+      console.log("this.request", item);
       this.toggleModal(item._id);
       this.type = "Edit";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       this.$store.commit("setRequestsUserModal", this.request);
       this.dialog = true;
     },
     detail(item) {
       this.type = "Detail";
       this.title = "Detalle";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       this.$store.commit("setRequestsUserModal", this.request);
       this.toggleModal(item._id);
     },
@@ -231,7 +236,6 @@ export default {
     },
     loadRequests() {
       //const user = JSON.parse(localStorage.getItem("user"))._id;
-      console.log("herereeeeee")
       this.$store.dispatch("GET_REQUESTS_ALL");
       this.role = JSON.parse(localStorage.getItem("user")).role;
       this.data = false;

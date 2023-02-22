@@ -1,15 +1,8 @@
 <template>
-  <v-container  id="regular-tables"
-    fluid
-    tag="section">
+  <v-container id="regular-tables" fluid tag="section">
     <div class="py-3" />
- <v-alert
-      border="top"
-      colored-border
-      type="info"
-      elevation="2"
-    >
-     Proyectos activos actualmente
+    <v-alert border="top" colored-border type="info" elevation="2">
+      Proyectos activos actualmente
     </v-alert>
     <base-material-card
       color="primary"
@@ -20,30 +13,30 @@
       <v-container class="d-flex flex-column align-end">
         <v-row>
           <v-col>
-             <v-tooltip left>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="role !== 'ROLE_USER'"
-                    color="success"
-                    @click.stop="create(true)"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
-                  <modal-project
-                    :id="id"
-                    :project="project"
-                    :show="showModal(true)"
-                    :type="type"
-                    :title="title"
-                    @close="toggleModalClose(true)"
-                    @reqProject="loadProjects"
-                  />
-                </template>
-                <span>Nuevo</span>
-              </v-tooltip>
+            <v-tooltip left>
+              <template v-slot:activator="{ on: tooltip }">
+                <v-btn
+                  v-on="{ ...tooltip }"
+                  fab
+                  small
+                  v-show="role !== 'ROLE_USER'"
+                  color="success"
+                  @click.stop="create(true)"
+                >
+                  <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
+                <modal-project
+                  :id="id"
+                  :project="project"
+                  :show="showModal(true)"
+                  :type="type"
+                  :title="title"
+                  @close="toggleModalClose(true)"
+                  @reqProject="loadProjects"
+                />
+              </template>
+              <span>Nuevo</span>
+            </v-tooltip>
           </v-col>
         </v-row>
       </v-container>
@@ -54,14 +47,15 @@
         :search="search"
         :loading="data"
       >
-        <template v-slot:item="row">
-        
+        <template v-slot:item="{ item, index }">
           <tr>
-            <td>{{ row.item.title }}</td>
-            <td>{{ row.item.description }}</td>
-            <td>{{ convertDate(row.item.date) }}</td>
-            <td>{{ row.item.department }}</td>
-            <td>{{ row.item.tecnology }}</td>
+            <td>{{ index + 1 }}</td>
+            <td>{{ 'PRO'+ item._id.slice(-10) }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ convertDate(item.date) }}</td>
+            <td>{{ item.department }}</td>
+            <td>{{ item.tecnology }}</td>
 
             <td v-show="role !== 'ROLE_USER'">
               <v-tooltip bottom>
@@ -73,7 +67,7 @@
                     v-show="true"
                     class="mx-2"
                     color="success"
-                    @click.stop="edit(row)"
+                    @click.stop="edit(item)"
                   >
                     <v-icon dark>mdi-pencil</v-icon>
                   </v-btn>
@@ -88,7 +82,7 @@
                     fab
                     small
                     color="red"
-                    @click="deleted(row)"
+                    @click="deleted(item)"
                   >
                     <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
@@ -109,7 +103,6 @@ import ModalProject from "../component/modals/ModalProject.vue";
 export default {
   name: "RegularTables",
   components: {
-
     ModalProject,
   },
   created() {
@@ -118,7 +111,7 @@ export default {
     this.$store.dispatch("GET_PROJECTS_ALL");
     this.data = false;
     this.role = JSON.parse(localStorage.getItem("user")).role;
-    console.log("role", this.role)
+    console.log("role", this.role);
   },
 
   data() {
@@ -140,6 +133,8 @@ export default {
       },
       project: {},
       headers: [
+        { text: "#", value: "" },
+        { text: "ID", value: "_id" },
         { text: "Título", value: "title" },
         { text: "Descripción", value: "description" },
         { text: "Fecha", value: "date", sortable: false },
@@ -180,16 +175,15 @@ export default {
       this.project = Object.assign({}, {});
       this.$store.commit("setRequestsProjectModal", {});
       this.type = "Create";
-     
     },
     edit(item) {
       this.id = item._id;
       this.title = "Editar ";
       this.show = true;
-      console.log("this.request", item.item);
+      console.log("this.request", item);
       this.toggleModal(item._id);
       this.type = "Edit";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("this", this.request);
       this.$store.commit("setRequestsProjectModal", this.request);
       this.dialog = true;
@@ -197,24 +191,22 @@ export default {
     detail(item) {
       this.type = "Detail";
       this.title = "Detalle";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("item", item);
       this.$store.commit("setRequestsProjectModal", this.request);
       this.toggleModal(item._id);
     },
-      deleted(item){
+    deleted(item) {
       this.id = item._id;
       this.title = "Editar";
       this.toggleModal(this.id);
-      this.request = Object.assign({}, item.item);
-      this.$store.commit("setRequestsProjectModal",item.item);
-      this.type = 'Delete';
+      this.request = Object.assign({}, item);
+      this.$store.commit("setRequestsProjectModal", item);
+      this.type = "Delete";
       this.show = true;
       this.dialog = true;
-
     },
     toggleModal: async function (id) {
-     
       this.activeModal = !this.activeModal;
     },
     closeModal() {
@@ -230,7 +222,6 @@ export default {
     },
     toggleModalClose: async function (id) {
       if (this.activeModal !== 0) {
-        console.log("aqui caaaayo");
         this.activeModal = 0;
         return false;
       }
@@ -239,17 +230,13 @@ export default {
     },
     loadProjects() {
       this.data = true;
-            this.role = JSON.parse(localStorage.getItem("user")).role;
-      console.log("hiiiii aquii-------->")
+      this.role = JSON.parse(localStorage.getItem("user")).role;
       const user = JSON.parse(localStorage.getItem("user"))._id;
       this.$store.dispatch("GET_PROJECTS_ALL");
       this.data = false;
-
     },
-      loadRequests() {
-      //const user = JSON.parse(localStorage.getItem("user"))._id;
-    this.$store.dispatch("GET_REQUESTS_ALL");
-
+    loadRequests() {
+      this.$store.dispatch("GET_REQUESTS_ALL");
       this.role = JSON.parse(localStorage.getItem("user")).role;
       this.data = false;
     },

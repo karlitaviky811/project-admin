@@ -17,7 +17,7 @@
 
     <v-divider class="mb-1" />
 
-    <v-list dense nav >
+    <v-list dense nav>
       <v-list-item class="body">
         <v-list-item-avatar class="align-self-center" color="white" contain>
           <v-img
@@ -27,7 +27,7 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title class="text-h4" v-text="'User : '+nameUser" />
+          <v-list-item-title class="text-h4" v-text="'User : ' + nameUser" />
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -142,7 +142,7 @@ export default {
     */
     ],
     role: "",
-    nameUser: ""
+    nameUser: "",
   }),
 
   computed: {
@@ -170,7 +170,7 @@ export default {
   created() {
     const user = JSON.parse(localStorage.getItem("user"))._id;
     this.nameUser = JSON.parse(localStorage.getItem("user")).surname;
-    console.log("nameUser", this.nameUser)
+    console.log("nameUser", this.nameUser);
     this.$store.dispatch("GET_REQUESTS_ALL");
     this.role = JSON.parse(localStorage.getItem("user")).role;
   },
@@ -252,12 +252,12 @@ export default {
   background-color: #5e5e5e !important;
 }
 
-.body{
-background: rgba( 255, 255, 255, 0.2 ) !important;
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ) !important;
-backdrop-filter: blur( 10px ) !important;
--webkit-backdrop-filter: blur( 4px ) !important;
-border-radius: 10px !important;
-border: 1px solid rgba( 255, 255, 255, 0.18 ) !important;
+.body {
+  background: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
 }
 </style>

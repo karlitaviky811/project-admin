@@ -4,23 +4,20 @@ const RequestModule = {
   state: {
     requestsU: [],
     modalReq: {
-      
     },
     requestList: [],
-    requestListByType: []
+    requestListByType: [],
+    loading: false
   },
   mutations: {
     setRequestsUser(state, data) {
       state.requestsU = data;
     },
     setRequestsUserModal(state, data) {
-
       let comm = ''
-      if(data !== {}){
+      if (data !== {}) {
         comm = data.feedBack?.comment
       }
-
-      console.log("req---->", data)
       const req = {
         _id: data._id,
         type: data.type,
@@ -47,10 +44,13 @@ const RequestModule = {
     setRequestsListByType(state, data) {
       state.requestListByType = data;
     },
+    setLoading(state, data){
+      state.loading = data;
+    }
   },
   actions: {
     GET_REQUESTS_ALL: async function ({ commit }) {
-   
+
       axios.get("http://localhost:3999/api/req/requests/:1", {
         "Authorization": localStorage.getItem('token'),
       }).then((response) => {
@@ -63,12 +63,12 @@ const RequestModule = {
 
     },
     GET_REQUESTS_ALL_BY_TYPE: async function ({ commit }) {
-   
+
       axios.get("http://localhost:3999/api/req/request/group/:1", {
         "Authorization": localStorage.getItem('token'),
       }).then((response) => {
         console.log("response--->", response.data.requests)
-       
+
         commit('setRequestsListByType', response.data.requests)
         return true;
       }, (err) => {
@@ -90,7 +90,7 @@ const RequestModule = {
 
     },
     SAVE_REQUESTS_USER: async function ({ commit }, data) {
-   
+
       const req = {
         type: data.type,
         project: data.project,
@@ -99,8 +99,8 @@ const RequestModule = {
         priority: data.priority,
         urgency: data.urgency,
         feedBack: '',
-        image: data.image !== ''? data.image : 'https://metrika.com/images/empty-photo.jpg'
-  
+        image: data.image !== '' ? data.image : 'https://metrika.com/images/empty-photo.jpg'
+
       }
       console.log("req------->", req)
 
@@ -126,7 +126,9 @@ const RequestModule = {
       const headers = {
         Authorization: localStorage.getItem('token')
       }
+      let that = this
       console.log("data----*************", data, "token", headers, data.feedBack.comment)
+      const user = JSON.parse(localStorage.getItem("user"))._id;
       const req = {
         type: data.type,
         project: data.project,
@@ -136,28 +138,26 @@ const RequestModule = {
         status: data.status,
         urgency: data.urgency,
         feedBack: data.feedBack.comment,
-        image: data.image !== ''? data.image : 'https://metrika.com/images/empty-photo.jpg'
+        image: data.image !== '' ? data.image : 'https://metrika.com/images/empty-photo.jpg'
       }
       console.log("req", req)
 
-      
+
       axios
-        .put("http://localhost:3999/api/req/request/"+data._id, req, {
+        .put("http://localhost:3999/api/req/request/" + data._id, req, {
           headers: {
             "Authorization": localStorage.getItem('token'),
           }
         })
         .then(function (res) {
-   
           axios.get("http://localhost:3999/api/req/user-requests/" + user).then((response) => {
-        console.log("response", response.data.requests)
-        commit('setRequestsUser', response.data.requests)
-        return true;
-      }, (err) => {
-        console.log(err)
-        return false;
-      })
-      
+            commit('setRequestsUser', response.data.requests)
+            return true;
+          }, (err) => {
+            console.log(err)
+            return false;
+          })
+
         })
         .catch(function (res) {
           console.log("FAILURE!!", res);
@@ -178,13 +178,13 @@ const RequestModule = {
         status: data.status,
         urgency: data.urgency,
         feedBack: data.feedBack.comment,
-        image: data.image !== ''? data.image : 'https://metrika.com/images/empty-photo.jpg'
+        image: data.image !== '' ? data.image : 'https://metrika.com/images/empty-photo.jpg'
       }
       console.log("req--->>>>", req)
 
 
       axios
-        .put("http://localhost:3999/api/req/request/" +data._id +"/feedback",  req, {
+        .put("http://localhost:3999/api/req/request/" + data._id + "/feedback", req, {
           headers: {
             "Authorization": localStorage.getItem('token'),
           }
@@ -204,25 +204,25 @@ const RequestModule = {
       const headers = {
         Authorization: localStorage.getItem('token')
       }
-  
+
       console.log("req--->>>>", data)
 
 
       axios
-        .delete("http://localhost:3999/api/req/request/" +data, {
+        .delete("http://localhost:3999/api/req/request/" + data, {
           headers: {
             "Authorization": localStorage.getItem('token'),
           }
         })
         .then(function (res) {
-     axios.get("http://localhost:3999/api/req/user-requests/" + user).then((response) => {
-        console.log("response", response.data.requests)
-        commit('setRequestsUser', response.data.requests)
-        return true;
-      }, (err) => {
-        console.log(err)
-        return false;
-      })
+          axios.get("http://localhost:3999/api/req/user-requests/" + user).then((response) => {
+            console.log("response", response.data.requests)
+            commit('setRequestsUser', response.data.requests)
+            return true;
+          }, (err) => {
+            console.log(err)
+            return false;
+          })
         })
         .catch(function (res) {
           console.log("FAILURE!!", res);
@@ -242,6 +242,9 @@ const RequestModule = {
     },
     requestListByType(state) {
       return state.requestListByType;
+    },
+    loading(state) {
+      return state.loading;
     }
   },
 };

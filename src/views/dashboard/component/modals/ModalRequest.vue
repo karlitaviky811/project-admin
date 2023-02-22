@@ -5,115 +5,164 @@
         <v-icon @click="close">mdi-close</v-icon>
       </div>
       <template>
-        <v-form
-          @submit.prevent="checkForm"
-        >
-    <v-alert
-      dense
-      outlined
-      type="error"
-      v-show="noValid"
-    >
-     Por favor llene todos los campos solicitados type
-    </v-alert>
-
-     <v-progress-linear
-        :active="loading"
-        :indeterminate="loading"
-        absolute
-        bottom
-        color="deep-purple-accent-4"
-      ></v-progress-linear>
-
-
+        <v-form fast-fail @submit.prevent>
+          <v-alert dense outlined type="error" v-show="noValid">
+            Por favor llene todos los campos solicitados type
+          </v-alert>
+          <v-progress-linear
+            :active="loading"
+            :indeterminate="loading"
+            absolute
+            bottom
+            color="deep-purple-accent-4"
+          ></v-progress-linear>
           <h4 class="font-weight-medium outline text-left">{{ title }}</h4>
-
-          <v-chip dark class="font-weight-medium" style="marparamsProjectgin-top: 25px" v-show="type !== 'Create'">{{
-            modalRequest.status
-          }}</v-chip>
+          <v-chip
+            dark
+            class="font-weight-medium"
+            style="marparamsprojectgin-top: 25px"
+            v-show="type !== 'Create'"
+            >{{ modalRequest.status }}</v-chip
+          >
           <v-container>
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field   v-model="modalRequest.title" label="Título solicitud" required
-                  :disabled="type == 'Detail'"></v-text-field>
+                <v-text-field
+                  v-model="modalRequest.title"
+                  label="Título solicitud"
+                  required
+                  :disabled="type == 'Detail'"
+                ></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-select v-model="modalRequest.type" label="Seleccione tipo" persistent-hint :items="params" required
-                :disabled="type == 'Detail'"
-                  item-text="name" item-value="rol">
+                <v-select
+                  v-model="modalRequest.type"
+                  label="Seleccione tipo"
+                  persistent-hint
+                  :items="params"
+                  required
+                  :disabled="type == 'Detail'"
+                  item-text="name"
+                  item-value="rol"
+                >
                 </v-select>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-              <v-select v-if="paramsProject.length" v-model="modalRequest.project" label="Proyecto" requiredpersistent-hint :items="paramsProject"
-                :disabled="type == 'Detail'"
-                :required="title"
-                item-text="title" item-value="title">
-              </v-select>
+                <v-select
+                  v-if="paramsProject.length"
+                  v-model="modalRequest.project"
+                  label="Proyecto"
+                  requiredpersistent-hint
+                  :items="paramsProject"
+                  :disabled="type == 'Detail'"
+                  :required="title"
+                  item-text="title"
+                  item-value="title"
+                >
+                </v-select>
               </v-col>
               <v-col cols="12" md="6">
-                <v-select v-model="modalRequest.priority" label="Prioridad" requiredpersistent-hint :items="paramsPriority"
-                :disabled="type == 'Detail'"
-                required
-                item-text="name" item-value="rol">
-              </v-select>
+                <v-select
+                  v-model="modalRequest.priority"
+                  label="Prioridad"
+                  requiredpersistent-hint
+                  :items="paramsPriority"
+                  :disabled="type == 'Detail'"
+                  required
+                  item-text="name"
+                  item-value="rol"
+                >
+                </v-select>
               </v-col>
-             
             </v-row>
             <v-row> </v-row>
             <v-row v-if="type !== 'Detail' && role == 'ROLE_USER'">
               <v-col cols="12" md="6">
-                <v-select v-model="modalRequest.urgency" label="Seleccione tipo" persistent-hint :items="paramsUrgency"
-                
-                  item-text="name" item-value="type" :disabled="type == 'Detail'">
+                <v-select
+                  v-model="modalRequest.urgency"
+                  label="Seleccione tipo"
+                  persistent-hint
+                  :items="paramsUrgency"
+                  item-text="name"
+                  item-value="type"
+                  :disabled="type == 'Detail'"
+                >
                 </v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field v-model="modalRequest.description" color="teal" label="Descripción"
-                required
-                  :disabled="type === 'Detail'">
+                <v-text-field
+                  v-model="modalRequest.description"
+                  color="teal"
+                  label="Descripción"
+                  required
+                  :disabled="type === 'Detail'"
+                >
                 </v-text-field>
               </v-col>
             </v-row>
             <v-row v-if="type == 'Detail' && role == 'ROLE_ADMIN'">
               <v-col cols="12" md="6">
-             
-                     <v-select v-model="modalRequest.status" label="Estatus" requiredpersistent-hint :items="paramsStatus"
-                :disabled="type !== 'Detail'"
-                required
-                item-text="name" item-value="type">
-              </v-select>
+                <v-select
+                  v-model="modalRequest.status"
+                  label="Estatus"
+                  requiredpersistent-hint
+                  :items="paramsStatus"
+                  :disabled="type !== 'Detail'"
+                  required
+                  item-text="name"
+                  item-value="type"
+                >
+                </v-select>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Urgencia" required v-model="modalReq.urgency"
-                  :disabled="type == 'Detail'"></v-text-field>
+                <v-text-field
+                  label="Urgencia"
+                  required
+                  v-model="modalReq.urgency"
+                  :disabled="type == 'Detail'"
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" sm="6" style="align-items: center; justify-content: center">
+              <v-col
+                cols="12"
+                sm="6"
+                style="align-items: center; justify-content: center"
+              >
                 <div>
-                  <v-file-input 
-                  show-size counter
-                  chips multiple 
-                  label="Archivos" 
-                  v-model="modalReq.image" 
-                  v-on:change="upload"
-                  v-show="type !== 'Detail'">
-                  <v-chip small label color="primary">{{modalReq.image}}</v-chip>
-                </v-file-input>
+                  <v-file-input
+                    show-size
+                    counter
+                    chips
+                    multiple
+                    label="Archivos"
+                    v-model="modalReq.image"
+                    v-on:change="upload"
+                    v-show="type !== 'Detail'"
+                  >
+                    <v-chip small label color="primary">{{
+                      modalReq.image
+                    }}</v-chip>
+                  </v-file-input>
                 </div>
-                <div style="display:flex;">
-                 
-                <v-img
-                v-show="modalReq.image!== ''"
-                :src="modalReq.image"
-                @click="downloadImg(modalReq.image)"
-              ></v-img>
-                <v-btn fab small  v-show="modalReq.image!== ''" class="mx-2" color="green"
-                @click="downloadImg(modalRequest)">
-                <v-icon dark>mdi-arrow-down </v-icon>
-              </v-btn>
+                <div style="display: flex">
+                  <v-img
+                    v-show="modalReq.image !== ''"
+                    :src="modalReq.image"
+                    @click="downloadImg(modalReq.image)"
+                  ></v-img>
+                  <v-btn
+                    fab
+                    small
+                    v-show="modalReq.image !== ''"
+                    class="mx-2"
+                    color="green"
+                    @click="downloadImg(modalRequest)"
+                  >
+                    <v-icon dark>mdi-arrow-down </v-icon>
+                  </v-btn>
                 </div>
                 <!--div style="display:flex;">
                   <v-file-input 
@@ -139,8 +188,12 @@
             </v-row>
             <v-row>
               <v-col cols="12" sm="6" v-if="type">
-                <v-textarea v-model="modalRequest.description" color="teal" label="Descripcion" v-if="type == 'Detail'"
-                :disabled="type == 'Detail'"
+                <v-textarea
+                  v-model="modalRequest.description"
+                  color="teal"
+                  label="Descripcion"
+                  v-if="type == 'Detail'"
+                  :disabled="type == 'Detail'"
                 >
                   <template v-slot:label>
                     <div>Descripcion</div>
@@ -150,8 +203,12 @@
                 <!--v-file-input show-size counter chips multiple label="Arquivo Geral"  v-model="files" ref="file" @change="upload"></v-file-input-->
               </v-col>
               <v-col cols="12" sm="6" v-if="type">
-                <v-textarea v-model="modalRequest.feedBack.comment" color="teal" label="Feedback" v-show="type == 'Detail'"
-                :disabled="role == 'ROLE_USER'"
+                <v-textarea
+                  v-model="modalRequest.feedBack.comment"
+                  color="teal"
+                  label="Feedback"
+                  v-show="type == 'Detail'"
+                  :disabled="role == 'ROLE_USER'"
                 >
                   <template v-slot:label>
                     <div>Feedback</div>
@@ -164,42 +221,28 @@
             <v-row class="mt-5">
               <v-spacer></v-spacer>
               <v-btn color="secondary" text @click="close">Cerrar</v-btn>
-              <v-btn color="primary" text @click="save" type="submit" >Guardar</v-btn>
+              <!--v-btn type="submit" block class="mt-2">Submit</v-btn-->
+              <v-btn color="primary" text @click="save" type="submit"
+                >Guardar</v-btn
+              >
             </v-row>
           </v-container>
         </v-form>
       </template>
     </modal>
 
-
-
-      <modal :show="show" v-if=" type == 'Delete'"    max-width="180">
-    
-        <v-card-title class="headline">Eliminar</v-card-title>
-
-        <v-card-text>
-          ¿Esta seguro(a) de eliminar el elemento seleccionado ?
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="green darken-1"
-            text
-            @click="desagree()"
-          >
-            Cancelar
-          </v-btn>
-
-          <v-btn
-            color="green darken-1"
-            text
-            @click="deleted()"
-          >
-            Aceptar
-          </v-btn>
-        </v-card-actions>
+    <modal :show="show" v-if="type == 'Delete'" max-width="180">
+      <v-card-title class="headline">Eliminar</v-card-title>
+      <v-card-text>
+        ¿Esta seguro(a) de eliminar el elemento seleccionado ?
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="green darken-1" text @click="desagree()">
+          Cancelar
+        </v-btn>
+        <v-btn color="green darken-1" text @click="deleted()"> Aceptar </v-btn>
+      </v-card-actions>
     </modal>
   </div>
 </template>
@@ -212,10 +255,11 @@ import { saveAs } from "file-saver";
 
 export default {
   props: ["show", "title", "id", "type"],
-  
+
   components: { Modal },
+
   data: () => ({
-    noValid : false,
+    noValid: false,
     valid: false,
     firstname: "",
     request: {},
@@ -226,6 +270,13 @@ export default {
     chosenFile: [],
     modalRequest: [],
     loading: false,
+    firstNameRules: [
+      (value) => {
+        if (value?.length > 3) return true;
+
+        return "First name must be at least 3 characters.";
+      },
+    ],
     params: [
       {
         id: 1,
@@ -270,9 +321,9 @@ export default {
         id: 2,
         type: "baja",
         name: "Baja",
-      }
+      },
     ],
-     paramsStatus: [
+    paramsStatus: [
       {
         id: 1,
         type: "Approved",
@@ -292,114 +343,96 @@ export default {
         id: 4,
         type: "Rejected",
         name: "Rechazada",
-      }
+      },
     ],
-    paramsProject:[],
-    nameRules: [
-      (v) => !!v || "Name is required",
-      (v) => v.length <= 10 || "Name must be less than 10 characters",
-    ],
-    email: "",
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+/.test(v) || "E-mail must be valid",
-    ],
+    paramsProject: [],
   }),
- created() {
+  created() {
     this.role = JSON.parse(localStorage.getItem("user")).role;
     this.request = Object.assign({}, this.modalRequest);
-    this.urlImgDam =this.modalReq.image
+    this.urlImgDam = this.modalReq.image;
     this.$store.dispatch("GET_PROJECTS_ALL");
-    console.log("heree type", this.type)
   },
   computed: {
     ...mapGetters(["modalReq"]),
     ...mapGetters(["user"]),
     ...mapGetters(["projectsList"]),
-     rules() {
-      const valid = (this.values[0] + '').length < (this.values[1] + '').length;
-      return {
-        first: [() => valid || "Must have less characters than second value"], 
-        second: [() => valid || "Must have more characters than first value"]
-      };
-    }
   },
   watch: {
-    modalReq(){
-      this.modalRequest = this.modalReq
+    modalReq() {
+      this.modalRequest = this.modalReq;
     },
-    projectsList(){
-      this.paramsProject = this.projectsList
+    projectsList() {
+      this.paramsProject = this.projectsList;
     },
-    modalRequest(){
-      if(this.modalRequest.title !== ""){
-        return true
+    modalRequest() {
+      if (this.modalRequest.title !== "") {
+        return true;
       }
-      return false
-    }
+      return false;
+    },
   },
   methods: {
     close: function () {
       this.$emit("close");
     },
-    validForm(){
-     
-      if(this.modalRequest.title !== ""){
-        return false
+    validForm() {
+      if (this.modalRequest.title !== "") {
+        return false;
       }
 
-      return true
+      return true;
     },
-  async  save() {
+    async save() {
       this.role = JSON.parse(localStorage.getItem("user")).role;
-          const user = JSON.parse(localStorage.getItem("user"))._id;
-      this.checkForm()
-       this.loading = true;
-        if (this.role === "ROLE_USER") {
+      const user = JSON.parse(localStorage.getItem("user"))._id;
+      this.checkForm();
+      this.loading = true;
+      if (this.role === "ROLE_USER") {
         if (this.type == "Create") {
-          if(!this.noValid){
-       
-        await  this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
-        await  this.$store.dispatch("GET_REQUESTS_USER", user);
-          this.close();
-          this.loading = false;
-           
-
+          if (!this.noValid) {
+            await this.$store.dispatch("SAVE_REQUESTS_USER", this.modalRequest);
+            await this.$store.dispatch("GET_REQUESTS_USER", user);
+            this.request = Object.assign({}, this.modalRequest);
+            this.close();
+            this.loading = false;
           }
         } else if (this.type == "Edit") {
-          if(!this.noValid){
-          await this.$store.dispatch("UPDATE_REQUESTS_USER", this.modalRequest);
-          await  this.$store.dispatch("GET_REQUESTS_USER", user);
-          this.close();
-            
-        
+          if (!this.noValid) {
+            await this.$store.dispatch(
+              "UPDATE_REQUESTS_USER",
+              this.modalRequest
+            );
+            await this.$store.dispatch("GET_REQUESTS_USER", user);
+            this.request = Object.assign({}, this.modalRequest);
+            this.close();
           }
         }
       } else if (this.role == "ROLE_ADMIN") {
         if (this.type === "Detail") {
-        await  this.$store.dispatch("UPDATE_REQUESTS_USER_FEEDBACKS", this.modalRequest);
-        await  this.$store.dispatch("GET_REQUESTS_USER", user);
+          await this.$store.dispatch(
+            "UPDATE_REQUESTS_USER_FEEDBACKS",
+            this.modalRequest
+          );
+          await this.$store.dispatch("GET_REQUESTS_USER", user);
+          this.request = Object.assign({}, this.modalRequest);
           this.close();
         }
       }
-    
     },
-     async deleted() {
-                const user = JSON.parse(localStorage.getItem("user"))._id;
-       await  this.$store.dispatch("DELETE_REQUEST", this.modalRequest._id);
-       if(this.role === "ROLE_USER"){
+    async deleted() {
+      const user = JSON.parse(localStorage.getItem("user"))._id;
+      await this.$store.dispatch("DELETE_REQUEST", this.modalRequest._id);
+      if (this.role === "ROLE_USER") {
         await this.$store.dispatch("GET_REQUESTS_USER", user);
+      }
 
-
-       }
-       
       this.close();
-
     },
     downloadImg(item) {
       let responseUrl = item;
-      let url =  this.modalRequest.image;
-      console.log("img",  this.modalRequest.image)
+      let url = this.modalRequest.image;
+      console.log("img", this.modalRequest.image);
       fetch(url)
         .then((response) => response.blob())
         .then((blob) => {
@@ -407,7 +440,7 @@ export default {
         });
       console.log("downloading", url);
     },
-   async upload(e) {
+    async upload(e) {
       const file = e[0];
       const formData = new FormData();
       formData.append("file", file);
@@ -423,45 +456,41 @@ export default {
           }
         );
         this.photoInfo = res.data;
-      this.chosenFile = this.photoInfo.name
+        this.chosenFile = this.photoInfo.name;
         this.modalRequest.image = this.photoInfo.secure_url;
       } catch (e) {
         console.log(e);
       }
-
-
     },
     submitFile() {
       return new Promise((resolve, reject) => {
-        console.log("file", file)
+        console.log("file", file);
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
       });
     },
-     desagree(){
+    desagree() {
       this.close();
-this.show = false
+      this.show = false;
     },
     checkForm(e) {
-  
       if (this.modalRequest.title && this.modalRequest.description) {
         this.noValid = false;
       }
-    
+
       this.errors = [];
 
       if (!this.modalRequest.title) {
-        this.errors.push('Titulo required.');
-        this.noValid = true
+        this.errors.push("Titulo required.");
+        this.noValid = true;
       }
       if (!this.modalRequest.description) {
-        this.errors.push('Descripcion required.');
-        this.noValid = true
+        this.errors.push("Descripcion required.");
+        this.noValid = true;
       }
-    
-    }
+    },
   },
 };
 </script>

@@ -1,8 +1,6 @@
 <template>
-  <v-container id="dashboard" fluid tag="section">
-
-    <v-row>
-    
+  <v-container id="dashboard" fluid tag="section" >
+    <v-row >
       <v-col cols="12" lg="4">
         <base-material-chart-card :data="emailsSubscriptionChart.data" :options="emailsSubscriptionChart.options"
           :responsive-options="emailsSubscriptionChart.responsiveOptions" color="#0088cc" hover-reveal type="Bar">
@@ -112,15 +110,15 @@
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card color="primary" icon="mdi-poll" title="Quejas" :value="qrs[0].cont" />
+        <base-material-stats-card color="primary" icon="mdi-poll" title="Quejas" :value="qrs[0]?.cont" />
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card color="success" icon="mdi-store" title="Reclamos"  :value="qrs[1].cont" />
+        <base-material-stats-card color="success" icon="mdi-store" title="Reclamos"  :value="qrs[1]?.cont" />
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card color="orange" icon="mdi-sofa" title="Sugerencias"  :value="qrs[2].cont">
+        <base-material-stats-card color="orange" icon="mdi-sofa" title="Sugerencias"  :value="qrs[2]?.cont">
         </base-material-stats-card>
       </v-col>
 
@@ -201,6 +199,7 @@
     </v-row>
 
   </v-container>
+  
 </template>
 
 <script>
@@ -500,7 +499,7 @@ export default {
     ...mapGetters(["chartsListRPMR"]),
     ...mapGetters(["requestListByType"]),
     ...mapGetters(["chartsListQRSUsers"]),
-     ...mapGetters(["projectsList"]),
+    ...mapGetters(["projectsList"]),
   },
   watch: {
     chartsListRPM() {
@@ -514,7 +513,6 @@ export default {
       this.rejectedRequestChart.data.series = [this.chartsListRPMR.series];
     },
     chartsListQRSUsers(){
-      console.log("aquiiiiiii", this.chartsListQRSUsers)
       this.qrs =  this.chartsListQRSUsers
     },
     requestListByType(){

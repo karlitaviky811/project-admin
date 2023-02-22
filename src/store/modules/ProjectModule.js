@@ -54,8 +54,15 @@ const ProjectsModule = {
           "Authorization": localStorage.getItem('token'),
         }
       }).then((response) => {
-        console.log("response project create", response)
-        return true;
+        axios.get("http://localhost:3999/api/project/projects/").then((response) => {
+          console.log("response projects", response)
+          commit('setProjectsList', response.data.project)
+          return true;
+        }, (err) => {
+          console.log(err)
+          return false;
+        })
+        return true
       }, (err) => {
         console.log(err)
         return false;
@@ -74,7 +81,14 @@ const ProjectsModule = {
           "Authorization": localStorage.getItem('token'),
         }
       }).then((response) => {
-        console.log("response project update", response)
+        axios.get("http://localhost:3999/api/project/projects/").then((response) => {
+          console.log("response projects", response)
+          commit('setProjectsList', response.data.project)
+          return true;
+        }, (err) => {
+          console.log(err)
+          return false;
+        })
         return true;
       }, (err) => {
         console.log(err)
@@ -90,7 +104,14 @@ const ProjectsModule = {
           "Authorization": localStorage.getItem('token'),
         }
       }).then((response) => {
-        console.log("response project delete", response)
+        axios.get("http://localhost:3999/api/project/projects/").then((response) => {
+          console.log("response projects", response)
+          commit('setProjectsList', response.data.project)
+          return true;
+        }, (err) => {
+          console.log(err)
+          return false;
+        })
         return true;
       }, (err) => {
         console.log(err)

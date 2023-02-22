@@ -43,6 +43,17 @@
           </v-col>
         </v-row>
       </v-container>
+
+           <v-toolbar flat class="d-flex flex-column align-end">
+            <v-spacer />
+            <v-text-field
+              v-model="search"
+              v-bind:label="'Buscar solicitud'"
+              append-icon="mdi-magnify"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-toolbar>
       <v-data-table
         :headers="headers"
         :items="QrsList"
@@ -51,15 +62,16 @@
         :loading="data"
         style="width: 100%;"
       >
-        <template v-slot:item="row">
+        <template v-slot:item="{ item, index }">
           <tr>
-            <td >{{ row.item.title }}</td>
-            <td>{{ row.item.type }}</td>
-            <td>{{ convertDate(row.item.date) }}</td>
-            <td  width="200">{{ row.item.description }}</td>
-
-            <td>{{ row.item.status }}</td>
-            <td>{{ row.item.user.name }}</td>
+            <td >{{ index + 1 }}</td>
+            <td>{{ 'QRS'+ item._id.slice(-10) }}</td>
+            <td >{{ item.title }}</td>
+            <td>{{  item.type }}</td>
+            <td>{{ convertDate(item.date) }}</td>
+            <td  width="200">{{ item.description }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.user.name }}</td>
 
             <td v-show="true"  width="200">
               <v-tooltip bottom>
@@ -71,7 +83,7 @@
                     v-show="true"
                     class="mx-2"
                     color="success"
-                    @click.stop="edit(row)"
+                    @click.stop="edit(item)"
                   >
                     <v-icon dark>mdi-pencil</v-icon>
                   </v-btn>
@@ -86,7 +98,7 @@
                     fab
                     small
                     color="red"
-                    @click="deleted(row)"
+                    @click="deleted(item)"
                   >
                     <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
@@ -135,6 +147,8 @@ export default {
       },
       project: {},
       headers: [
+        { text: "#", value: "" },
+        { text: "ID", value: "_id" },
         { text: "Título", value: "title" },
         { text: "Tipo", value: "type", sortable: false },
         { text: "Fecha", value: "date", sortable: false },
@@ -196,10 +210,9 @@ export default {
       this.id = item._id;
       this.title = "Editar QRS";
       this.show = true;
-      console.log("this.request", item.item);
       this.toggleModal(item._id);
       this.type = "Edit";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("this ---->", this.request);
       this.$store.commit("setQrsModal", this.request);
       this.dialog = true;
@@ -207,17 +220,16 @@ export default {
     detail(item) {
       this.type = "Detail";
       this.title = "Detalle";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("item", item);
       this.$store.commit("setRequestsUserModal", this.request);
       this.toggleModal(item._id);
     },
      deleted(item){
-      console.log("here", item)
       this.id = item._id;
       this.title = "Editar";
       this.toggleModal(this.id);
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       this.$store.commit("setQrsModal",this.request);
       this.type = 'Delete';
       this.show = true;

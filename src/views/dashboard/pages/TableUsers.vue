@@ -47,13 +47,14 @@
         :search="search"
         :loading="data"
       >
-        <template v-slot:item="row">
+        <template v-slot:item="{ item, index }">
           <tr>
-            <td>{{ row.item.name }}</td>
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.name }}</td>
             <!--td>{{ convertDate(row.item.date) }}</td-->
-            <td>{{ row.item.surname }}</td>
-            <td>{{ row.item.role }}</td>
-            <td>{{ row.item.email }}</td>
+            <td>{{ item.surname }}</td>
+            <td>{{ item.role }}</td>
+            <td>{{ item.email }}</td>
 
             <td v-show="true">
               <v-tooltip bottom>
@@ -65,7 +66,7 @@
                     v-show="true"
                     class="mx-2"
                     color="success"
-                    @click.stop="edit(row)"
+                    @click.stop="edit(item)"
                   >
                     <v-icon dark>mdi-pencil</v-icon>
                   </v-btn>
@@ -80,7 +81,7 @@
                     fab
                     small
                     color="red"
-                    @click="deleted(row)"
+                    @click="deleted(item)"
                   >
                     <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
@@ -130,6 +131,7 @@ export default {
       },
       project: {},
       headers: [
+        { text: "#", value: "" },
         { text: "Nombre", value: "name" },
         { text: "Surname", value: "surname" },
         { text: "Rol", value: "role", sortable: false },
@@ -181,10 +183,10 @@ export default {
       this.id = item._id;
       this.title = "Editar";
       this.show = true;
-      console.log("this.request", item.item);
+      console.log("this.request", item);
       this.toggleModal(item._id);
       this.type = "Edit";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("this", this.request);
       this.$store.commit("setUserModal", this.request);
       this.dialog = true;
@@ -192,7 +194,7 @@ export default {
     detail(item) {
       this.type = "Detail";
       this.title = "Detalle";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("item", item);
       this.$store.commit("setRequestsUserModal", this.request);
       this.toggleModal(item._id);
@@ -200,7 +202,7 @@ export default {
      deleted(item) {
       this.type = "Delete";
       this.title = "Detalle";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("item---->", item._id);
       this.$store.commit("setUserModal", this.request);
       this.toggleModal(item._id);

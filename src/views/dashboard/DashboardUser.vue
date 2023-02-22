@@ -1,6 +1,7 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
-    <v-row>
+    
+    <v-row v-show="qrs.length">
       <v-col cols="12" lg="4">
         <base-material-chart-card
           :data="emailsSubscriptionChart.data"
@@ -145,7 +146,7 @@
           color="success"
           icon="mdi-store"
           title="Reclamos"
-           :value="qrs[1].cont"
+          :value="qrs[1].cont"
         />
       </v-col>
 
@@ -154,7 +155,7 @@
           color="orange"
           icon="mdi-sofa"
           title="Sugerencias"
-           :value="qrs[2].cont"
+          :value="qrs[2].cont"
         >
         </base-material-stats-card>
       </v-col>
@@ -200,35 +201,34 @@
             </v-tabs>
           </template>
 
-      
           <v-tabs-items v-model="tabs" class="transparent">
-
-            <v-tab-item>      
+            <v-tab-item>
               <template>
-                    <v-data-table
-                      :headers="headersReq"
-                      :items="tasks[0]"
-                      :items-per-page="5"
-                    ></v-data-table>
-                  </template> </v-tab-item>
-        <v-tab-item> 
+                <v-data-table
+                  :headers="headersReq"
+                  :items="tasks[0]"
+                  :items-per-page="5"
+                ></v-data-table>
+              </template>
+            </v-tab-item>
+            <v-tab-item>
               <template>
-                    <v-data-table
-                      :headers="headersReq"
-                      :items="tasks[1]"
-                      :items-per-page="5"
-                    ></v-data-table>
-                  </template>
-         </v-tab-item>
-           <v-tab-item> 
+                <v-data-table
+                  :headers="headersReq"
+                  :items="tasks[1]"
+                  :items-per-page="5"
+                ></v-data-table>
+              </template>
+            </v-tab-item>
+            <v-tab-item>
               <template>
-                    <v-data-table
-                      :headers="headersReq"
-                      :items="tasks[2]"
-                      :items-per-page="5"
-                    ></v-data-table>
-                  </template>
-         </v-tab-item>
+                <v-data-table
+                  :headers="headersReq"
+                  :items="tasks[2]"
+                  :items-per-page="5"
+                ></v-data-table>
+              </template>
+            </v-tab-item>
           </v-tabs-items>
         </base-material-card>
       </v-col>
@@ -240,19 +240,18 @@
 import { mapGetters } from "vuex";
 export default {
   name: "DashboardUser",
-  async created() {
+  async mounted() {
+    this.loading = true;
     const user = JSON.parse(localStorage.getItem("user"))._id;
     await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE_USER");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_USER", user);
-
-  
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_A_USER");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_R_USER");
     await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE_USER");
     await this.$store.dispatch("GET_LIST_QRS_USER", user);
-      await  this.$store.dispatch("GET_PROJECTS_ALL");
-    this.$store.dispatch("GET_REQUESTS_USER", user);
-
+    await this.$store.dispatch("GET_PROJECTS_ALL");
+    await this.$store.dispatch("GET_REQUESTS_USER", user);
+    this.loading = false;
   },
   data() {
     return {
@@ -275,6 +274,7 @@ export default {
           },
         },
       },
+      loading: false,
       activeRequestChartUser: {
         data: {
           labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
@@ -450,12 +450,11 @@ export default {
           salary: "$63,542",
         },
       ],
-        headersReq:[
+      headersReq: [
         {
           sortable: false,
           text: "",
           value: "i",
-
         },
         {
           sortable: false,
@@ -524,9 +523,9 @@ export default {
     ...mapGetters(["chartsListRPMAUSER"]),
     ...mapGetters(["chartsListRPMR"]),
     ...mapGetters(["chartsListPSCUSER"]),
-     ...mapGetters(["requestsU"]),
-     ...mapGetters(["chartsListQRSByUser"]),
-      ...mapGetters(["projectsList"]),
+    ...mapGetters(["requestsU"]),
+    ...mapGetters(["chartsListQRSByUser"]),
+    ...mapGetters(["projectsList"]),
   },
   watch: {
     chartsListRPMUSER() {
@@ -535,54 +534,58 @@ export default {
       ];
     },
     chartsListRPMAUSER() {
-      this.activeRequestChartUser.data.series = [this.chartsListRPMAUSER.series];
+      this.activeRequestChartUser.data.series = [
+        this.chartsListRPMAUSER.series,
+      ];
     },
     chartsListRPMR() {
-      this.rejectedRequestChartUser.data.series = [this.chartsListRPMRUSER.series];
+      this.rejectedRequestChartUser.data.series = [
+        this.chartsListRPMRUSER.series,
+      ];
     },
-      chartsListQRSByUser(){
-      console.log("aquiiiiiii", this.chartsListQRSByUser)
-      this.qrs =  this.chartsListQRSByUser
+    chartsListQRSByUser() {
+      this.qrs = this.chartsListQRSByUser;
     },
-     projectsList(){
-      this.paramsProject = this.projectsList
+    projectsList() {
+      this.paramsProject = this.projectsList;
     },
-   requestsU(){
-    let data = []
-      let typeArr = []
-      let type = ['Incidencia', 'Problema', 'Cambio']
-      type.forEach(type=>{
-        this.requestsU.forEach(item=>{
-        if(item.type == type){
-          data.push(item)
-        }
-        
+    requestsU() {
+      let data = [];
+      let typeArr = [];
+      let type = ["Incidencia", "Problema", "Cambio"];
+      type.forEach((type) => {
+        this.requestsU.forEach((item) => {
+          if (item.type == type) {
+            data.push(item);
+          }
+        });
 
-
-      })
-
-      typeArr.push(data)
-      data = []
-      })
-     this.tasks = typeArr
+        typeArr.push(data);
+        data = [];
+      });
+      this.tasks = typeArr;
       //console.log("hey", this.requestListByType)
       //this.rtasks = this.requestListByType
-      console.log("request------>",  this.tasks)
-   }
+      console.log("request------>", this.tasks);
+    },
   },
   methods: {
     complete(index) {
       this.list[index] = !this.list[index];
     },
+
+    loading(){
+      
+    }
   },
 };
 </script>
 <style>
-.body{
-background: rgba( 120, 227, 236, 0.15 ) !important;
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 4px );
--webkit-backdrop-filter: blur( 4px );
-border-radius: 10px;
+.body {
+  background: rgba(120, 227, 236, 0.15) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
 }
 </style>

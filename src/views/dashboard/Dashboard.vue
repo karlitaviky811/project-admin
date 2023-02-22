@@ -1,33 +1,39 @@
 <template>
   <div>
-    <dashboard-admin v-if="role === 'ROLE_ADMIN'" />
-    <dashboard-user v-else />
+    <div>
+      <dashboard-admin v-if="role === 'ROLE_ADMIN'" />
+      <dashboard-user v-else />
+    </div>
+    
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import DashboardAdmin from './DashboardAdmin.vue';
-import DashboardUser from './DashboardUser.vue'
+import DashboardAdmin from "./DashboardAdmin.vue";
+import DashboardUser from "./DashboardUser.vue";
 export default {
   name: "DashboardDashboard",
-  components:{
-     DashboardAdmin,
-     DashboardUser
-
+  components: {
+    DashboardAdmin,
+    DashboardUser,
   },
   async created() {
     const user = JSON.parse(localStorage.getItem("user"))._id;
-    await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE_USER");
-    await this.$store.dispatch("GET_LIST_REQUEST_MONTS_USER", user);
-   
+
     this.role = JSON.parse(localStorage.getItem("user")).role;
 
     this.emailsSubscriptionChart.series = this.chartsListRPM;
+
+    console.log("this.projectList", this.projectsList)
+
+
+  },
+  computed: {
   },
   data() {
     return {
-      role: '',
+      role: "",
       dailySalesChart: {
         data: {
           labels: ["M", "T", "W", "T", "F", "S", "S"],
@@ -68,20 +74,7 @@ export default {
       },
       emailsSubscriptionChart: {
         data: {
-          labels: [
-            "E",
-            "F",
-            "M",
-            "A",
-            "M",
-            "J",
-            "J",
-            "A",
-            "S",
-            "O",
-            "N",
-            "D",
-          ],
+          labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
           series: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
         },
         options: {
@@ -219,14 +212,8 @@ export default {
       },
     };
   },
-  computed: {
-  
-   
-  },
-  watch:{
-     chartsListRPMUSER(){
-       this.emailsSubscriptionChart.data.series = [this.chartsListRPMUSER.series] ;
-    }
+  computed: {},
+  watch: {
   },
   methods: {
     complete(index) {
@@ -237,11 +224,11 @@ export default {
 };
 </script>
 <style>
-.body{
-background: rgba( 120, 227, 236, 0.15 ) !important;
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 4px );
--webkit-backdrop-filter: blur( 4px );
-border-radius: 10px;
+.body {
+  background: rgba(120, 227, 236, 0.15) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
 }
 </style>

@@ -1,146 +1,136 @@
 <template>
-<v-container 
-    fluid
-    tag="section">
-      <v-alert
-      border="top"
-      colored-border
-      type="info"
-      elevation="2"
-    >
-     Envia tus solicitudes de cambio a nuestros administradores
+  <v-container fluid tag="section">
+    <v-alert border="top" colored-border type="info" elevation="2">
+      Envia tus solicitudes de cambio a nuestros administradores
     </v-alert>
     <div class="py-3" />
-  <base-material-card
-    icon="mdi-file-check"
-    title="Listado"
-    class="px-5 py-3"
-    color="primary"
-  >
-  
-    <div v-if="this.$route.name === 'Solicitudes'">
-      <v-card-title class="d-flex justify-space-between">
-        <v-container class="d-flex flex-column align-end">
-          <v-row>
-            <v-col>
-              <v-tooltip left>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    color="success"
-                    @click.stop="create(true)"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
-                  <modal-request
-                    :id="id"
-                    :req="request"
-                    :show="showModal(true)"
-                    :type="type"
-                    :title="title"
-                    @close="toggleModalClose(true)"
-                    @reqCreated="loadRequests"
-                  />
-                </template>
-                <span>Nuevo</span>
-              </v-tooltip>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-toolbar flat class="d-flex flex-column align-end">
-          <v-spacer />
-          <v-text-field
-            v-model="search"
-            v-bind:label="'Buscar solicitud'"
-            append-icon="mdi-magnify"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-toolbar>
-      </v-card-title>
+    <base-material-card
+      icon="mdi-file-check"
+      title="Listado"
+      class="px-5 py-3"
+      color="primary"
+    >
+      <div v-if="this.$route.name === 'Solicitudes'">
+        <v-card-title class="d-flex justify-space-between">
+          <v-container class="d-flex flex-column align-end">
+            <v-row>
+              <v-col>
+                <v-tooltip left>
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn
+                      v-on="{ ...tooltip }"
+                      fab
+                      small
+                      v-show="true"
+                      color="success"
+                      @click.stop="create(true)"
+                    >
+                      <v-icon dark>mdi-plus</v-icon>
+                    </v-btn>
+                    <modal-request
+                      :id="id"
+                      :req="request"
+                      :show="showModal(true)"
+                      :type="type"
+                      :title="title"
+                      @close="toggleModalClose(true)"
+                      @reqCreated="loadRequests"
+                    />
+                  </template>
+                  <span>Nuevo</span>
+                </v-tooltip>
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-toolbar flat class="d-flex flex-column align-end">
+            <v-spacer />
+            <v-text-field
+              v-model="search"
+              v-bind:label="'Buscar solicitud'"
+              append-icon="mdi-magnify"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-toolbar>
+        </v-card-title>
 
-      <v-data-table
-        :headers="headers"
-        :items="requestsU"
-        :items-per-page="20"
-        :search="search"
-        :loading="data"
-      >
-        <template v-slot:item="row">
-          <tr>
-            <td>{{ row.item.title }}</td>
-            <td>{{ row.item.project }}</td>
-            <td>{{ convertDate(row.item.date) }}</td>
-            
-            <td>{{ row.item.type }}</td>
-            <td>{{ row.item.status }}</td>
-            <td width="200">{{ row.item.description }}</td>
+        <v-data-table
+          :headers="headers"
+          :items="requestsU"
+          :items-per-page="20"
+          :search="search"
+          :loading="data"
+        >
+          <template v-slot:item="{ item, index }">
+            <tr>
+              <td>{{ index + 1 }}</td>
+              <td>{{ 'REQ'+ item._id.slice(-10) }}</td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.project }}</td>
+              <td>{{ convertDate(item.date) }}</td>
 
-            <td v-show="true">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    class="mx-2"
-                    color="success"
-                    @click.stop="edit(row)"
-                  >
-                    <v-icon dark>mdi-pencil</v-icon>
-                  </v-btn>
-                </template>
-                <span>Editar</span>
-              </v-tooltip>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    class="mx-2"
-                    fab
-                    small
-                    color="red"
-                    @click.stop="deleted(row)"
-                  >
-                    <v-icon dark>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-                <span>Eliminar</span>
-              </v-tooltip>
-            </td>
-            <td v-show="true">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on: tooltip }">
-                  <v-btn
-                    v-on="{ ...tooltip }"
-                    fab
-                    small
-                    v-show="true"
-                    class="mx-2"
-                    color="white"
-                    @click.stop="detail(row)"
-                  >
-                    <v-icon dark>mdi-chevron-right </v-icon>
-                  </v-btn>
-                </template>
-                <span>Detalle</span>
-              </v-tooltip>
-            </td>
-          </tr>
-        </template>
+              <td>{{ item.type }}</td>
+              <td>{{ item.status }}</td>
+              <td width="200">{{ item.description }}</td>
 
-        
-      </v-data-table>
-
-    </div>
-    <router-view></router-view>
-  </base-material-card>
-</v-container>
-
+              <td v-show="true">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn
+                      v-on="{ ...tooltip }"
+                      fab
+                      small
+                      v-show="true"
+                      class="mx-2"
+                      color="success"
+                      @click.stop="edit(item)"
+                    >
+                      <v-icon dark>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Editar</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn
+                      v-on="{ ...tooltip }"
+                      class="mx-2"
+                      fab
+                      small
+                      color="red"
+                      @click.stop="deleted(item)"
+                    >
+                      <v-icon dark>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Eliminar</span>
+                </v-tooltip>
+              </td>
+              <td v-show="true">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on: tooltip }">
+                    <v-btn
+                      v-on="{ ...tooltip }"
+                      fab
+                      small
+                      v-show="true"
+                      class="mx-2"
+                      color="white"
+                      @click.stop="detail(item)"
+                    >
+                      <v-icon dark>mdi-chevron-right </v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Detalle</span>
+                </v-tooltip>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </div>
+      <router-view></router-view>
+    </base-material-card>
+  </v-container>
 </template>
 
 <script>
@@ -182,6 +172,8 @@ export default {
       showMessage: false,
       request: {},
       headers: [
+        { text: "#", value: "index" },
+        { text: "ID", value: "_id" },
         { text: "Título", value: "title" },
         { text: "Proyecto", value: "project" },
         { text: "Fecha", value: "date", sortable: false },
@@ -213,40 +205,38 @@ export default {
 
       this.activeModal = id;
     },
-    deleted(item){
-      console.log("here", item)
-        this.id = item._id;
+    deleted(item) {
+      console.log("here", item);
+      this.id = item._id;
       this.title = "Editar";
       this.toggleModal(this.id);
-      this.request = Object.assign({}, item.item);
-      this.$store.commit("setRequestsUserModal",item.item);
-      this.type = 'Delete';
+      this.request = Object.assign({}, item);
+      this.$store.commit("setRequestsUserModal", item);
+      this.type = "Delete";
       this.show = true;
       this.dialog = true;
-
     },
     create(id) {
       this.title = "Crear Solicitud";
       this.toggleModal(id);
       this.request = Object.assign({}, {});
       this.$store.commit("setRequestsUserModal", {});
-      this.type = 'Create';
+      this.type = "Create";
     },
     edit(item) {
       this.id = item._id;
       this.title = "Editar";
       this.toggleModal(this.id);
-      this.request = Object.assign({}, item.item);
-      this.$store.commit("setRequestsUserModal",item.item);
-      this.type = 'Edit';
+      this.request = Object.assign({}, item);
+      this.$store.commit("setRequestsUserModal", item);
+      this.type = "Edit";
       this.show = true;
       this.dialog = true;
-   
     },
     detail(item) {
-      this.type = 'Detail';
+      this.type = "Detail";
       this.title = "Detalle";
-      this.request = Object.assign({}, item.item);
+      this.request = Object.assign({}, item);
       console.log("item", item);
       this.$store.commit("setRequestsUserModal", this.request);
       this.toggleModal(item._id);
@@ -285,7 +275,7 @@ export default {
       this.data = false;
       this.role = JSON.parse(localStorage.getItem("user")).role;
       this.data = false;
-          this.show = false;
+      this.show = false;
     },
     clickColumn(slotData) {
       console.log("say hi");
