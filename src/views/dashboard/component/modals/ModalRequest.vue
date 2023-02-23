@@ -32,7 +32,9 @@
                   label="Título solicitud"
                   required
                   :disabled="type == 'Detail'"
+                  v-validate="'required|email'"
                 ></v-text-field>
+                
               </v-col>
               <v-col cols="12" md="6">
                 <v-select
@@ -230,12 +232,12 @@ import Modal from "./Modal";
 import { mapGetters } from "vuex";
 import ax from "axios";
 import { saveAs } from "file-saver";
-
+import { Field } from 'vee-validate';
+import { defineRule } from 'vee-validate';
+import { required } from '@vee-validate/rules';
 export default {
   props: ["show", "title", "id", "type"],
-
   components: { Modal },
-
   data: () => ({
     noValid: false,
     valid: false,

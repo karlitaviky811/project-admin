@@ -1,7 +1,7 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
     
-    <v-row v-show="qrs.length">
+    <v-row>
       <v-col cols="12" lg="4">
         <base-material-chart-card
           :data="emailsSubscriptionChart.data"
@@ -137,7 +137,7 @@
           color="primary"
           icon="mdi-poll"
           title="Quejas"
-          :value="qrs[0].cont"
+          :value="qrs[0]?.cont"
         />
       </v-col>
 
@@ -146,7 +146,7 @@
           color="success"
           icon="mdi-store"
           title="Reclamos"
-          :value="qrs[1].cont"
+          :value="qrs[1]?.cont"
         />
       </v-col>
 
@@ -155,7 +155,7 @@
           color="orange"
           icon="mdi-sofa"
           title="Sugerencias"
-          :value="qrs[2].cont"
+          :value="qrs[2]?.cont"
         >
         </base-material-stats-card>
       </v-col>
@@ -168,7 +168,14 @@
             </div>
           </template>
           <v-card-text>
-            <v-data-table :headers="headers" :items="chartsListPSCUSER" />
+            <v-data-table :headers="headers" :items="chartsListPSCUSER">
+            
+        <template v-slot:item.status="{ item }">
+      <v-chip :color="getColor(item.status)">
+        {{ getStatus(item.status) }}
+      </v-chip>
+    </template>
+ </v-data-table> 
           </v-card-text>
         </base-material-card>
       </v-col>
@@ -201,14 +208,15 @@
             </v-tabs>
           </template>
 
-          <v-tabs-items v-model="tabs" class="transparent">
+          <v-tabs-items v-model="tabs" class="transparent" v-show="tasks?.length">
             <v-tab-item>
               <template>
                 <v-data-table
                   :headers="headersReq"
                   :items="tasks[0]"
                   :items-per-page="5"
-                ></v-data-table>
+                >
+                </v-data-table>
               </template>
             </v-tab-item>
             <v-tab-item>
@@ -233,6 +241,79 @@
         </base-material-card>
       </v-col>
     </v-row>
+        <v-row>
+
+       <base-material-card color="primary" class="px-5 py-3">
+          <template v-slot:heading>
+            <div class="text-h3 font-weight-light">
+             Proyectos con QRS
+            </div>
+          </template>
+          <v-card-text>
+   <v-data-table
+    :headers="headersQRS"
+    :items="chartsQrsProjectR"
+    item-key="id"
+    class="elevation-1"
+    show-expand
+    :expanded.sync="expanded" 
+    @click:row="expandRow"
+  >
+    <template v-slot:expanded-item="{ headers, item }">
+      <td :colspan="headers.length">
+        <v-data-table
+          :headers="replyHeaders"
+          :items="item.info"
+          item-key="item._id"
+          hide-default-footer
+        ></v-data-table>
+      </td>
+    </template>
+  </v-data-table>
+
+  <template> 
+     </template>
+
+          </v-card-text>
+        </base-material-card>
+      </v-col>
+       </v-col>
+
+        <v-col cols="12" lg="6">
+        <base-material-chart-card :data="qrsAllRequestChart.data" :options="qrsAllRequestChart.options"
+          hover-reveal color="info" type="Bar">
+          <template v-slot:reveal-actions>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" color="info" icon v-on="on">
+                  <v-icon color="info"> mdi-refresh </v-icon>
+                </v-btn>
+              </template>
+
+              <span>Refresh</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" light icon v-on="on">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+
+              <span>Change Date</span>
+            </v-tooltip>
+          </template>
+
+          <h3 class="card-title font-weight-light mt-2 ml-2">
+            Reclamos recibidos
+          </h3>
+
+          <p class="d-inline-flex font-weight-light ml-2 mt-1">
+            En el año en curso (2023)
+          </p>
+        </base-material-chart-card>
+      </v-col>
+   </v-row>
   </v-container>
 </template>
 
@@ -241,17 +322,19 @@ import { mapGetters } from "vuex";
 export default {
   name: "DashboardUser",
   async mounted() {
-    this.loading = true;
+  
     const user = JSON.parse(localStorage.getItem("user"))._id;
     await this.$store.dispatch("GET_LIST_PROJECTS_STATE_CREATE_USER");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_USER", user);
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_A_USER");
     await this.$store.dispatch("GET_LIST_REQUEST_MONTS_R_USER");
-    await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE_USER");
+    await this.$store.dispatch("GET_LIST_QRS_PROJECTR_USER",user)
+    //await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE_USER");
     await this.$store.dispatch("GET_LIST_QRS_USER", user);
     await this.$store.dispatch("GET_PROJECTS_ALL");
     await this.$store.dispatch("GET_REQUESTS_USER", user);
-    this.loading = false;
+    await this.$store.dispatch("GET_LIST_QRS_ALL_USER",user)
+    
   },
   data() {
     return {
@@ -341,6 +424,40 @@ export default {
           ],
         ],
       },
+      qrsAllRequestChart: {
+        data: {
+          labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+          series: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+        },
+
+        options: {
+          axisX: {
+            showGrid: false,
+          },
+          low: 0,
+          high: 50,
+          chartPadding: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        responsiveOptions: [
+          [
+            "screen and (max-width: 640px)",
+            {
+              seriesBarDistance: 5,
+              axisX: {
+                labelInterpolationFnc: function (value) {
+                  return value[0];
+                },
+              },
+            },
+          ],
+        ],
+      },
+      
       qrs: [],
       dataCompletedTasksChart: {
         data: {
@@ -413,6 +530,49 @@ export default {
           align: "right",
         },
       ],
+       headersQRS: [
+        {
+          sortable: false,
+          text: "Proyecto",
+          value: "name",
+        },
+        {
+          sortable: false,
+          text: "Tipo",
+          value: "type",
+          align: "right",
+        },
+        {
+          sortable: false,
+          text: "Solicitudes",
+          value: "number",
+          align: "right",
+        },
+      ],
+      replyHeaders: [
+        {
+          sortable: false,
+          text: "Título",
+          value: "title",
+        },
+        {
+          sortable: false,
+          text: "Description",
+          value: "description"
+        },
+        {
+          sortable: false,
+          text: "Fecha",
+          value: "date",
+          align: "right",
+        },
+        {
+          sortable: false,
+          text: "Estatus",
+          value: "status",
+          align: "right",
+        },
+      ],
       items: [
         {
           id: 1,
@@ -474,6 +634,7 @@ export default {
           align: "right",
         },
       ],
+      
       tabs: 0,
       tasks: {
         0: [
@@ -511,6 +672,7 @@ export default {
           },
         ],
       },
+      expanded: [],
       list: {
         0: false,
         1: false,
@@ -521,27 +683,42 @@ export default {
   computed: {
     ...mapGetters(["chartsListRPMUSER"]),
     ...mapGetters(["chartsListRPMAUSER"]),
-    ...mapGetters(["chartsListRPMR"]),
+    ...mapGetters(["chartsListRPMRUSER"]),
     ...mapGetters(["chartsListPSCUSER"]),
     ...mapGetters(["requestsU"]),
     ...mapGetters(["chartsListQRSByUser"]),
     ...mapGetters(["projectsList"]),
+    ...mapGetters(["chartsQrsProjectR"]),
+    ...mapGetters(["chartsQRSAll"])
   },
   watch: {
     chartsListRPMUSER() {
+       console.log("hey",this.chartsListRPMUSER.series)
       this.emailsSubscriptionChart.data.series = [
         this.chartsListRPMUSER.series,
       ];
     },
+    chartsQrsProjectRUser(){
+      console.log("this.",this.chartsQrsProjectRUser)
+    },
     chartsListRPMAUSER() {
+          console.log("hey", this.activeRequestChartUser)
       this.activeRequestChartUser.data.series = [
         this.chartsListRPMAUSER.series,
       ];
     },
-    chartsListRPMR() {
-      this.rejectedRequestChartUser.data.series = [
+    chartsQRSAll(){
+      console.log("la data--------------------------",   this.chartsQRSAll)
+      this.qrsAllRequestChart.data.series = [
+        this.chartsQRSAll.data.series,
+      ];
+    },
+    chartsListRPMRUSER() {
+      
+      this.rejectedRequestChart.data.series = [
         this.chartsListRPMRUSER.series,
       ];
+         console.log("data", this.chartsListRPMRUSER.series)
     },
     chartsListQRSByUser() {
       this.qrs = this.chartsListQRSByUser;
@@ -564,8 +741,6 @@ export default {
         data = [];
       });
       this.tasks = typeArr;
-      //console.log("hey", this.requestListByType)
-      //this.rtasks = this.requestListByType
       console.log("request------>", this.tasks);
     },
   },
@@ -573,10 +748,40 @@ export default {
     complete(index) {
       this.list[index] = !this.list[index];
     },
+       getColor (item) {
+ 
 
-    loading(){
-      
-    }
+         if(item == "Created"){
+        return "#e6e6fa"
+      }else
+        if(item == "Review"){
+          return "#add8e6"
+        }else
+            if(item == "Rejected"){
+              return "#f08080"
+            }else{
+              return "#20b2aa"	
+            }
+    },
+    getStatus(item){
+      if(item == "Created"){
+        return "Creada"
+      }else
+        if(item == "Review"){
+          return "En revisión"
+        }else
+            if(item == "Rejected"){
+              return "Rechazada"
+            }else{
+              return "Aceptada"
+            }
+    },
+      expandRow(item, event) { 
+    if(event.isExpanded) 
+    { var index = this.expanded.findIndex(i => i === item); 
+    this.expanded.splice(index, 1) } 
+else 
+    { this.expanded.push(item); } }
   },
 };
 </script>

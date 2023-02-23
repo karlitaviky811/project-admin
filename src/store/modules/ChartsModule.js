@@ -12,6 +12,9 @@ const ChartsModule = {
         chartsListRPMRUSER: [],
         chartsListQRSUsers: [],
         chartsListQRSByUser: [],
+        chartsQrsProjectR: [],
+        chartsQrsProjectS: [],
+        chartsQRSAll: [],
         requestList: []
     },
     mutations: {
@@ -34,17 +37,22 @@ const ChartsModule = {
             state.chartsListRPMUSER = data.data;
         },
         setChartsListRSAUSER(state, data){
-            state.chartsListRPMAUSER = data.data
+            state.chartsListRPMAUSER = data
         },
         setChartsListRSRUSER(state, data){
-            state.chartsListRPMRUSER = data.data
+            state.chartsListRPMRUSER = data
         },
         setChartsListQRSUsers(state, data){
-            console.log("data", data)
             state.chartsListQRSUsers = data
         },
         setChartsListQRSByUser(state, data){
             state.chartsListQRSByUser = data
+        },
+        setChartsQrsProjectR(state, data){
+            state.chartsQrsProjectR = data
+        },
+        setChartsQRSAll(state,data){
+            state.chartsQRSAll = data;
         }
     },
     actions: {
@@ -78,7 +86,6 @@ const ChartsModule = {
             })
 
         },
-
         GET_LIST_REQUEST_MONTS_A: async function ({ commit }) {
             axios.get("http://localhost:3999/api/req/request/graph/montsA", {
                 headers: {
@@ -111,8 +118,6 @@ const ChartsModule = {
             })
 
         },
-
-
         GET_LIST_PROJECTS_STATE_CREATE_USER: async function ({ commit }) {
             axios.get("http://localhost:3999/api/req/request/graph/project/", {
                 headers: {
@@ -145,14 +150,15 @@ const ChartsModule = {
             })
 
         },
-        GET_LIST_REQUEST_MONTS_A_USER: async function ({ commit }) {
-            axios.get("http://localhost:3999/api/req/request/graph/montsA", {
+        GET_LIST_REQUEST_MONTS_R_USER: async function ({ commit }) {
+            const user = JSON.parse(localStorage.getItem("user"))._id;
+            axios.get("http://localhost:3999/api/req/request/graph/montsRUser/"+user, {
                 headers: {
                     "Authorization": localStorage.getItem('token'),
                 }
             }
             ).then((response) => {
-                commit('setChartsListRSAUSER', response.data)
+                commit('setChartsListRSRUSER', response.data)
                 return true;
             }, (err) => {
                 console.log(err)
@@ -160,14 +166,15 @@ const ChartsModule = {
             })
 
         },
-        GET_LIST_REQUEST_MONTS_R_USER: async function ({ commit }) {
-            axios.get("http://localhost:3999/api/req/request/graph/montsR", {
+        GET_LIST_REQUEST_MONTS_A_USER: async function ({ commit }) {
+            const user = JSON.parse(localStorage.getItem("user"))._id;
+            axios.get("http://localhost:3999/api/req/request/graph/montsAUser/"+user, {
                 headers: {
                     "Authorization": localStorage.getItem('token'),
                 }
             }
             ).then((response) => {
-                commit('setChartsListRSRUSER', response.data)
+                commit('setChartsListRSAUSER', response.data)
                 return true;
             }, (err) => {
                 console.log(err)
@@ -209,6 +216,76 @@ const ChartsModule = {
             })
 
         },
+        GET_LIST_QRS_PROJECTR: async function ({ commit }, data) {
+           
+            axios.get("http://localhost:3999/api/req/request/graph/project/qrsQR", {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                console.log("hereeeeeeeeeeeeeeeeeeee***********", response)
+                commit('setChartsQrsProjectR', response.data.reqStatus)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+        GET_LIST_QRS_PROJECTR_USER: async function ({ commit }, data) {
+           
+            axios.get("http://localhost:3999/api/req/request/graph/project/qrsQR/"+data, {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                console.log("hereeeeeeeeeeeeeeeeeeee***********", response)
+                commit('setChartsQrsProjectR', response.data.reqStatus)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+        
+        GET_LIST_QRS_ALL: async function ({ commit }) {
+           
+            axios.get("http://localhost:3999/api/req/request/graph/project/qrs-all/", {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", response.data.data)
+                commit('setChartsQRSAll', response.data)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+        GET_LIST_QRS_ALL_USER: async function ({ commit },data) {
+           
+            axios.get("http://localhost:3999/api/req/request/graph/project/qrs-all/"+data, {
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                }
+            }
+            ).then((response) => {
+                console.log("bbbbbbbbbbbbbbbbbbbbbbb", response.data.data)
+                commit('setChartsQRSAll', response.data)
+                return true;
+            }, (err) => {
+                console.log(err)
+                return false;
+            })
+
+        },
+
     },
     getters: {
         chartsListPSC(state) {
@@ -235,13 +312,26 @@ const ChartsModule = {
         chartsListRPMRUSER(state){
             return state.chartsListRPMRUSER;
         },
+        chartsQRSAll(state){
+            console.log("heree state", state.chartsQRSAll)
+            return state.chartsQRSAll
+        },
         chartsListQRSUsers(state){
             console.log("heree state", state.chartsListQRSUsers)
             return state.chartsListQRSUsers;
         },
         chartsListQRSByUser(state){
            return  state.chartsListQRSByUser
-        }
+        },
+        chartsQrsProjectR(state){
+            return state.chartsQrsProjectR
+        },
+        chartsQrsProjectRUser(state){
+            return state.chartsQrsProjectRUser
+        },
+       
+
+
     },
 };
 export default ChartsModule;

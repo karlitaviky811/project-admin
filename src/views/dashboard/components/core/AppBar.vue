@@ -43,11 +43,10 @@
         <div>
           <app-bar-item
             v-for="(n, i) in notifications"
-            :key="`item-${i}`"
-            
-          >
-          
-            <v-list-item-title v-text="n" @click="menuActionClick()" />
+              :key="i"
+        @click="menuActionClick(i)"
+          >   
+            <v-list-item-title v-text="n.title" @click="n.click" />
           </app-bar-item>
         </div>
       </v-list>
@@ -109,7 +108,13 @@
 
     data: () => ({
       notifications: [
-        'Salir del sistema',
+        {
+    title:  'Salir del sistema',
+    icon: "mdi-logout",
+     click() {
+          router.push("/login")
+        }         // this.logout instead "logout"
+  },
       ],
     }),
 

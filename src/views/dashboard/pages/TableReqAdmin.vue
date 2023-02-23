@@ -78,7 +78,9 @@
               <td>{{ convertDate(item.date) }}</td>
          
               <td>{{ item.type }}</td>
-              <td>{{ item.status }}</td>
+              <td>   <v-chip :color="getColor(item.status)">
+        {{ getStatus(item.status) }}
+      </v-chip></td>
               <td width="200">{{ item.description }}</td>
               <td width="200">{{ item.user.name }}</td>
 
@@ -249,6 +251,34 @@ export default {
         name: "Detail",
         params: {},
       });
+    },
+     getColor (item) {
+ 
+
+         if(item == "Created"){
+        return "#e6e6fa"
+      }else
+        if(item == "Review"){
+          return "#add8e6"
+        }else
+            if(item == "Rejected"){
+              return "#f08080"
+            }else{
+              return "#20b2aa"	
+            }
+    },
+    getStatus(item){
+      if(item == "Created"){
+        return "Creada"
+      }else
+        if(item == "Review"){
+          return "En revisión"
+        }else
+            if(item == "Rejected"){
+              return "Rechazada"
+            }else{
+              return "Aceptada"
+            }
     },
   },
 };

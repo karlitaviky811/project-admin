@@ -134,8 +134,6 @@
           </v-card-text>
         </base-material-card>
       </v-col>
-
-     
       <v-col cols="12" md="6">
         <base-material-card class="px-5 py-3">
           <template v-slot:heading>
@@ -198,6 +196,79 @@
       </v-col>
     </v-row>
 
+     <v-row>
+
+       <base-material-card color="primary" class="px-5 py-3">
+          <template v-slot:heading>
+            <div class="text-h3 font-weight-light">
+             Proyectos con QRS
+            </div>
+          </template>
+          <v-card-text>
+   <v-data-table
+    :headers="headersQRS"
+    :items="chartsQrsProjectR"
+    item-key="id"
+    class="elevation-1"
+    show-expand
+    :expanded.sync="expanded" 
+    @click:row="expandRow"
+  >
+    <template v-slot:expanded-item="{ headers, item }">
+      <td :colspan="headers.length">
+        <v-data-table
+          :headers="replyHeaders"
+          :items="item.info"
+          item-key="item._id"
+          hide-default-footer
+        ></v-data-table>
+      </td>
+    </template>
+  </v-data-table>
+
+  <template> 
+     </template>
+
+          </v-card-text>
+        </base-material-card>
+      </v-col>
+
+        <v-col cols="12" lg="6">
+        <base-material-chart-card :data="qrsAllRequestChart.data" :options="qrsAllRequestChart.options"
+          hover-reveal color="info" type="Bar">
+          <template v-slot:reveal-actions>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" color="info" icon v-on="on">
+                  <v-icon color="info"> mdi-refresh </v-icon>
+                </v-btn>
+              </template>
+
+              <span>Refresh</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" light icon v-on="on">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+
+              <span>Change Date</span>
+            </v-tooltip>
+          </template>
+
+          <h3 class="card-title font-weight-light mt-2 ml-2">
+            Solicitudes Rechazadas
+          </h3>
+
+          <p class="d-inline-flex font-weight-light ml-2 mt-1">
+            En el año en curso (2023)
+          </p>
+        </base-material-chart-card>
+      </v-col>
+   </v-row>
+
   </v-container>
   
 </template>
@@ -216,7 +287,8 @@ export default {
     await this.$store.dispatch("GET_REQUESTS_ALL_BY_TYPE");
     await this.$store.dispatch("GET_LIST_QRS");
     await  this.$store.dispatch("GET_PROJECTS_ALL");
-    
+    await this.$store.dispatch("GET_LIST_QRS_PROJECTR")
+    await this.$store.dispatch("GET_LIST_QRS_ALL")
 
   },
   data() {
@@ -397,6 +469,39 @@ export default {
           ],
         ],
       },
+      qrsAllRequestChart: {
+        data: {
+          labels: ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+          series: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+        },
+
+        options: {
+          axisX: {
+            showGrid: false,
+          },
+          low: 0,
+          high: 50,
+          chartPadding: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        responsiveOptions: [
+          [
+            "screen and (max-width: 640px)",
+            {
+              seriesBarDistance: 5,
+              axisX: {
+                labelInterpolationFnc: function (value) {
+                  return value[0];
+                },
+              },
+            },
+          ],
+        ],
+      },
       headers: [
         {
           sortable: false,
@@ -490,6 +595,49 @@ export default {
           align: "right",
         },
       ],
+       headersQRS: [
+        {
+          sortable: false,
+          text: "Proyecto",
+          value: "name",
+        },
+        {
+          sortable: false,
+          text: "Tipo",
+          value: "type",
+          align: "right",
+        },
+        {
+          sortable: false,
+          text: "Solicitudes",
+          value: "number",
+          align: "right",
+        },
+      ],
+      replyHeaders: [
+        {
+          sortable: false,
+          text: "Título",
+          value: "title",
+        },
+        {
+          sortable: false,
+          text: "Description",
+          value: "description"
+        },
+        {
+          sortable: false,
+          text: "Fecha",
+          value: "date",
+          align: "right",
+        },
+        {
+          sortable: false,
+          text: "Estatus",
+          value: "status",
+          align: "right",
+        },
+      ],
     };
   },
   computed: {
@@ -500,6 +648,8 @@ export default {
     ...mapGetters(["requestListByType"]),
     ...mapGetters(["chartsListQRSUsers"]),
     ...mapGetters(["projectsList"]),
+    ...mapGetters(["chartsQrsProjectR"]),
+    ...mapGetters(["chartsQRSAll"])
   },
   watch: {
     chartsListRPM() {
@@ -515,6 +665,12 @@ export default {
     chartsListQRSUsers(){
       this.qrs =  this.chartsListQRSUsers
     },
+     chartsQRSAll(){
+      console.log("la data----------",   this.chartsQRSAll)
+      this.qrsAllRequestChart.data.series = [
+        this.chartsQRSAll.data.series,
+      ];
+    },
     requestListByType(){
       let data = []
       let typeArr = []
@@ -524,9 +680,6 @@ export default {
         if(item.type == type){
           data.push(item)
         }
-        
-
-
       })
 
       typeArr.push(data)

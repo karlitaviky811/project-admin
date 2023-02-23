@@ -70,7 +70,11 @@
             <td>{{  item.type }}</td>
             <td>{{ convertDate(item.date) }}</td>
             <td  width="200">{{ item.description }}</td>
-            <td>{{ item.status }}</td>
+          <td>   <v-chip :color="getColor(item.status)">
+        {{ item.status }}
+      </v-chip></td>
+
+            
             <td>{{ item.user.name }}</td>
 
             <td v-show="true"  width="200">
@@ -272,6 +276,18 @@ export default {
       this.role = JSON.parse(localStorage.getItem("user")).role;
       this.data = false;
     },
+     getColor (item) {
+ 
+
+         if(item == "Enviada al admin"){
+        return "#e6e6fa"
+      }else
+        if(item == "Feedback del Administrador"){
+          return "#20b2aa"
+        }
+            
+    },
+  
   },
 };
 </script>
