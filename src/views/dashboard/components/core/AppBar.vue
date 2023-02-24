@@ -44,7 +44,7 @@
           <app-bar-item
             v-for="(n, i) in notifications"
               :key="i"
-        @click="menuActionClick(i)"
+        @click="handleClick(i)"
           >   
             <v-list-item-title v-text="n.title" @click="n.click" />
           </app-bar-item>
@@ -130,7 +130,10 @@
         console.log("log out")
 
                 router.push("/login")
-      }
+      },
+      handleClick(index) {
+      this.items[index].click.call(this)
+    }
     },
   }
 </script>
